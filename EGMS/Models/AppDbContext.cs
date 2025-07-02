@@ -7,6 +7,7 @@ namespace EGMS.Models
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Customer> Customers { get; set; }
     }
 
 }

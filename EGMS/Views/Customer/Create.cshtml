@@ -1,0 +1,93 @@
+﻿@model EGMS.DTOs.CustomerCreateDTO
+
+@{
+    ViewData["Title"] = "Add New Customer";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Add New Customer</h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Name" class="form-label">Name *</label>
+                                    <input asp-for="Name" class="form-control" placeholder="Enter full name" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="F_name" class="form-label">Father's Name *</label>
+                                    <input asp-for="F_name" class="form-control" placeholder="Enter father's name" />
+                                    <span asp-validation-for="F_name" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="M_name" class="form-label">Mother's Name *</label>
+                                    <input asp-for="M_name" class="form-control" placeholder="Enter mother's name" />
+                                    <span asp-validation-for="M_name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Mobile_number" class="form-label">Mobile Number *</label>
+                                    <input asp-for="Mobile_number" class="form-control" placeholder="01XXXXXXXXX" />
+                                    <span asp-validation-for="Mobile_number" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Address" class="form-label">Address *</label>
+                            <textarea asp-for="Address" class="form-control" rows="3" placeholder="Enter full address"></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="NID_Number" class="form-label">NID Number *</label>
+                            <input asp-for="NID_Number" class="form-control" placeholder="Enter 10, 13, or 17 digit NID number" />
+                            <small class="form-text text-muted">Enter a valid 10, 13, or 17 digit NID number</small>
+                            <span asp-validation-for="NID_Number" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Customer
+                            </button>
+
+                            <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
