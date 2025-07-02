@@ -5,8 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System;
-using Org.BouncyCastle.Crypto.Generators;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
 
@@ -25,44 +23,94 @@ namespace EGMS.Services
 
         public async Task<bool> Register(UserRegisterDTO dto)
         {
-            if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
-                return false;
-
-            var user = new User
+            try
             {
-                Username = dto.Username,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password), // ✅ Correct
-                Role = dto.Role
-            };
+                // Validate input
+                if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+                    return false;
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return true;
+                // Check if user already exists
+                if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
+                    return false;
+
+                // Create new user with properly hashed password
+                var user = new User
+                {
+                    Username = dto.Username.Trim(),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password, 12), // Use work factor instead of GenerateSalt
+                    Role = dto.Role ?? "Admin" // Default role if not provided
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging
+                Console.WriteLine($"Registration error: {ex.Message}");
+                return false;
+            }
         }
 
         public async Task<string> Login(UserLoginDTO dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-                return null;
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
-            }),
-                Expires = DateTime.UtcNow.AddHours(3),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+                // Validate input
+                if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+                    return null;
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+                // Find user
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username.Trim());
+
+                // Check if user exists
+                if (user == null)
+                {
+                    Console.WriteLine($"User not found: {dto.Username}");
+                    return null;
+                }
+
+                // Check if password hash exists
+                if (string.IsNullOrWhiteSpace(user.PasswordHash))
+                {
+                    Console.WriteLine($"Password hash is null or empty for user: {dto.Username}");
+                    return null;
+                }
+
+                // Verify password
+                bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
+
+                if (!isPasswordValid)
+                {
+                    Console.WriteLine($"Password verification failed for user: {dto.Username}");
+                    return null;
+                }
+
+                // Generate JWT token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[]
+                    {
+                        new Claim(ClaimTypes.Name, user.Username),
+                        new Claim(ClaimTypes.Role, user.Role ?? "Admin")
+                    }),
+                    Expires = DateTime.UtcNow.AddHours(3),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                return tokenHandler.WriteToken(token);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Login error: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                return null;
+            }
         }
     }
-
 }

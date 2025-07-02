@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EGMS")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c45822a6831aa6b1b702ca6f68e737dfee6ae068")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f72e60ec75aaf60ebe4217ef979624e0c68da69b")]
 [assembly: System.Reflection.AssemblyProductAttribute("EGMS")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EGMS")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
