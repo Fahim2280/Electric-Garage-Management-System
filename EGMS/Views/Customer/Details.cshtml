@@ -1,0 +1,46 @@
+﻿@model EGMS.DTOs.CustomerDTO
+
+@{
+    ViewData["Title"] = "Customer Details";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<div class="container py-4">
+    <h2 class="mb-4">Customer Details</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Customer ID</dt>
+                <dd class="col-sm-9">@Model.C_ID</dd>
+
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Father's Name</dt>
+                <dd class="col-sm-9">@Model.F_name</dd>
+
+                <dt class="col-sm-3">Mother's Name</dt>
+                <dd class="col-sm-9">@Model.M_name</dd>
+
+                <dt class="col-sm-3">Address</dt>
+                <dd class="col-sm-9">@Model.Address</dd>
+
+                <dt class="col-sm-3">Mobile Number</dt>
+                <dd class="col-sm-9">@Model.Mobile_number</dd>
+
+                <dt class="col-sm-3">NID Number</dt>
+                <dd class="col-sm-9">@Model.NID_Number</dd>
+
+                <dt class="col-sm-3">Created Date</dt>
+                <dd class="col-sm-9">@Model.Created_Date.ToString("dd/MM/yyyy")</dd>
+            </dl>
+
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

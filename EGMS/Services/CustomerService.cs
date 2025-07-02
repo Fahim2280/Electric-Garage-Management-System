@@ -20,29 +20,31 @@ namespace EGMS.Services
             {
                 var customers = await _context.Customers
                     .OrderByDescending(c => c.Created_Date)
-                    .Select(c => new CustomerDTO
-                    {
-                        C_ID = c.C_ID,
-                        Name = c.Name,
-                        F_name = c.F_name,
-                        M_name = c.M_name,
-                        Address = c.Address,
-                        Mobile_number = c.Mobile_number,
-                        NID_Number = c.NID_Number,
-                        Created_Date = c.Created_Date
-                    })
                     .ToListAsync();
 
-                return customers;
+                Console.WriteLine($"Found {customers.Count} customers in database");
+
+                return customers.Select(c => new CustomerDTO
+                {
+                    C_ID = c.C_ID,
+                    Name = c.Name,
+                    F_name = c.F_name,
+                    M_name = c.M_name,
+                    Address = c.Address,
+                    Mobile_number = c.Mobile_number,
+                    NID_Number = c.NID_Number,
+                    Created_Date = c.Created_Date
+                }).ToList();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error getting customers: {ex.Message}");
+                Console.WriteLine($"Error in GetAllCustomersAsync: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 return new List<CustomerDTO>();
             }
         }
 
-        public async Task<CustomerDTO> GetCustomerByIdAsync(int id)
+        public async Task<CustomerDTO?> GetCustomerByIdAsync(int id)
         {
             try
             {
@@ -63,7 +65,7 @@ namespace EGMS.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error getting customer by ID: {ex.Message}");
+                Console.WriteLine($"Error in GetCustomerByIdAsync: {ex.Message}");
                 return null;
             }
         }
@@ -72,32 +74,26 @@ namespace EGMS.Services
         {
             try
             {
-                // Check for duplicate NID
-                if (await IsNIDUniqueAsync(dto.NID_Number) == false)
-                    return false;
-
-                // Check for duplicate Mobile
-                if (await IsMobileUniqueAsync(dto.Mobile_number) == false)
-                    return false;
-
                 var customer = new Customer
                 {
-                    Name = dto.Name.Trim(),
-                    F_name = dto.F_name.Trim(),
-                    M_name = dto.M_name.Trim(),
-                    Address = dto.Address.Trim(),
-                    Mobile_number = dto.Mobile_number.Trim(),
-                    NID_Number = dto.NID_Number.Trim(),
+                    Name = dto.Name,
+                    F_name = dto.F_name,
+                    M_name = dto.M_name,
+                    Address = dto.Address,
+                    Mobile_number = dto.Mobile_number,
+                    NID_Number = dto.NID_Number,
                     Created_Date = DateTime.UtcNow
                 };
 
                 _context.Customers.Add(customer);
-                await _context.SaveChangesAsync();
-                return true;
+                var result = await _context.SaveChangesAsync();
+
+                Console.WriteLine($"Customer created: {result > 0}");
+                return result > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error creating customer: {ex.Message}");
+                Console.WriteLine($"Error in CreateCustomerAsync: {ex.Message}");
                 return false;
             }
         }
@@ -109,27 +105,22 @@ namespace EGMS.Services
                 var customer = await _context.Customers.FindAsync(id);
                 if (customer == null) return false;
 
-                // Check for duplicate NID (excluding current customer)
-                if (await IsNIDUniqueAsync(dto.NID_Number, id) == false)
-                    return false;
+                customer.Name = dto.Name;
+                customer.F_name = dto.F_name;
+                customer.M_name = dto.M_name;
+                customer.Address = dto.Address;
+                customer.Mobile_number = dto.Mobile_number;
+                customer.NID_Number = dto.NID_Number;
 
-                // Check for duplicate Mobile (excluding current customer)
-                if (await IsMobileUniqueAsync(dto.Mobile_number, id) == false)
-                    return false;
+                _context.Customers.Update(customer);
+                var result = await _context.SaveChangesAsync();
 
-                customer.Name = dto.Name.Trim();
-                customer.F_name = dto.F_name.Trim();
-                customer.M_name = dto.M_name.Trim();
-                customer.Address = dto.Address.Trim();
-                customer.Mobile_number = dto.Mobile_number.Trim();
-                customer.NID_Number = dto.NID_Number.Trim();
-
-                await _context.SaveChangesAsync();
-                return true;
+                Console.WriteLine($"Customer updated: {result > 0}");
+                return result > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error updating customer: {ex.Message}");
+                Console.WriteLine($"Error in UpdateCustomerAsync: {ex.Message}");
                 return false;
             }
         }
@@ -142,39 +133,56 @@ namespace EGMS.Services
                 if (customer == null) return false;
 
                 _context.Customers.Remove(customer);
-                await _context.SaveChangesAsync();
-                return true;
+                var result = await _context.SaveChangesAsync();
+
+                Console.WriteLine($"Customer deleted: {result > 0}");
+                return result > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting customer: {ex.Message}");
+                Console.WriteLine($"Error in DeleteCustomerAsync: {ex.Message}");
                 return false;
             }
         }
 
-        public async Task<bool> CustomerExistsAsync(int id)
+        public async Task<bool> IsNIDUniqueAsync(string nidNumber, int? excludeCustomerId = null)
         {
-            return await _context.Customers.AnyAsync(c => c.C_ID == id);
+            try
+            {
+                var query = _context.Customers.Where(c => c.NID_Number == nidNumber);
+
+                if (excludeCustomerId.HasValue)
+                {
+                    query = query.Where(c => c.C_ID != excludeCustomerId.Value);
+                }
+
+                return !await query.AnyAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in IsNIDUniqueAsync: {ex.Message}");
+                return false;
+            }
         }
 
-        public async Task<bool> IsNIDUniqueAsync(string nid, int? excludeId = null)
+        public async Task<bool> IsMobileUniqueAsync(string mobileNumber, int? excludeCustomerId = null)
         {
-            var query = _context.Customers.Where(c => c.NID_Number == nid);
+            try
+            {
+                var query = _context.Customers.Where(c => c.Mobile_number == mobileNumber);
 
-            if (excludeId.HasValue)
-                query = query.Where(c => c.C_ID != excludeId.Value);
+                if (excludeCustomerId.HasValue)
+                {
+                    query = query.Where(c => c.C_ID != excludeCustomerId.Value);
+                }
 
-            return !await query.AnyAsync();
-        }
-
-        public async Task<bool> IsMobileUniqueAsync(string mobile, int? excludeId = null)
-        {
-            var query = _context.Customers.Where(c => c.Mobile_number == mobile);
-
-            if (excludeId.HasValue)
-                query = query.Where(c => c.C_ID != excludeId.Value);
-
-            return !await query.AnyAsync();
+                return !await query.AnyAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in IsMobileUniqueAsync: {ex.Message}");
+                return false;
+            }
         }
     }
 }

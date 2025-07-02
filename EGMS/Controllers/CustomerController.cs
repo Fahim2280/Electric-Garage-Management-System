@@ -13,12 +13,12 @@ namespace EGMS.Controllers
             _customerService = customerService;
         }
 
-        // GET: Customer
         public async Task<IActionResult> Index()
         {
             var customers = await _customerService.GetAllCustomersAsync();
-            return View(customers);
+            return View("Index", customers ?? new List<CustomerDTO>());
         }
+
 
         // GET: Customer/Details/5
         public async Task<IActionResult> Details(int id)
@@ -26,7 +26,8 @@ namespace EGMS.Controllers
             var customer = await _customerService.GetCustomerByIdAsync(id);
             if (customer == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Customer not found.";
+                return RedirectToAction(nameof(Index));
             }
             return View(customer);
         }
@@ -72,7 +73,6 @@ namespace EGMS.Controllers
             return View(dto);
         }
 
-
         // GET: Customer/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
@@ -87,42 +87,31 @@ namespace EGMS.Controllers
         // POST: Customer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CustomerDTO dto)
+        public async Task<IActionResult> Edit(CustomerDTO dto)
         {
-            if (id != dto.C_ID)
-            {
-                return BadRequest();
-            }
-
             if (!ModelState.IsValid)
             {
-                return View(dto);
-            }
-
-            // Check for duplicate NID (excluding current customer)
-            if (!await _customerService.IsNIDUniqueAsync(dto.NID_Number, id))
-            {
-                ModelState.AddModelError("NID_Number", "This NID number already exists.");
-                return View(dto);
-            }
-
-            // Check for duplicate Mobile (excluding current customer)
-            if (!await _customerService.IsMobileUniqueAsync(dto.Mobile_number, id))
-            {
-                ModelState.AddModelError("Mobile_number", "This mobile number already exists.");
-                return View(dto);
-            }
-
-            var result = await _customerService.UpdateCustomerAsync(id, dto);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Customer updated successfully!";
+                TempData["ErrorMessage"] = "Invalid data submitted.";
                 return RedirectToAction(nameof(Index));
             }
 
-            ModelState.AddModelError("", "Failed to update customer. Please try again.");
-            return View(dto);
+            if (!await _customerService.IsNIDUniqueAsync(dto.NID_Number, dto.C_ID))
+            {
+                TempData["ErrorMessage"] = "NID number already exists.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!await _customerService.IsMobileUniqueAsync(dto.Mobile_number, dto.C_ID))
+            {
+                TempData["ErrorMessage"] = "Mobile number already exists.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var result = await _customerService.UpdateCustomerAsync(dto.C_ID, dto);
+            TempData["SuccessMessage"] = result ? "Customer updated successfully." : "Update failed.";
+            return RedirectToAction(nameof(Index));
         }
+
 
         // GET: Customer/Delete/5
         public async Task<IActionResult> Delete(int id)
@@ -136,7 +125,7 @@ namespace EGMS.Controllers
         }
 
         // POST: Customer/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -151,5 +140,6 @@ namespace EGMS.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
     }
 }
