@@ -32,6 +32,10 @@ namespace EGMS.Services
                 // Create unique indexes
                 entity.HasIndex(e => e.Mobile_number).IsUnique();
                 entity.HasIndex(e => e.NID_Number).IsUnique();
+
+                // Configure decimal properties
+                entity.Property(e => e.Previous_Unit).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.Advance_money).HasColumnType("decimal(18,2)");
             });
 
             // Configure ElectricBill entity
@@ -40,6 +44,7 @@ namespace EGMS.Services
                 entity.HasKey(e => e.ID);
                 entity.Property(e => e.Date).IsRequired();
                 entity.Property(e => e.Previous_unit).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.Current_Unit).IsRequired().HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Total_Unit).HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Electric_bill).HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Previous_duos).HasColumnType("decimal(18,2)");

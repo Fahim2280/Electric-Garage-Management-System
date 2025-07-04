@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EGMS.Models
 {
@@ -34,10 +35,12 @@ namespace EGMS.Models
         public DateTime Created_Date { get; set; }
 
         [Required]
-        public string Previous_Unit { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Previous_Unit { get; set; } // Fixed: Changed from string to decimal
 
         [Required]
-        public string Advance_money { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Advance_money { get; set; } // Fixed: Changed from string to decimal
 
         // Navigation property for electric bills
         public virtual ICollection<ElectricBill> ElectricBills { get; set; } = new List<ElectricBill>();

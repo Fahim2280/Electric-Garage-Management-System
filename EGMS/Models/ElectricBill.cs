@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Data.SqlClient;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EGMS.Models
@@ -18,6 +19,10 @@ namespace EGMS.Models
         [Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Previous_unit { get; set; }
+
+        [Required]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Current_Unit { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]

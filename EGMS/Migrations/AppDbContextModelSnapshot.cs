@@ -35,9 +35,8 @@ namespace EGMS.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Advance_money")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Advance_money")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("Created_Date")
                         .ValueGeneratedOnAdd()
@@ -69,9 +68,8 @@ namespace EGMS.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Previous_Unit")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Previous_Unit")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("C_ID");
 
@@ -93,6 +91,9 @@ namespace EGMS.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<decimal>("Clear_money")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Current_Unit")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Customer_ID")

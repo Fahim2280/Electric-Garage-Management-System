@@ -6,36 +6,46 @@ namespace EGMS.DTOs
     {
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Customer is required")]
+        [Required]
+        [Display(Name = "Customer")]
         public int Customer_ID { get; set; }
 
-        [Required(ErrorMessage = "Date is required")]
+        [Required]
+        [Display(Name = "Date")]
         public DateTime Date { get; set; }
 
-        [Required(ErrorMessage = "Previous unit is required")]
-        [Range(0, double.MaxValue, ErrorMessage = "Previous unit must be a positive number")]
+        [Display(Name = "Previous Unit")]
         public decimal Previous_unit { get; set; }
 
-        [Required(ErrorMessage = "Total unit is required")]
-        [Range(0, double.MaxValue, ErrorMessage = "Total unit must be a positive number")]
-        public decimal Total_Unit { get; set; }
+        [Required]
+        [Display(Name = "Current Unit")]
+        public decimal Current_Unit { get; set; } // User input
 
-        [Required(ErrorMessage = "Electric bill is required")]
-        [Range(0, double.MaxValue, ErrorMessage = "Electric bill must be a positive number")]
-        public decimal Electric_bill { get; set; }
+        [Display(Name = "Total Unit")]
+        public decimal Total_Unit { get; set; } // Calculated
 
-        [Required(ErrorMessage = "Rent bill is required")]
-        [Range(0, double.MaxValue, ErrorMessage = "Rent bill must be a positive number")]
-        public decimal Rent_Bill { get; set; }
+        [Display(Name = "Electric Bill")]
+        public decimal Electric_bill { get; set; } // Calculated
 
-        [Required(ErrorMessage = "Clear money is required")]
-        [Range(0, double.MaxValue, ErrorMessage = "Clear money must be a positive number")]
-        public decimal Clear_money { get; set; }
+        [Display(Name = "Previous Dues")]
+        public decimal Previous_duos { get; set; } // From previous bill or customer advance
 
-        // Read-only properties for display
-        public string? CustomerName { get; set; }
-        public decimal? Previous_duos { get; set; }
-        public decimal? Total_bill { get; set; }
-        public decimal? Present_dues { get; set; }
+        [Required]
+        [Display(Name = "Rent Bill")]
+        public decimal Rent_Bill { get; set; } // User input
+
+        [Display(Name = "Total Bill")]
+        public decimal Total_bill { get; set; } // Calculated
+
+        [Required]
+        [Display(Name = "Clear Money")]
+        public decimal Clear_money { get; set; } // User input
+
+        [Display(Name = "Present Dues")]
+        public decimal Present_dues { get; set; } // Calculated
+
+        // Additional properties for display
+        public string CustomerName { get; set; }
     }
+
 }

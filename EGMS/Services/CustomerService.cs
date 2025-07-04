@@ -33,8 +33,8 @@ namespace EGMS.Services
                     Address = c.Address,
                     Mobile_number = c.Mobile_number,
                     NID_Number = c.NID_Number,
-                    Previous_Unit = c.Previous_Unit,
-                    Advance_money = c.Advance_money,
+                    Previous_Unit = c.Previous_Unit.ToString(), // Fix: Convert decimal to string
+                    Advance_money = c.Advance_money.ToString(), // Fix: Convert decimal to string
                     Created_Date = c.Created_Date
                 }).ToList();
             }
@@ -62,8 +62,8 @@ namespace EGMS.Services
                     Address = customer.Address,
                     Mobile_number = customer.Mobile_number,
                     NID_Number = customer.NID_Number,
-                    Previous_Unit = customer.Previous_Unit,
-                    Advance_money = customer.Advance_money,
+                    Previous_Unit = customer.Previous_Unit.ToString(), // Fix: Convert decimal to string
+                    Advance_money = customer.Advance_money.ToString(), // Fix: Convert decimal to string
                     Created_Date = customer.Created_Date
                 };
             }
@@ -86,8 +86,8 @@ namespace EGMS.Services
                     Address = dto.Address,
                     Mobile_number = dto.Mobile_number,
                     NID_Number = dto.NID_Number,
-                    Previous_Unit = dto.Previous_Unit,
-                    Advance_money = dto.Advance_money,
+                    Previous_Unit = decimal.Parse(dto.Previous_Unit), // Fix: Convert string to decimal
+                    Advance_money = decimal.Parse(dto.Advance_money), // Fix: Convert string to decimal
                     Created_Date = DateTime.UtcNow
                 };
 
@@ -117,8 +117,10 @@ namespace EGMS.Services
                 customer.Address = dto.Address;
                 customer.Mobile_number = dto.Mobile_number;
                 customer.NID_Number = dto.NID_Number;
-                customer.Previous_Unit = dto.Previous_Unit;
-                customer.Advance_money = dto.Advance_money;
+
+                // Fix for CS0029: Convert string to decimal using decimal.Parse
+                customer.Previous_Unit = decimal.Parse(dto.Previous_Unit);
+                customer.Advance_money = decimal.Parse(dto.Advance_money);
 
                 _context.Customers.Update(customer);
                 var result = await _context.SaveChangesAsync();
