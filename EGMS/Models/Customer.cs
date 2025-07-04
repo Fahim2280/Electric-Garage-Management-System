@@ -28,14 +28,18 @@ namespace EGMS.Models
         public string Mobile_number { get; set; }
 
         [Required]
-        [StringLength(17)] // Changed from 10 to 17 to support 10, 13, or 17 digit NIDs
+        [StringLength(17)]
         public string NID_Number { get; set; }
 
         public DateTime Created_Date { get; set; }
 
-        public Customer()
-        {
-            Created_Date = DateTime.UtcNow;
-        }
+        [Required]
+        public string Previous_Unit { get; set; }
+
+        [Required]
+        public string Advance_money { get; set; }
+
+        // Navigation property for electric bills
+        public virtual ICollection<ElectricBill> ElectricBills { get; set; } = new List<ElectricBill>();
     }
 }

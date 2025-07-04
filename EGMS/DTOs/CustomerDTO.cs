@@ -31,5 +31,11 @@ namespace EGMS.DTOs
         public string NID_Number { get; set; }
 
         public DateTime Created_Date { get; set; }
+
+        [Required(ErrorMessage = "Pervious Unit is required")]
+        public string Previous_Unit { get; set; }
+
+        [Required(ErrorMessage = "Advance money is required")]
+        public string Advance_money { get; set; }
     }
 }

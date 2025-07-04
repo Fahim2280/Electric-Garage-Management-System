@@ -13,8 +13,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EGMS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250702170350_Init3")]
-    partial class Init3
+    [Migration("20250703163436_Init5")]
+    partial class Init5
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,11 @@ namespace EGMS.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Advance_money")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("Created_Date")
                         .HasColumnType("datetime2");
@@ -67,9 +72,59 @@ namespace EGMS.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Previous_Unit")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("C_ID");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("EGMS.Models.ElectricBill", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<decimal>("Clear_money")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Customer_ID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Electric_bill")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Present_dues")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Previous_duos")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Previous_unit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Rent_Bill")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Total_Unit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Total_bill")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("Customer_ID");
+
+                    b.ToTable("ElectricBills");
                 });
 
             modelBuilder.Entity("EGMS.Models.User", b =>
@@ -95,6 +150,22 @@ namespace EGMS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EGMS.Models.ElectricBill", b =>
+                {
+                    b.HasOne("EGMS.Models.Customer", "Customer")
+                        .WithMany("ElectricBills")
+                        .HasForeignKey("Customer_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("EGMS.Models.Customer", b =>
+                {
+                    b.Navigation("ElectricBills");
                 });
 #pragma warning restore 612, 618
         }

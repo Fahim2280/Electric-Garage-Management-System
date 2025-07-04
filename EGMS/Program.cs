@@ -37,6 +37,7 @@ namespace EGMS
             // Add custom service
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IElectricBillService, ElectricBillService>();
 
             builder.Services.AddControllersWithViews();
 

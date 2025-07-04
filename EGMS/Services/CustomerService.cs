@@ -33,6 +33,8 @@ namespace EGMS.Services
                     Address = c.Address,
                     Mobile_number = c.Mobile_number,
                     NID_Number = c.NID_Number,
+                    Previous_Unit = c.Previous_Unit,
+                    Advance_money = c.Advance_money,
                     Created_Date = c.Created_Date
                 }).ToList();
             }
@@ -60,6 +62,8 @@ namespace EGMS.Services
                     Address = customer.Address,
                     Mobile_number = customer.Mobile_number,
                     NID_Number = customer.NID_Number,
+                    Previous_Unit = customer.Previous_Unit,
+                    Advance_money = customer.Advance_money,
                     Created_Date = customer.Created_Date
                 };
             }
@@ -82,6 +86,8 @@ namespace EGMS.Services
                     Address = dto.Address,
                     Mobile_number = dto.Mobile_number,
                     NID_Number = dto.NID_Number,
+                    Previous_Unit = dto.Previous_Unit,
+                    Advance_money = dto.Advance_money,
                     Created_Date = DateTime.UtcNow
                 };
 
@@ -111,6 +117,8 @@ namespace EGMS.Services
                 customer.Address = dto.Address;
                 customer.Mobile_number = dto.Mobile_number;
                 customer.NID_Number = dto.NID_Number;
+                customer.Previous_Unit = dto.Previous_Unit;
+                customer.Advance_money = dto.Advance_money;
 
                 _context.Customers.Update(customer);
                 var result = await _context.SaveChangesAsync();

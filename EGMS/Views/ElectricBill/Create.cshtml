@@ -1,0 +1,120 @@
+﻿@model EGMS.DTOs.ElectricBillDTO
+@{
+    ViewData["Title"] = "Create Electric Bill";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+
+<div class="container mt-4">
+    <h2 class="mb-4">Create Electric Bill</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+    <div>
+    <form asp-action="Create" asp-controller="ElectricBill" method="post">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="Customer_ID" class="form-label">Customer</label>
+                <select asp-for="Customer_ID" class="form-select" required>
+                    <option value="">-- Select Customer --</option>
+                    @foreach (var customer in ViewBag.Customers as IEnumerable<EGMS.Models.Customer>)
+                    {
+                        <option value="@customer.C_ID">@customer.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="Customer_ID" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Date" class="form-label">Date</label>
+                <input asp-for="Date" type="date" class="form-control" value="@Model.Date.ToString("yyyy-MM-dd")" required />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="Previous_unit" class="form-label" >Previous Unit</label>
+                    <input asp-for="Previous_unit" type="number" step="0.01" class="form-control" value="@Model.Previous_unit" required />
+                <span asp-validation-for="Previous_unit" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Total_Unit" class="form-label">Total Unit</label>
+                <input asp-for="Total_Unit" type="number" step="0.01" class="form-control" required />
+                <span asp-validation-for="Total_Unit" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="Electric_bill" class="form-label">Electric Bill (৳)</label>
+                <input asp-for="Electric_bill" type="number" step="0.01" class="form-control" required />
+                <span asp-validation-for="Electric_bill" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Rent_Bill" class="form-label">Rent Bill (৳)</label>
+                <input asp-for="Rent_Bill" type="number" step="0.01" class="form-control" required />
+                <span asp-validation-for="Rent_Bill" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="Clear_money" class="form-label">Clear Money (৳)</label>
+                <input asp-for="Clear_money" type="number" step="0.01" class="form-control" required />
+                <span asp-validation-for="Clear_money" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="alert alert-info mb-3">
+            <strong>Calculated Info:</strong>
+            <br>Previous Dues: ৳<span id="previousDues">@((Model.Previous_duos ?? 0).ToString("N2"))</span>
+            <br>Current Bill: ৳<span id="currentBill">@((Model.Electric_bill + Model.Rent_Bill).ToString("N2"))</span>
+            <br>Total Bill: ৳<span id="totalBill">@((Model.Total_bill ?? 0).ToString("N2"))</span>
+            <br>Present Dues: ৳<span id="presentDues">@((Model.Present_dues ?? 0).ToString("N2"))</span>
+        </div>
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+       
+    </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<script>
+    function calculateBill() {
+        const electricBill = parseFloat(document.querySelector('input[name="Electric_bill"]').value) || 0;
+        const rentBill = parseFloat(document.querySelector('input[name="Rent_Bill"]').value) || 0;
+        const clearMoney = parseFloat(document.querySelector('input[name="Clear_money"]').value) || 0;
+        const previousDues = parseFloat(document.getElementById('previousDues').textContent.replace('৳', '').replace(',', '')) || 0;
+
+        const currentBill = electricBill + rentBill;
+        const totalBill = currentBill + previousDues;
+        const presentDues = totalBill - clearMoney;
+
+        document.getElementById('currentBill').textContent = currentBill.toFixed(2);
+        document.getElementById('totalBill').textContent = totalBill.toFixed(2);
+        document.getElementById('presentDues').textContent = presentDues.toFixed(2);
+    }
+
+    // Add event listeners to recalculate when values change
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input[name="Electric_bill"], input[name="Rent_Bill"], input[name="Clear_money"]');
+        inputs.forEach(input => {
+            input.addEventListener('input', calculateBill);
+        });
+    });
+</script>
