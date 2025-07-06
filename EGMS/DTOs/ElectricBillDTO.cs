@@ -19,6 +19,7 @@ namespace EGMS.DTOs
 
         [Required]
         [Display(Name = "Current Unit")]
+        [Range(0, double.MaxValue, ErrorMessage = "Current unit must be greater than or equal to 0")]
         public decimal Current_Unit { get; set; } // User input
 
         [Display(Name = "Total Unit")]
@@ -32,6 +33,7 @@ namespace EGMS.DTOs
 
         [Required]
         [Display(Name = "Rent Bill")]
+        [Range(0, double.MaxValue, ErrorMessage = "Rent bill must be greater than or equal to 0")]
         public decimal Rent_Bill { get; set; } // User input
 
         [Display(Name = "Total Bill")]
@@ -39,6 +41,7 @@ namespace EGMS.DTOs
 
         [Required]
         [Display(Name = "Clear Money")]
+        [Range(0, double.MaxValue, ErrorMessage = "Clear money must be greater than or equal to 0")]
         public decimal Clear_money { get; set; } // User input
 
         [Display(Name = "Present Dues")]
@@ -46,6 +49,8 @@ namespace EGMS.DTOs
 
         // Additional properties for display
         public string CustomerName { get; set; }
+
+       
     }
 
 }

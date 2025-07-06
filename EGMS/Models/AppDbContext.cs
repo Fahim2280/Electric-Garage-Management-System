@@ -1,5 +1,6 @@
 ﻿using EGMS.Models;
 using Microsoft.EntityFrameworkCore;
+using EGMS.DTOs;
 
 namespace EGMS.Services
 {
@@ -60,5 +61,6 @@ namespace EGMS.Services
                       .OnDelete(DeleteBehavior.Cascade);
             });
         }
+        public DbSet<EGMS.DTOs.ElectricBillDTO> ElectricBillDTO { get; set; } = default!;
     }
 }

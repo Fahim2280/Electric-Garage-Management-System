@@ -37,5 +37,9 @@ namespace EGMS.DTOs
 
         [Required(ErrorMessage = "Advance money is required")]
         public string Advance_money { get; set; }
+
+        [Required(ErrorMessage = "Present dues is required")]
+        [Range(0, double.MaxValue, ErrorMessage = "Present dues must be a positive value")]
+        public decimal Present_dues { get; set; }
     }
 }

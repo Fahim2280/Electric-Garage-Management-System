@@ -33,18 +33,46 @@ namespace EGMS.Controllers
             }
             return View(electricBill);
         }
-
         // GET: ElectricBill/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? id = null)
         {
-            var customers = await _electricBillService.GetAllCustomersAsync();
-            ViewBag.Customers = customers ?? new List<Customer>();
-
-            // Return initialized model with today's date
-            return View(new ElectricBillDTO
+            try
             {
-                Date = DateTime.Today
-            });
+                var customers = await _electricBillService.GetAllCustomersAsync();
+                ViewBag.Customers = customers ?? new List<Customer>();
+
+                var model = new ElectricBillDTO
+                {
+                    Date = DateTime.Today
+                };
+
+                // If customer ID is provided, pre-populate the form
+                if (id.HasValue && id.Value > 0)
+                {
+                    var customer = customers?.FirstOrDefault(c => c.C_ID == id.Value);
+                    if (customer != null)
+                    {
+                        model.Customer_ID = customer.C_ID;
+                        model.CustomerName = customer.Name;
+                        model.Previous_unit = customer.Previous_Unit;
+
+                        // Get customer's bill summary to populate previous dues and last reading
+                        var customerSummary = await _electricBillService.GetCustomerBillSummaryAsync(id.Value);
+                        if (customerSummary != null)
+                        {
+                            model.Previous_unit = customerSummary.LastMeterReading;
+                            model.Previous_duos = customerSummary.PreviousDues;
+                        }
+                    }
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error loading customer data. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: ElectricBill/Create
@@ -52,33 +80,125 @@ namespace EGMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ElectricBillDTO electricBillDto)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = await _electricBillService.CreateElectricBillAsync(electricBillDto);
-                if (result)
+                if (ModelState.IsValid)
                 {
-                    TempData["SuccessMessage"] = "Electric bill created successfully with automatic calculations.";
-                    return RedirectToAction(nameof(Index));
+                    // Additional validation
+                    if (electricBillDto.Customer_ID <= 0)
+                    {
+                        ModelState.AddModelError("Customer_ID", "Please select a customer.");
+                    }
+
+                    if (electricBillDto.Current_Unit < 0)
+                    {
+                        ModelState.AddModelError("Current_Unit", "Current unit reading cannot be negative.");
+                    }
+
+                    if (electricBillDto.Rent_Bill < 0)
+                    {
+                        ModelState.AddModelError("Rent_Bill", "Rent bill cannot be negative.");
+                    }
+
+                    if (electricBillDto.Clear_money < 0)
+                    {
+                        ModelState.AddModelError("Clear_money", "Payment amount cannot be negative.");
+                    }
+
+                    // Validate that current reading is not less than previous reading
+                    var customerSummary = await _electricBillService.GetCustomerBillSummaryAsync(electricBillDto.Customer_ID);
+                    if (customerSummary != null && electricBillDto.Current_Unit < customerSummary.LastMeterReading)
+                    {
+                        ModelState.AddModelError("Current_Unit",
+                            $"Current unit reading ({electricBillDto.Current_Unit}) cannot be less than the last meter reading ({customerSummary.LastMeterReading}).");
+                    }
+
+                    if (ModelState.IsValid)
+                    {
+                        var result = await _electricBillService.CreateElectricBillAsync(electricBillDto);
+                        if (result)
+                        {
+                            TempData["SuccessMessage"] = "Electric bill created successfully with automatic calculations.";
+
+                            // Redirect back to customer details if customer ID is available
+                            if (electricBillDto.Customer_ID > 0)
+                            {
+                                return RedirectToAction("Details", "Customer", new { id = electricBillDto.Customer_ID });
+                            }
+
+                            return RedirectToAction(nameof(Index));
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "Failed to create electric bill. Please check your input and try again.";
+                        }
+                    }
                 }
 
-                ModelState.AddModelError("", "Failed to create electric bill.");
-            }
+                // If we got this far, something failed, redisplay form
+                var customers = await _electricBillService.GetAllCustomersAsync();
+                ViewBag.Customers = customers ?? new List<Customer>();
 
-            ViewBag.Customers = await _electricBillService.GetAllCustomersAsync();
-            return View(electricBillDto);
+                // Re-populate customer name if available
+                if (electricBillDto.Customer_ID > 0)
+                {
+                    var customer = customers?.FirstOrDefault(c => c.C_ID == electricBillDto.Customer_ID);
+                    if (customer != null)
+                    {
+                        electricBillDto.CustomerName = customer.Name;
+                    }
+                }
+
+                return View(electricBillDto);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while creating the electric bill. Please try again.";
+
+                // Reload customers for the form
+                try
+                {
+                    var customers = await _electricBillService.GetAllCustomersAsync();
+                    ViewBag.Customers = customers ?? new List<Customer>();
+
+                    // Re-populate customer name if available
+                    if (electricBillDto.Customer_ID > 0)
+                    {
+                        var customer = customers?.FirstOrDefault(c => c.C_ID == electricBillDto.Customer_ID);
+                        if (customer != null)
+                        {
+                            electricBillDto.CustomerName = customer.Name;
+                        }
+                    }
+                }
+                catch
+                {
+                    ViewBag.Customers = new List<Customer>();
+                }
+
+                return View(electricBillDto);
+            }
         }
 
         // GET: ElectricBill/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var electricBill = await _electricBillService.GetElectricBillByIdAsync(id);
-            if (electricBill == null)
+            try
             {
-                return NotFound();
-            }
+                var electricBill = await _electricBillService.GetElectricBillByIdAsync(id);
+                if (electricBill == null)
+                {
+                    return NotFound();
+                }
 
-            ViewBag.Customers = await _electricBillService.GetAllCustomersAsync();
-            return View(electricBill);
+                ViewBag.Customers = await _electricBillService.GetAllCustomersAsync();
+                return View(electricBill);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error loading bill data. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: ElectricBill/Edit/5
@@ -91,30 +211,59 @@ namespace EGMS.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                var result = await _electricBillService.UpdateElectricBillAsync(electricBillDto);
-                if (result)
+                if (ModelState.IsValid)
                 {
-                    TempData["SuccessMessage"] = "Electric bill updated successfully with automatic calculations.";
-                    return RedirectToAction(nameof(Index));
+                    var result = await _electricBillService.UpdateElectricBillAsync(electricBillDto);
+                    if (result)
+                    {
+                        TempData["SuccessMessage"] = "Electric bill updated successfully with automatic calculations.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Failed to update electric bill. Please try again.";
+                    }
                 }
-                ModelState.AddModelError("", "Failed to update electric bill.");
-            }
 
-            ViewBag.Customers = await _electricBillService.GetAllCustomersAsync();
-            return View(electricBillDto);
+                ViewBag.Customers = await _electricBillService.GetAllCustomersAsync();
+                return View(electricBillDto);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while updating the electric bill. Please try again.";
+
+                try
+                {
+                    ViewBag.Customers = await _electricBillService.GetAllCustomersAsync();
+                }
+                catch
+                {
+                    ViewBag.Customers = new List<Customer>();
+                }
+
+                return View(electricBillDto);
+            }
         }
 
         // GET: ElectricBill/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var electricBill = await _electricBillService.GetElectricBillByIdAsync(id);
-            if (electricBill == null)
+            try
             {
-                return NotFound();
+                var electricBill = await _electricBillService.GetElectricBillByIdAsync(id);
+                if (electricBill == null)
+                {
+                    return NotFound();
+                }
+                return View(electricBill);
             }
-            return View(electricBill);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error loading bill data. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: ElectricBill/Delete/5
@@ -122,29 +271,45 @@ namespace EGMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var result = await _electricBillService.DeleteElectricBillAsync(id);
-            if (result)
+            try
             {
-                TempData["SuccessMessage"] = "Electric bill deleted successfully.";
+                var result = await _electricBillService.DeleteElectricBillAsync(id);
+                if (result)
+                {
+                    TempData["SuccessMessage"] = "Electric bill deleted successfully.";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Failed to delete electric bill.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Failed to delete electric bill.";
+                TempData["ErrorMessage"] = "An error occurred while deleting the electric bill.";
             }
+
             return RedirectToAction(nameof(Index));
         }
 
         // GET: ElectricBill/Customer/5
         public async Task<IActionResult> CustomerBills(int customerId)
         {
-            var electricBills = await _electricBillService.GetElectricBillsByCustomerIdAsync(customerId);
-            var customer = (await _electricBillService.GetAllCustomersAsync())
-                .FirstOrDefault(c => c.C_ID == customerId);
+            try
+            {
+                var electricBills = await _electricBillService.GetElectricBillsByCustomerIdAsync(customerId);
+                var customer = (await _electricBillService.GetAllCustomersAsync())
+                    .FirstOrDefault(c => c.C_ID == customerId);
 
-            ViewBag.CustomerName = customer?.Name ?? "Unknown Customer";
-            ViewBag.CustomerId = customerId;
+                ViewBag.CustomerName = customer?.Name ?? "Unknown Customer";
+                ViewBag.CustomerId = customerId;
 
-            return View(electricBills);
+                return View(electricBills);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error loading customer bills. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // AJAX endpoint to get customer summary when customer is selected
@@ -229,50 +394,66 @@ namespace EGMS.Controllers
 
                 foreach (var customer in customers)
                 {
-                    // Check if bill already exists for this customer for this month
-                    var existingBills = await _electricBillService.GetElectricBillsByCustomerIdAsync(customer.C_ID);
-                    bool billExists = existingBills.Any(b => b.Date.Year == billDate.Year && b.Date.Month == billDate.Month);
-
-                    if (!billExists)
+                    try
                     {
-                        var summary = await _electricBillService.GetCustomerBillSummaryAsync(customer.C_ID);
-                        if (summary != null)
-                        {
-                            // Create a bill with default values (assuming no change in meter reading and no payment)
-                            var billDto = new ElectricBillDTO
-                            {
-                                Customer_ID = customer.C_ID,
-                                Date = billDate,
-                                Total_Unit = summary.LastMeterReading, // Same as last reading (no consumption)
-                                Rent_Bill = 0, // Default rent bill
-                                Clear_money = 0 // No payment
-                            };
+                        // Check if bill already exists for this customer for this month
+                        var existingBills = await _electricBillService.GetElectricBillsByCustomerIdAsync(customer.C_ID);
+                        bool billExists = existingBills.Any(b => b.Date.Year == billDate.Year && b.Date.Month == billDate.Month);
 
-                            var result = await _electricBillService.CreateElectricBillAsync(billDto);
-                            if (result)
-                                successCount++;
+                        if (!billExists)
+                        {
+                            var summary = await _electricBillService.GetCustomerBillSummaryAsync(customer.C_ID);
+                            if (summary != null)
+                            {
+                                // Create a bill with default values (assuming no change in meter reading and no payment)
+                                var billDto = new ElectricBillDTO
+                                {
+                                    Customer_ID = customer.C_ID,
+                                    Date = billDate,
+                                    Current_Unit = summary.LastMeterReading, // Same as last reading (no consumption)
+                                    Rent_Bill = 0, // Default rent bill
+                                    Clear_money = 0 // No payment
+                                };
+
+                                var result = await _electricBillService.CreateElectricBillAsync(billDto);
+                                if (result)
+                                    successCount++;
+                                else
+                                    failCount++;
+                            }
                             else
+                            {
                                 failCount++;
+                            }
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        failCount++;
                     }
                 }
 
-                TempData["SuccessMessage"] = $"Monthly bills generated successfully. {successCount} bills created, {failCount} failed.";
+                if (successCount > 0)
+                {
+                    TempData["SuccessMessage"] = $"Monthly bills generated successfully. {successCount} bills created" +
+                                                (failCount > 0 ? $", {failCount} failed" : "") + ".";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "No bills were generated. " +
+                                             (failCount > 0 ? $"{failCount} attempts failed." : "All customers may already have bills for this month.");
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Error generating monthly bills.";
+                TempData["ErrorMessage"] = "Error generating monthly bills. Please try again.";
                 return RedirectToAction(nameof(Index));
             }
         }
     }
 
     // Request model for preview bill AJAX call
-    public class PreviewBillRequest
-    {
-        public int CustomerId { get; set; }
-        public decimal CurrentMeterReading { get; set; }
-        public decimal RentBill { get; set; }
-    }
+    
 }

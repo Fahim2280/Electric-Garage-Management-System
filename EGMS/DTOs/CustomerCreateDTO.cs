@@ -33,5 +33,6 @@ namespace EGMS.DTOs
 
         [Required(ErrorMessage = "Advance money is required")]
         public string Advance_money { get; set; }
+       
     }
 }

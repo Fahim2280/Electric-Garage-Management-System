@@ -9,3 +9,4 @@
         public DateTime? LastBillDate { get; set; }
     }
 }
+ 

@@ -132,7 +132,7 @@ namespace EGMS.Services
 
                 Console.WriteLine($"Previous Unit: {previousUnit}, Previous Dues: {previousDues}");
 
-                // BUSINESS LOGIC CALCULATIONS:
+                // CORRECTED BUSINESS LOGIC CALCULATIONS:
                 // 1. Current_Unit - Previous_unit = Total_Unit (consumed units)
                 decimal totalUnit = electricBillDto.Current_Unit - previousUnit;
 
@@ -150,10 +150,17 @@ namespace EGMS.Services
                 Console.WriteLine($"Total Bill: {totalBill}");
                 Console.WriteLine($"Present Dues: {presentDues}");
 
+                // Validation: Current unit should not be less than previous unit
+                if (totalUnit < 0)
+                {
+                    Console.WriteLine("Error: Current unit cannot be less than previous unit");
+                    return false;
+                }
+
                 var electricBillEntity = new ElectricBill
                 {
                     Customer_ID = electricBillDto.Customer_ID,
-                    Date = electricBillDto.Date,
+                    Date =DateTime.Now,
                     Previous_unit = previousUnit,               // From customer or last bill
                     Current_Unit = electricBillDto.Current_Unit, // Current meter reading (input)
                     Total_Unit = totalUnit,                     // Calculated: consumed units
@@ -215,11 +222,18 @@ namespace EGMS.Services
                     previousDues = previousBill.Present_dues;
                 }
 
-                // BUSINESS LOGIC CALCULATIONS:
+                // CORRECTED BUSINESS LOGIC CALCULATIONS:
                 decimal totalUnit = electricBillDto.Current_Unit - previousUnit;
                 decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
                 decimal totalBill = previousDues + electricBillAmount + electricBillDto.Rent_Bill;
                 decimal presentDues = totalBill - electricBillDto.Clear_money;
+
+                // Validation: Current unit should not be less than previous unit
+                if (totalUnit < 0)
+                {
+                    Console.WriteLine("Error: Current unit cannot be less than previous unit");
+                    return false;
+                }
 
                 // Update the entity
                 electricBillEntity.Customer_ID = electricBillDto.Customer_ID;
@@ -282,7 +296,7 @@ namespace EGMS.Services
                     previousDues = previousBill.Present_dues;
                 }
 
-                // Recalculate using business logic
+                // Recalculate using corrected business logic
                 decimal totalUnit = bill.Current_Unit - previousUnit;
                 decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
                 decimal totalBill = previousDues + electricBillAmount + bill.Rent_Bill;
@@ -318,8 +332,9 @@ namespace EGMS.Services
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error deleting electric bill: {ex.Message}");
                 return false;
             }
         }
@@ -330,27 +345,10 @@ namespace EGMS.Services
             {
                 return await _context.Customers.OrderBy(c => c.Name).ToListAsync();
             }
-            catch (InvalidCastException)
+            catch (Exception ex)
             {
-                // Fallback: Use raw SQL with manual conversion
-                var customers = await _context.Customers
-                    .Select(c => new Customer
-                    {
-                        C_ID = c.C_ID,
-                        Name = c.Name,
-                        // Add other string properties as needed
-                        // Handle decimal properties separately
-                    })
-                    .ToListAsync();
-
-                // Manual conversion for problematic decimal fields
-                foreach (var customer in customers)
-                {
-                    // You'll need to implement this based on your actual Customer model
-                    // This is just a placeholder
-                }
-
-                return customers;
+                Console.WriteLine($"Error getting customers: {ex.Message}");
+                return new List<Customer>();
             }
         }
 
@@ -394,6 +392,7 @@ namespace EGMS.Services
             var summary = await GetCustomerBillSummaryAsync(customerId);
             if (summary == null) return null;
 
+            // CORRECTED BUSINESS LOGIC FOR PREVIEW:
             decimal totalUnit = currentMeterReading - summary.LastMeterReading;
             decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
             decimal totalBill = summary.PreviousDues + electricBillAmount + rentBill;

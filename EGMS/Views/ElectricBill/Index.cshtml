@@ -1,7 +1,841 @@
-﻿
+﻿@model IEnumerable<EGMS.DTOs.ElectricBillDTO>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Electric Bills";
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-bolt text-warning me-2"></i>
+            Electric Bills
+        </h2>
+        <div class="badge bg-info fs-6">Total Records: <span id="totalRecords">@Model.Count()</span></div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                <i class="fas fa-search text-primary me-2"></i>
+                Search & Filter
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-calendar-alt text-primary me-1"></i>
+                        From Date
+                    </label>
+                    <input type="date" class="form-control" id="fromDate" placeholder="Select start date">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-calendar-alt text-primary me-1"></i>
+                        To Date
+                    </label>
+                    <input type="date" class="form-control" id="toDate" placeholder="Select end date">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-user text-primary me-1"></i>
+                        Customer Name
+                    </label>
+                    <input type="text" class="form-control" id="customerSearch" placeholder="Search by customer name">
+                </div>
+                <div class="col-12">
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-primary" id="searchBtn">
+                            <i class="fas fa-search me-1"></i> Search
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="clearBtn">
+                            <i class="fas fa-times me-1"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Bills</h6>
+                            <h4 class="mb-0">৳<span id="totalBillSum">0.00</span></h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-receipt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Payments</h6>
+                            <h4 class="mb-0">৳<span id="totalPaymentSum">0.00</span></h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-hand-holding-usd fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Dues</h6>
+                            <h4 class="mb-0">৳<span id="totalDuesSum">0.00</span></h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-exclamation-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Balance</h6>
+                            <h4 class="mb-0">৳<span id="balanceSum">0.00</span></h4>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-balance-scale fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Check Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-search-dollar me-2"></i>
+                Payment Check by Date
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-calendar-check text-success me-1"></i>
+                        Payment Check From
+                    </label>
+                    <input type="date" class="form-control" id="paymentFromDate" placeholder="Select start date">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-calendar-check text-success me-1"></i>
+                        Payment Check To
+                    </label>
+                    <input type="date" class="form-control" id="paymentToDate" placeholder="Select end date">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">
+                        <i class="fas fa-user-check text-success me-1"></i>
+                        Customer Name (Optional)
+                    </label>
+                    <input type="text" class="form-control" id="paymentCustomerSearch" placeholder="Search specific customer">
+                </div>
+                <div class="col-12">
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-success" id="checkPaymentBtn">
+                            <i class="fas fa-search-dollar me-1"></i> Check Payments
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="clearPaymentBtn">
+                            <i class="fas fa-times me-1"></i> Clear Payment Check
+                        </button>
+                        <button type="button" class="btn btn-info" id="exportPaymentBtn">
+                            <i class="fas fa-download me-1"></i> Export Payment Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Summary Cards -->
+    <div class="row mb-4" id="paymentSummaryCards" style="display: none;">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <h6><i class="fas fa-info-circle me-2"></i>Payment Summary for Selected Period</h6>
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="border-end">
+                            <h5 class="text-primary mb-0">৳<span id="periodTotalBills">0.00</span></h5>
+                            <small class="text-muted">Total Bills</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border-end">
+                            <h5 class="text-success mb-0">৳<span id="periodTotalPayments">0.00</span></h5>
+                            <small class="text-muted">Total Payments</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border-end">
+                            <h5 class="text-danger mb-0">৳<span id="periodTotalDues">0.00</span></h5>
+                            <small class="text-muted">Outstanding Dues</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="mb-0" id="periodBalance">৳<span id="periodBalanceAmount">0.00</span></h5>
+                        <small class="text-muted">Net Balance</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Details Table -->
+    <div class="card shadow-sm mb-4" id="paymentDetailsTable" style="display: none;">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-table me-2"></i>
+                Payment Details Report
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Bill Amount</th>
+                            <th>Payment Received</th>
+                            <th>Outstanding</th>
+                            <th>Payment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentTableBody">
+                        <!-- Payment data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @* <!-- Action Buttons --> *@
+    @* <div class="mb-3"> *@
+    @*     <a asp-action="Create" class="btn btn-success"> *@
+    @*         <i class="fas fa-plus me-1"></i> Create New Bill *@
+    @*     </a> *@
+    @* </div> *@
+
+    <!-- Bills Table -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">
+                <i class="fas fa-table me-2"></i>
+                Electric Bills List
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0" id="billsTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>
+                                <i class="fas fa-id-badge me-1"></i>
+                                Customer ID
+                            </th>
+                            <th>
+                                <i class="fas fa-user me-1"></i>
+                                Customer Name
+                            </th>
+                            <th>
+                                <i class="fas fa-calendar me-1"></i>
+                                Date
+                            </th>
+                            <th>
+                                <i class="fas fa-history me-1"></i>
+                                Previous Unit
+                            </th>
+                            <th>
+                                <i class="fas fa-bolt me-1"></i>
+                                Current Unit
+                            </th>
+                            <th>
+                                <i class="fas fa-calculator me-1"></i>
+                                Total Unit
+                            </th>
+                            <th>
+                                <i class="fas fa-money-bill-wave me-1"></i>
+                                Electric Bill
+                            </th>
+                            <th>
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                Previous Dues
+                            </th>
+                            <th>
+                                <i class="fas fa-home me-1"></i>
+                                Rent Bill
+                            </th>
+                            <th>
+                                <i class="fas fa-receipt me-1"></i>
+                                Total Bill
+                            </th>
+                            <th>
+                                <i class="fas fa-hand-holding-usd me-1"></i>
+                                Payment
+                            </th>
+                            <th>
+                                <i class="fas fa-exclamation-circle me-1"></i>
+                                Present Dues
+                            </th>
+                            <th>
+                                <i class="fas fa-cogs me-1"></i>
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr data-customer-name="@item.CustomerName?.ToLower()"
+                                data-date="@item.Date.ToString("yyyy-MM-dd")"
+                                data-total-bill="@item.Total_bill"
+                                data-payment="@item.Clear_money"
+                                data-dues="@item.Present_dues">
+                                <td>
+                                    <span class="badge bg-primary">@item.Customer_ID</span>
+                                </td>
+                                <td>
+                                    <strong>@Html.DisplayFor(modelItem => item.CustomerName)</strong>
+                                </td>
+                                <td>
+                                    <i class="fas fa-calendar-day text-muted me-1"></i>
+                                    @item.Date.ToString("dd/MM/yyyy")
+                                </td>
+                                <td>
+                                    <span class="text-muted">@Html.DisplayFor(modelItem => item.Previous_unit)</span>
+                                </td>
+                                <td>
+                                    <span class="text-info fw-bold">@Html.DisplayFor(modelItem => item.Current_Unit)</span>
+                                </td>
+                                <td>
+                                    <span class="text-primary fw-bold">@Html.DisplayFor(modelItem => item.Total_Unit)</span>
+                                </td>
+                                <td>
+                                    <span class="text-success fw-bold">৳@Html.DisplayFor(modelItem => item.Electric_bill)</span>
+                                </td>
+                                <td>
+                                    <span class="text-warning">৳@Html.DisplayFor(modelItem => item.Previous_duos)</span>
+                                </td>
+                                <td>
+                                    <span class="text-info">৳@Html.DisplayFor(modelItem => item.Rent_Bill)</span>
+                                </td>
+                                <td>
+                                    <span class="text-success fw-bold">৳@Html.DisplayFor(modelItem => item.Total_bill)</span>
+                                </td>
+                                <td>
+                                    <span class="text-primary">৳@Html.DisplayFor(modelItem => item.Clear_money)</span>
+                                </td>
+                                <td>
+                                    @if (item.Present_dues > 0)
+                                    {
+                                        <span class="badge bg-danger">৳@Html.DisplayFor(modelItem => item.Present_dues)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">৳0.00</span>
+                                    }
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete(@item.ID, '@item.CustomerName')">
+                                        <i class="fas fa-trash me-1"></i> 
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Records Message -->
+    <div id="noRecordsMessage" class="alert alert-info text-center mt-3" style="display: none;">
+        <i class="fas fa-info-circle me-2"></i>
+        No records found matching your search criteria.
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Confirm Delete
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this electric bill?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-warning me-2"></i>
+                    <strong>Customer:</strong> <span id="deleteCustomerName"></span><br>
+                    <strong>Warning:</strong> This action cannot be undone.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Cancel
+                </button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table th {
+        font-weight: 600;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    .table td {
+        vertical-align: middle;
+        font-size: 0.9rem;
+    }
+
+    .badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: 2px solid rgba(0,0,0,0.1);
+    }
+
+    .btn {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .table-responsive {
+        border-radius: 0 0 15px 15px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+
+    .modal-content {
+        border-radius: 15px;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,123,255,0.05);
+    }
+
+    .form-label {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-card {
+        transition: transform 0.2s;
+    }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+        }
+
+    .payment-check-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .payment-status-paid {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .payment-status-partial {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .payment-status-unpaid {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .payment-summary-card {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .border-end {
+        border-right: 1px solid #dee2e6;
+    }
+   
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fromDate = document.getElementById('fromDate');
+        const toDate = document.getElementById('toDate');
+        const customerSearch = document.getElementById('customerSearch');
+        const searchBtn = document.getElementById('searchBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const billsTable = document.getElementById('billsTable');
+        const noRecordsMessage = document.getElementById('noRecordsMessage');
+        const totalRecords = document.getElementById('totalRecords');
+        const tableRows = billsTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+        // Summary elements
+        const totalBillSum = document.getElementById('totalBillSum');
+        const totalPaymentSum = document.getElementById('totalPaymentSum');
+        const totalDuesSum = document.getElementById('totalDuesSum');
+        const balanceSum = document.getElementById('balanceSum');
+
+        // Payment check elements
+        const paymentFromDate = document.getElementById('paymentFromDate');
+        const paymentToDate = document.getElementById('paymentToDate');
+        const paymentCustomerSearch = document.getElementById('paymentCustomerSearch');
+        const checkPaymentBtn = document.getElementById('checkPaymentBtn');
+        const clearPaymentBtn = document.getElementById('clearPaymentBtn');
+        const exportPaymentBtn = document.getElementById('exportPaymentBtn');
+        const paymentSummaryCards = document.getElementById('paymentSummaryCards');
+        const paymentDetailsTable = document.getElementById('paymentDetailsTable');
+        const paymentTableBody = document.getElementById('paymentTableBody');
+
+        // Payment summary elements
+        const periodTotalBills = document.getElementById('periodTotalBills');
+        const periodTotalPayments = document.getElementById('periodTotalPayments');
+        const periodTotalDues = document.getElementById('periodTotalDues');
+        const periodBalance = document.getElementById('periodBalance');
+        const periodBalanceAmount = document.getElementById('periodBalanceAmount');
+
+        // Initialize summations
+        updateSummations();
+
+        // Function to update summations
+        function updateSummations() {
+            let totalBill = 0;
+            let totalPayment = 0;
+            let totalDues = 0;
+
+            for (let i = 0; i < tableRows.length; i++) {
+                const row = tableRows[i];
+
+                // Only count visible rows
+                if (row.style.display !== 'none') {
+                    const billAmount = parseFloat(row.getAttribute('data-total-bill')) || 0;
+                    const paymentAmount = parseFloat(row.getAttribute('data-payment')) || 0;
+                    const duesAmount = parseFloat(row.getAttribute('data-dues')) || 0;
+
+                    totalBill += billAmount;
+                    totalPayment += paymentAmount;
+                    totalDues += duesAmount;
+                }
+            }
+
+            // Update display
+            totalBillSum.textContent = totalBill.toFixed(2);
+            totalPaymentSum.textContent = totalPayment.toFixed(2);
+            totalDuesSum.textContent = totalDues.toFixed(2);
+
+            // Calculate balance (Payment - Dues)
+            const balance = totalPayment - totalDues;
+            balanceSum.textContent = balance.toFixed(2);
+
+            // Update balance card color based on positive/negative
+            const balanceCard = balanceSum.closest('.card');
+            if (balance >= 0) {
+                balanceCard.className = 'card bg-success text-white';
+            } else {
+                balanceCard.className = 'card bg-warning text-dark';
+            }
+        }
+
+        // Search functionality
+        function performSearch() {
+            const fromDateValue = fromDate.value;
+            const toDateValue = toDate.value;
+            const customerValue = customerSearch.value.toLowerCase();
+
+            let visibleCount = 0;
+
+            for (let i = 0; i < tableRows.length; i++) {
+                const row = tableRows[i];
+                const customerName = row.getAttribute('data-customer-name');
+                const rowDate = row.getAttribute('data-date');
+
+                let showRow = true;
+
+                // Filter by customer name
+                if (customerValue && !customerName.includes(customerValue)) {
+                    showRow = false;
+                }
+
+                // Filter by date range
+                if (fromDateValue && rowDate < fromDateValue) {
+                    showRow = false;
+                }
+                if (toDateValue && rowDate > toDateValue) {
+                    showRow = false;
+                }
+
+                if (showRow) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+
+            // Update total records count
+            totalRecords.textContent = visibleCount;
+
+            // Update summations after filtering
+            updateSummations();
+
+            // Show/hide no records message
+            if (visibleCount === 0) {
+                noRecordsMessage.style.display = 'block';
+                billsTable.style.display = 'none';
+            } else {
+                noRecordsMessage.style.display = 'none';
+                billsTable.style.display = 'table';
+            }
+        }
+
+        // Clear search
+        function clearSearch() {
+            fromDate.value = '';
+            toDate.value = '';
+            customerSearch.value = '';
+
+            for (let i = 0; i < tableRows.length; i++) {
+                tableRows[i].style.display = '';
+            }
+
+            totalRecords.textContent = tableRows.length;
+            noRecordsMessage.style.display = 'none';
+            billsTable.style.display = 'table';
+
+            // Update summations after clearing
+            updateSummations();
+        }
+
+        // Event listeners
+        searchBtn.addEventListener('click', performSearch);
+        clearBtn.addEventListener('click', clearSearch);
+
+        // Real-time search as user types
+        customerSearch.addEventListener('input', performSearch);
+        fromDate.addEventListener('change', performSearch);
+        toDate.addEventListener('change', performSearch);
+
+        // Payment check functionality
+        function performPaymentCheck() {
+            const fromDateValue = paymentFromDate.value;
+            const toDateValue = paymentToDate.value;
+            const customerValue = paymentCustomerSearch.value.toLowerCase();
+
+            if (!fromDateValue && !toDateValue) {
+                alert('Please select at least one date to check payments.');
+                return;
+            }
+
+            let paymentData = [];
+            let totalBills = 0;
+            let totalPayments = 0;
+            let totalDues = 0;
+
+            // Collect payment data from matching rows
+            for (let i = 0; i < tableRows.length; i++) {
+                const row = tableRows[i];
+                const customerName = row.getAttribute('data-customer-name');
+                const rowDate = row.getAttribute('data-date');
+                const billAmount = parseFloat(row.getAttribute('data-total-bill')) || 0;
+                const paymentAmount = parseFloat(row.getAttribute('data-payment')) || 0;
+                const duesAmount = parseFloat(row.getAttribute('data-dues')) || 0;
+
+                let includeRow = true;
+
+                // Filter by customer name if specified
+                if (customerValue && !customerName.includes(customerValue)) {
+                    includeRow = false;
+                }
+
+                // Filter by date range
+                if (fromDateValue && rowDate < fromDateValue) {
+                    includeRow = false;
+                }
+                if (toDateValue && rowDate > toDateValue) {
+                    includeRow = false;
+                }
+
+                if (includeRow) {
+                    // Get customer name from the row
+                    const customerCell = row.cells[1].textContent.trim();
+                    const dateCell = row.cells[2].textContent.trim();
+
+                    // Determine payment status
+                    let paymentStatus = 'Unpaid';
+                    let statusClass = 'payment-status-unpaid';
+
+                    if (paymentAmount >= billAmount) {
+                        paymentStatus = 'Paid';
+                        statusClass = 'payment-status-paid';
+                    } else if (paymentAmount > 0) {
+                        paymentStatus = 'Partial';
+                        statusClass = 'payment-status-partial';
+                    }
+
+                    paymentData.push({
+                        date: dateCell,
+                        customer: customerCell,
+                        billAmount: billAmount,
+                        paymentAmount: paymentAmount,
+                        duesAmount: duesAmount,
+                        paymentStatus: paymentStatus,
+                        statusClass: statusClass
+                    });
+
+                    totalBills += billAmount;
+                    totalPayments += paymentAmount;
+                    totalDues += duesAmount;
+                }
+            }
+
+            // Update payment summary
+            periodTotalBills.textContent = totalBills.toFixed(2);
+            periodTotalPayments.textContent = totalPayments.toFixed(2);
+            periodTotalDues.textContent = totalDues.toFixed(2);
+
+            const netBalance = totalPayments - totalDues;
+            periodBalanceAmount.textContent = netBalance.toFixed(2);
+
+            // Update balance color
+            if (netBalance >= 0) {
+                periodBalance.className = 'text-success mb-0';
+            } else {
+                periodBalance.className = 'text-danger mb-0';
+            }
+
+            // Populate payment details table
+            paymentTableBody.innerHTML = '';
+            paymentData.forEach(payment => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${payment.date}</td>
+                    <td><strong>${payment.customer}</strong></td>
+                    <td>৳${payment.billAmount.toFixed(2)}</td>
+                    <td>৳${payment.paymentAmount.toFixed(2)}</td>
+                    <td>৳${payment.duesAmount.toFixed(2)}</td>
+                    <td><span class="badge ${payment.statusClass}">${payment.paymentStatus}</span></td>
+                `;
+                paymentTableBody.appendChild(row);
+            });
+
+            // Show payment summary and details
+            paymentSummaryCards.style.display = 'block';
+            paymentDetailsTable.style.display = 'block';
+
+            // Scroll to payment summary
+            paymentSummaryCards.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearPaymentCheck() {
+            paymentFromDate.value = '';
+            paymentToDate.value = '';
+            paymentCustomerSearch.value = '';
+            paymentSummaryCards.style.display = 'none';
+            paymentDetailsTable.style.display = 'none';
+        }
+
+        function exportPaymentReport() {
+            const fromDateValue = paymentFromDate.value;
+            const toDateValue = paymentToDate.value;
+
+            if (!fromDateValue && !toDateValue) {
+                alert('Please perform a payment check first before exporting.');
+                return;
+            }
+
+            // Create CSV content
+            let csvContent = 'Date,Customer,Bill Amount,Payment Received,Outstanding,Payment Status\n';
+
+            const rows = paymentTableBody.getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const rowData = [];
+                for (let j = 0; j < cells.length - 1; j++) { // Exclude last cell (badge)
+                    rowData.push(cells[j].textContent.trim());
+                }
+                rowData.push(cells[cells.length - 1].textContent.trim()); // Add status
+                csvContent += rowData.join(',') + '\n';
+            }
+
+            // Download CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `Payment_Report_${fromDateValue}_to_${toDateValue}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // Payment check event listeners
+        checkPaymentBtn.addEventListener('click', performPaymentCheck);
+        clearPaymentBtn.addEventListener('click', clearPaymentCheck);
+        exportPaymentBtn.addEventListener('click', exportPaymentReport);
+    });
+
+    // Delete confirmation function
+    function confirmDelete(billId, customerName) {
+        document.getElementById('deleteCustomerName').textContent = customerName;
+        document.getElementById('deleteForm').action = `/ElectricBill/Delete/${billId}`;
+
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+</script>
