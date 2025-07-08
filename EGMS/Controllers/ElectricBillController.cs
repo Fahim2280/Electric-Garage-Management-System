@@ -7,6 +7,7 @@ using System.Text.Json;
 
 namespace EGMS.Controllers
 {
+    [Authorize]
     public class ElectricBillController : Controller
     {
         private readonly IElectricBillService _electricBillService;

@@ -2,10 +2,34 @@
 @model EGMS.DTOs.CustomerDTO
 @{
     ViewData["Title"] = "Customer Details";
+
+    // Debug: Check what we're receiving
+    var customerBills = ViewBag.CustomerBills as IEnumerable<EGMS.DTOs.ElectricBillDTO> ?? new List<EGMS.DTOs.ElectricBillDTO>();
+
+    // Get search parameters from query string
+    var searchTerm = ViewBag.SearchTerm as string ?? "";
+    var dateFrom = ViewBag.DateFrom as DateTime?;
+    var dateTo = ViewBag.DateTo as DateTime?;
+    var dateRange = ViewBag.DateRange as string ?? "all";
+
+    // Debug output
+    var billsList = customerBills.ToList();
+    var billsCount = billsList.Count;
+
+    // Find the most recent bill for this customer (assuming bills are for the same customer)
+    var mostRecentBill = billsList.OrderByDescending(x => x.Date).FirstOrDefault();
+    
+    // Get last bill data for summary
+    var lastBillTotalBill = mostRecentBill?.Total_bill ?? 0;
+    var lastBillPresentDues = mostRecentBill?.Present_dues ?? 0;
+    var lastBillClearMoney = mostRecentBill?.Clear_money ?? 0;
+    var advanceMoney = decimal.TryParse(Model.Advance_money?.ToString(), out var advance) ? advance : 0;
+    var balance = advanceMoney - lastBillPresentDues;
 }
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-<div class="container py-4">
+<div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">
             <i class="fas fa-user-circle text-primary me-2"></i>
@@ -14,7 +38,8 @@
         <div class="badge bg-primary fs-6">ID: @Model.C_ID</div>
     </div>
 
-    <div class="card shadow-sm">
+    <!-- Customer Information Card -->
+    <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
             <h5 class="mb-0">
                 <i class="fas fa-info-circle me-2"></i>
@@ -25,7 +50,7 @@
             <form>
                 <div class="row g-3">
                     <!-- Customer ID -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-id-badge text-primary me-1"></i>
                             Customer ID
@@ -34,7 +59,7 @@
                     </div>
 
                     <!-- Name -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-user text-primary me-1"></i>
                             Name
@@ -43,7 +68,7 @@
                     </div>
 
                     <!-- Father's Name -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-male text-primary me-1"></i>
                             Father's Name
@@ -52,7 +77,7 @@
                     </div>
 
                     <!-- Mother's Name -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-female text-primary me-1"></i>
                             Mother's Name
@@ -60,17 +85,8 @@
                         <input type="text" class="form-control" value="@Model.M_name" disabled>
                     </div>
 
-                    <!-- Address -->
-                    <div class="col-12">
-                        <label class="form-label fw-bold">
-                            <i class="fas fa-map-marker-alt text-primary me-1"></i>
-                            Address
-                        </label>
-                        <textarea class="form-control" rows="2" disabled>@Model.Address</textarea>
-                    </div>
-
                     <!-- Mobile Number -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-phone text-primary me-1"></i>
                             Mobile Number
@@ -79,7 +95,7 @@
                     </div>
 
                     <!-- NID Number -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-id-card text-primary me-1"></i>
                             NID Number
@@ -87,8 +103,17 @@
                         <input type="text" class="form-control" value="@Model.NID_Number" disabled>
                     </div>
 
+                    <!-- Address -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                            Address
+                        </label>
+                        <textarea class="form-control" rows="2" disabled>@Model.Address</textarea>
+                    </div>
+
                     <!-- Previous Unit -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-bolt text-primary me-1"></i>
                             Previous Unit
@@ -97,7 +122,7 @@
                     </div>
 
                     <!-- Advance Money -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-money-bill-wave text-primary me-1"></i>
                             Advance Money
@@ -108,34 +133,42 @@
                         </div>
                     </div>
 
-                    <!-- Present Dues -->
-                    <div class="col-md-6">
+                    <!-- Present Dues (from last bill) -->
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-exclamation-circle text-danger me-1"></i>
-                            Present Dues
+                            Present Dues (Last Bill)
                         </label>
                         <div class="input-group">
                             <span class="input-group-text">৳</span>
-                            <input type="number" class="form-control" value="@Model.Present_dues" disabled>
+                            <input type="number" class="form-control" value="@lastBillPresentDues" disabled>
                         </div>
                     </div>
 
                     <!-- Created Date -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">
                             <i class="fas fa-calendar-alt text-primary me-1"></i>
                             Created Date
                         </label>
                         <input type="text" class="form-control" value="@Model.Created_Date.ToString("dd/MM/yyyy")" disabled>
                     </div>
+
+                    <!-- Last Bill Date -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-clock text-primary me-1"></i>
+                            Last Bill Date & Time
+                        </label>
+                        <input type="text" class="form-control" value="@(mostRecentBill?.Date.ToString("dd/MM/yyyy HH:mm:ss") ?? "No bills yet")" disabled>
+                    </div>
                 </div>
             </form>
         </div>
 
-        <!-- Update the card-footer section in your Customer Details page -->
+        <!-- Action Buttons -->
         <div class="card-footer bg-light">
             <div class="d-flex gap-2 justify-content-end">
-                <!-- This passes the Customer ID to the Create action -->
                 <a asp-action="Create" asp-controller="ElectricBill" asp-route-id="@Model.C_ID" class="btn btn-success">
                     <i class="fas fa-plus me-1"></i> Add Bill
                 </a>
@@ -145,6 +178,394 @@
                 <a asp-action="Index" asp-controller="Customer" class="btn btn-secondary">
                     <i class="fas fa-arrow-left me-1"></i> Back to List
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    @if (customerBills.Any())
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-search me-2"></i>
+                    Search & Filter Bills
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="get" asp-action="Details" asp-controller="Customer" asp-route-id="@Model.C_ID" id="searchForm">
+                    <div class="row g-3">
+                        <!-- Search Term -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-search text-info me-1"></i>
+                                Search Bills
+                            </label>
+                            <input type="text" name="searchTerm" class="form-control" placeholder="Search by amount, status, etc..." value="@searchTerm" id="searchInput">
+                        </div>
+
+                        <!-- Date Range Selector -->
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="fas fa-calendar-alt text-info me-1"></i>
+                                Date Range
+                            </label>
+                            <select name="dateRange" class="form-select" id="dateRangeSelect">
+                                <option value="all" selected="@(dateRange == "all")">All Time</option>
+                                <option value="today" selected="@(dateRange == "today")">Today</option>
+                                <option value="yesterday" selected="@(dateRange == "yesterday")">Yesterday</option>
+                                <option value="last7days" selected="@(dateRange == "last7days")">Last 7 Days</option>
+                                <option value="last30days" selected="@(dateRange == "last30days")">Last 30 Days</option>
+                                <option value="last3months" selected="@(dateRange == "last3months")">Last 3 Months</option>
+                                <option value="last6months" selected="@(dateRange == "last6months")">Last 6 Months</option>
+                                <option value="thisyear" selected="@(dateRange == "thisyear")">This Year</option>
+                                <option value="lastyear" selected="@(dateRange == "lastyear")">Last Year</option>
+                                <option value="custom" selected="@(dateRange == "custom")">Custom Range</option>
+                            </select>
+                        </div>
+
+                        <!-- Custom Date Range -->
+                        <div class="col-md-6" id="customDateRange" style="display: @(dateRange == "custom" ? "block" : "none")">
+                            <label class="form-label">
+                                <i class="fas fa-calendar text-info me-1"></i>
+                                From Date
+                            </label>
+                            <input type="date" name="dateFrom" class="form-control" value="@(dateFrom?.ToString("yyyy-MM-dd") ?? "")">
+                        </div>
+
+                        <div class="col-md-6" id="customDateRangeTo" style="display: @(dateRange == "custom" ? "block" : "none")">
+                            <label class="form-label">
+                                <i class="fas fa-calendar text-info me-1"></i>
+                                To Date
+                            </label>
+                            <input type="date" name="dateTo" class="form-control" value="@(dateTo?.ToString("yyyy-MM-dd") ?? "")">
+                        </div>
+
+                        <!-- Search Buttons -->
+                        <div class="col-12">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search me-1"></i>
+                                    Search
+                                </button>
+                                <a href="@Url.Action("Details", "Customer", new { id = Model.C_ID })" class="btn btn-secondary">
+                                    <i class="fas fa-times me-1"></i>
+                                    Clear
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+
+    <!-- Customer Bills Summary -->
+    @if (customerBills.Any())
+    {
+        <div class="row mb-4">
+
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Total Payments</h6>
+                                <h4 class="mb-0">৳<span id="totalPaymentSum">@customerBills.Sum(x => x.Clear_money).ToString("F2")</span></h4>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-hand-holding-usd fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Total Bill (Last)</h6>
+                                <h4 class="mb-0">৳<span id="lastTotalBill">@lastBillTotalBill.ToString("F2")</span></h4>                              
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-receipt fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Present Dues (Last)</h6>
+                                <h4 class="mb-0">৳<span id="lastPresentDues">@lastBillPresentDues.ToString("F2")</span></h4>                              
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-exclamation-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card @(balance <= 0 ? "bg-success" : "bg-warning") text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Balance</h6>
+                                <h4 class="mb-0">৳<span id="balance">@balance.ToString("F2")</span></h4>                              
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-balance-scale fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Info -->
+        @if (!string.IsNullOrEmpty(searchTerm) || dateRange != "all")
+        {
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Search Results:</strong>
+                Showing @customerBills.Count() bill(s)
+                @if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    <span>for "@searchTerm"</span>
+                }
+                @if (dateRange != "all")
+                {
+                    <span>
+                        @if (dateRange == "custom")
+                        {
+                            <span>from @(dateFrom?.ToString("dd/MM/yyyy") ?? "N/A") to @(dateTo?.ToString("dd/MM/yyyy") ?? "N/A")</span>
+                        }
+                        else
+                        {
+                            <span>in @dateRange.Replace("last", "last ").Replace("this", "this ")</span>
+                        }
+                    </span>
+                }
+            </div>
+        }
+
+        <!-- Customer Bills List -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Electric Bills History for @Model.Name 
+                </h5>
+                <div class="badge bg-info fs-6 mt-2">Total Records: @customerBills.Count()</div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-container">
+                    <table class="table table-hover table-striped mb-0" id="customerBillsTable">
+                        <thead class="table-dark sticky-header">
+                            <tr>
+                                <th class="date-column">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Date & Time
+                                </th>
+                                <th class="unit-column">
+                                    <i class="fas fa-history me-1"></i>
+                                    Previous Unit
+                                </th>
+                                <th class="unit-column">
+                                    <i class="fas fa-bolt me-1"></i>
+                                    Current Unit
+                                </th>
+                                <th class="unit-column">
+                                    <i class="fas fa-calculator me-1"></i>
+                                    Total Unit
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-money-bill-wave me-1"></i>
+                                    Electric Bill
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    Previous Dues
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-home me-1"></i>
+                                    Rent Bill
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-receipt me-1"></i>
+                                    Total Bill
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-hand-holding-usd me-1"></i>
+                                    Payment
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-exclamation-circle me-1"></i>
+                                    Present Dues
+                                </th>
+                                <th class="status-column">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Status
+                                </th>
+                                <th class="action-column">
+                                    <i class="fas fa-cogs me-1"></i>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="billsTableBody">
+                            @foreach (var bill in customerBills.OrderByDescending(x => x.Date))
+                            {
+                                <tr class="bill-row" data-search-content="@bill.Electric_bill @bill.Total_bill @bill.Present_dues @bill.Clear_money @bill.Date.ToString("dd/MM/yyyy") @(bill.Clear_money >= bill.Total_bill ? "Paid" : bill.Clear_money > 0 ? "Partial" : "Unpaid")">
+                                    <td class="date-column">
+                                        <i class="fas fa-calendar-day text-muted me-1"></i>
+                                        <div>
+                                            <div class="fw-bold">@bill.Date.ToString("dd/MM/yyyy")</div>
+                                            <small class="text-muted">@bill.Date.ToString("HH:mm:ss")</small>
+                                        </div>
+                                    </td>
+                                    <td class="unit-column">
+                                        <span class="text-muted">@bill.Previous_unit</span>
+                                    </td>
+                                    <td class="unit-column">
+                                        <span class="text-info fw-bold">@bill.Current_Unit</span>
+                                    </td>
+                                    <td class="unit-column">
+                                        <span class="text-primary fw-bold">@bill.Total_Unit</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-success fw-bold">৳@bill.Electric_bill</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-warning">৳@bill.Previous_duos</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-info">৳@bill.Rent_Bill</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-success fw-bold">৳@bill.Total_bill</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-primary">৳@bill.Clear_money</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        @if (bill.Present_dues > 0)
+                                        {
+                                            <span class="badge bg-danger">৳@bill.Present_dues</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">৳0.00</span>
+                                        }
+                                    </td>
+                                    <td class="status-column">
+                                        @if (bill.Clear_money >= bill.Total_bill)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Paid
+                                            </span>
+                                        }
+                                        else if (bill.Clear_money > 0)
+                                        {
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Partial
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times-circle me-1"></i>Unpaid
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="action-column">
+                                        <div class="btn-group" role="group">
+                                            
+                                            @if (mostRecentBill != null && bill.ID == mostRecentBill.ID)
+                                            {
+                                                <a asp-action="Edit" asp-controller="ElectricBill" asp-route-id="@bill.ID" class="btn btn-sm btn-outline-primary" title="Edit Bill">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete(@bill.ID, '@Model.Name', '@bill.Date.ToString("dd/MM/yyyy HH:mm:ss")')" title="Delete Bill">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- No Bills Message -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Electric Bills History for @Model.Name
+                </h5>
+            </div>
+            <div class="card-body text-center py-5">
+                <i class="fas fa-receipt fa-5x text-muted mb-3"></i>
+                <h4 class="text-muted">No Bills Found</h4>
+                <p class="text-muted">
+                    @if (!string.IsNullOrEmpty(searchTerm) || dateRange != "all")
+                    {
+                        <span>No bills match your search criteria.</span>
+                    }
+                    else
+                    {
+                        <span>This customer doesn't have any electric bills yet.</span>
+                    }
+                </p>
+                <a asp-action="Create" asp-controller="ElectricBill" asp-route-id="@Model.C_ID" class="btn btn-success">
+                    <i class="fas fa-plus me-1"></i> Create First Bill
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Confirm Delete
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this electric bill?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-warning me-2"></i>
+                    <strong>Customer:</strong> <span id="deleteCustomerName"></span><br>
+                    <strong>Bill Date:</strong> <span id="deleteBillDate"></span><br>
+                    <strong>Warning:</strong> This action cannot be undone.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Cancel
+                </button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i> Delete
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -193,4 +614,395 @@
         border-top: 1px solid #dee2e6;
         padding: 1.25rem;
     }
+
+    /* Table styling for better column control */
+    .table-container {
+        width: 100%;
+        overflow-x: visible;
+    }
+
+    .table {
+        width: 100%;
+        table-layout: fixed;
+        margin-bottom: 0;
+    }
+
+        .table th {
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.75rem 0.5rem;
+            vertical-align: middle;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table td {
+            vertical-align: middle;
+            font-size: 0.85rem;
+            padding: 0.75rem 0.5rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+    /* Column widths */
+    .date-column {
+        width: 12%;
+        min-width: 120px;
+    }
+
+    .unit-column {
+        width: 8%;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .amount-column {
+        width: 10%;
+        min-width: 100px;
+        text-align: right;
+    }
+
+    .status-column {
+        width: 10%;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .action-column {
+        width: 8%;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .sticky-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #212529 !important;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,123,255,0.05);
+    }
+
+    .btn-group .btn {
+        border-radius: 4px;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .summary-card {
+        transition: transform 0.2s;
+    }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+        }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        color: #0c5460;
+    }
+
+    #searchForm .form-control:focus,
+    #searchForm .form-select:focus {
+        border-color: #17a2b8;
+        box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+    }
+
+    /* Responsive adjustments */
+    
+     
+    .date-column {
+        width: 14%;
+    }
+
+    .unit-column {
+        width: 7%;
+    }
+
+    .amount-column {
+        width: 9%;
+    }
+
+    .table th, .table td {
+        font-size: 0.8rem;
+        padding:
+
+    .date-column {
+        width: 16%;
+    }
+
+    .unit-column {
+        width: 6%;
+    }
+
+    .amount-column {
+        width: 8%;
+    }
+
+    /* Ensure full width usage */
+    .container-fluid {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Date and time styling */
+    .date-column div {
+        line-height: 1.2;
+    }
+
+    .date-column small {
+        font-size: 0.75rem;
+    }
 </style>
+
+<script>
+        // Enhanced Search and Filter JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const dateRangeSelect = document.getElementById('dateRangeSelect');
+        const customDateRange = document.getElementById('customDateRange');
+        const customDateRangeTo = document.getElementById('customDateRangeTo');
+
+        // Show/hide custom date range inputs
+        function toggleCustomDateRange() {
+            const isCustom = dateRangeSelect.value === 'custom';
+            customDateRange.style.display = isCustom ? 'block' : 'none';
+            customDateRangeTo.style.display = isCustom ? 'block' : 'none';
+
+            // If switching away from custom, clear the custom date inputs
+            if (!isCustom) {
+                const dateFromInput = document.querySelector('input[name="dateFrom"]');
+                const dateToInput = document.querySelector('input[name="dateTo"]');
+                if (dateFromInput) dateFromInput.value = '';
+                if (dateToInput) dateToInput.value = '';
+            }
+        }
+
+        // Initial state
+        toggleCustomDateRange();
+
+        // Event listener for date range change
+        dateRangeSelect.addEventListener('change', function() {
+            toggleCustomDateRange();
+
+            // Auto-submit for predefined ranges (optional)
+            if (this.value !== 'custom' && this.value !== 'all') {
+                // Uncomment the line below if you want auto-submit on date range change
+                // searchForm.submit();
+            }
+        });
+
+        // Add search input debouncing for better performance
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                // You can add real-time search here if needed
+                // searchForm.submit();
+            }, 500); // Wait 500ms after user stops typing
+        });
+
+        // Add loading state to search button
+        searchForm.addEventListener('submit', function() {
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Searching...';
+            submitButton.disabled = true;
+
+            // Re-enable after a short delay (in case of quick response)
+            setTimeout(function() {
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            }, 2000);
+        });
+
+        // Add enter key support for search
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchForm.submit();
+            }
+        });
+
+        // Add clear search functionality
+        function clearSearch() {
+            searchInput.value = '';
+            dateRangeSelect.value = 'all';
+            document.querySelector('input[name="dateFrom"]').value = '';
+            document.querySelector('input[name="dateTo"]').value = '';
+            toggleCustomDateRange();
+        }
+
+        // Enhanced table sorting with visual indicators
+        const table = document.getElementById('customerBillsTable');
+        if (table) {
+            const headers = table.querySelectorAll('th');
+            let currentSortColumn = -1;
+            let currentSortDirection = 'asc';
+
+            headers.forEach((header, index) => {
+                if (index < headers.length - 1) { // Don't add sorting to Actions column
+                    header.style.cursor = 'pointer';
+                    header.style.userSelect = 'none';
+                    header.innerHTML += ' <i class="fas fa-sort text-muted ms-1"></i>';
+
+                    header.addEventListener('click', function() {
+                        sortTable(table, index);
+                        updateSortIndicators(headers, index);
+                    });
+                }
+            });
+
+            function updateSortIndicators(headers, clickedIndex) {
+                headers.forEach((header, index) => {
+                    const icon = header.querySelector('i');
+                    if (icon) {
+                        if (index === clickedIndex) {
+                            icon.className = currentSortDirection === 'asc' ?
+                                'fas fa-sort-up text-primary ms-1' :
+                                'fas fa-sort-down text-primary ms-1';
+                        } else {
+                            icon.className = 'fas fa-sort text-muted ms-1';
+                        }
+                    }
+                });
+            }
+
+            function sortTable(table, columnIndex) {
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                // Toggle sort direction if clicking the same column
+                if (currentSortColumn === columnIndex) {
+                    currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSortDirection = 'asc';
+                }
+                currentSortColumn = columnIndex;
+
+                rows.sort((a, b) => {
+                    const aText = a.cells[columnIndex].textContent.trim();
+                    const bText = b.cells[columnIndex].textContent.trim();
+
+                    // Check if it's a currency amount
+                    const aNum = parseFloat(aText.replace(/[৳,\s]/g, ''));
+                    const bNum = parseFloat(bText.replace(/[৳,\s]/g, ''));
+
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return currentSortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+                    }
+
+                    // Check if it's a date (DD/MM/YYYY format)
+                    const aDateParts = aText.split('/');
+                    const bDateParts = bText.split('/');
+
+                    if (aDateParts.length === 3 && bDateParts.length === 3) {
+                        const aDate = new Date(aDateParts[2], aDateParts[1] - 1, aDateParts[0]);
+                        const bDate = new Date(bDateParts[2], bDateParts[1] - 1, bDateParts[0]);
+
+                        if (!isNaN(aDate) && !isNaN(bDate)) {
+                            return currentSortDirection === 'asc' ? aDate - bDate : bDate - aDate;
+                        }
+                    }
+
+                    // Default string comparison
+                    const result = aText.localeCompare(bText);
+                    return currentSortDirection === 'asc' ? result : -result;
+                });
+
+                // Add fade effect while sorting
+                tbody.style.opacity = '0.5';
+
+                // Re-append sorted rows
+                rows.forEach(row => tbody.appendChild(row));
+
+                // Restore opacity
+                setTimeout(() => {
+                    tbody.style.opacity = '1';
+                }, 100);
+            }
+        }
+
+        // Add responsive table scroll on mobile
+        const responsiveTable = document.querySelector('.table-responsive');
+        if (responsiveTable && window.innerWidth <= 768) {
+            responsiveTable.style.overflowX = 'auto';
+        }
+
+        // Add search result highlighting
+        function highlightSearchResults(searchTerm) {
+            if (!searchTerm || !table) return;
+
+            const cells = table.querySelectorAll('td');
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+
+            cells.forEach(cell => {
+                const originalText = cell.textContent;
+                if (originalText.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    cell.innerHTML = originalText.replace(regex, '<mark>$1</mark>');
+                }
+            });
+        }
+
+        // Highlight search results if there's a search term
+        const currentSearchTerm = searchInput.value;
+        if (currentSearchTerm) {
+            highlightSearchResults(currentSearchTerm);
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+F or Cmd+F to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+
+            // Escape to clear search focus
+            if (e.key === 'Escape' && document.activeElement === searchInput) {
+                searchInput.blur();
+            }
+        });
+
+        // Add hover effects to summary cards
+        const summaryCards = document.querySelectorAll('.row .card');
+        summaryCards.forEach(card => {
+            card.classList.add('summary-card');
+            card.style.transition = 'transform 0.2s ease-in-out';
+
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+
+    // Function to manually trigger search (can be called from other scripts)
+    function triggerSearch() {
+        const searchForm = document.getElementById('searchForm');
+        if (searchForm) {
+            searchForm.submit();
+        }
+    }
+
+    // Function to reset all filters
+    function resetFilters() {
+        const form = document.getElementById('searchForm');
+        if (form) {
+            form.reset();
+            const url = new URL(window.location.href);
+            url.searchParams.delete('searchTerm');
+            url.searchParams.delete('dateRange');
+            url.searchParams.delete('dateFrom');
+            url.searchParams.delete('dateTo');
+            window.location.href = url.toString();
+        }
+    }
+</script>

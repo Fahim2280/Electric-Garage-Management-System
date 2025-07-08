@@ -1,6 +1,7 @@
 ﻿using EGMS.DTOs;
 using EGMS.Interface;
 using EGMS.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EGMS.Services
@@ -46,6 +47,41 @@ namespace EGMS.Services
             }
         }
 
+
+        public async Task<IEnumerable<ElectricBillDTO>> GetCustomerBillsAsync(int customerId)
+        {
+            try
+            {
+                var bills = await _context.ElectricBills
+                    .Where(b => b.Customer_ID == customerId)
+                    .Include(b => b.Customer)
+                    .ToListAsync();
+
+                return bills.Select(bill => new ElectricBillDTO
+                {
+                    ID = bill.ID,
+                    Customer_ID = bill.Customer_ID,
+                    Date = bill.Date,
+                    Previous_unit = bill.Previous_unit,
+                    Current_Unit = bill.Current_Unit,
+                    Total_Unit = bill.Total_Unit,
+                    Electric_bill = bill.Electric_bill,
+                    Previous_duos = bill.Previous_duos,
+                    Rent_Bill = bill.Rent_Bill,
+                    Total_bill = bill.Total_bill,
+                    Clear_money = bill.Clear_money,
+                    Present_dues = bill.Present_dues
+                    // Add other properties as needed
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetCustomerBillsAsync: {ex.Message}");
+                return new List<ElectricBillDTO>();
+            }
+        }
+
+        
         public async Task<CustomerDTO?> GetCustomerByIdAsync(int id)
         {
             try

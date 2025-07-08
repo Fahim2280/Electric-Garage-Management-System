@@ -1,6 +1,9 @@
 ﻿using EGMS.DTOs;
 using EGMS.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace EGMS.Controllers
 {
@@ -28,7 +31,6 @@ namespace EGMS.Controllers
             }
 
             var result = await _userService.Register(dto);
-
             if (!result)
             {
                 ModelState.AddModelError("", "Username already exists or registration failed.");
@@ -46,7 +48,7 @@ namespace EGMS.Controllers
             {
                 ViewBag.SuccessMessage = TempData["SuccessMessage"];
             }
-            return View(new UserLoginDTO()); // Return empty DTO, not User model
+            return View(new UserLoginDTO());
         }
 
         [HttpPost]
@@ -59,24 +61,29 @@ namespace EGMS.Controllers
 
             try
             {
+                // Verify user credentials through your service
                 var token = await _userService.Login(dto);
-
                 if (token == null)
                 {
                     ModelState.AddModelError("", "Invalid username or password.");
                     return View(dto);
                 }
 
-                // Store JWT in cookie
-                Response.Cookies.Append("jwt", token, new CookieOptions
+                // Create claims for the user
+                var claims = new List<Claim>
                 {
-                    HttpOnly = true,
-                    Secure = true, // Use HTTPS in production
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddHours(3)
-                });
+                    new Claim(ClaimTypes.Name, dto.Username),
+                    new Claim(ClaimTypes.NameIdentifier, dto.Username),
+                    // Add more claims as needed
+                };
 
-                return RedirectToAction("Index", "Home"); // Specify controller
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                // Sign in the user using cookie authentication
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
+                return RedirectToAction("Index", "ElectricBill");
             }
             catch (Exception ex)
             {
@@ -88,9 +95,9 @@ namespace EGMS.Controllers
         }
 
         [HttpPost]
-        public IActionResult SignOut()
+        public async Task<IActionResult> SignOut()
         {
-            Response.Cookies.Delete("jwt");
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("SignIn");
         }
     }

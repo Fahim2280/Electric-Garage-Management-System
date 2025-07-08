@@ -1,16 +1,22 @@
 ﻿using EGMS.DTOs;
 using EGMS.Interface;
+using EGMS.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EGMS.Controllers
 {
+    [Authorize]
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;
+        private readonly AppDbContext _context;
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService, AppDbContext context)
         {
             _customerService = customerService;
+            _context = context; // Fixed: was context = _context; 
         }
 
         public async Task<IActionResult> Index()
@@ -18,7 +24,6 @@ namespace EGMS.Controllers
             var customers = await _customerService.GetAllCustomersAsync();
             return View("Index", customers ?? new List<CustomerDTO>());
         }
-
 
         // GET: Customer/Details/5
         public async Task<IActionResult> Details(int id)
@@ -29,6 +34,33 @@ namespace EGMS.Controllers
                 TempData["ErrorMessage"] = "Customer not found.";
                 return RedirectToAction(nameof(Index));
             }
+
+            // Get customer's bills and map to DTOs
+            var customerBillEntities = await _context.ElectricBills
+                .Where(b => b.Customer_ID == id)
+                .Include(b => b.Customer)
+                .ToListAsync();
+
+            // Map to DTOs
+            var customerBills = customerBillEntities.Select(bill => new ElectricBillDTO
+            {
+                ID = bill.ID,
+                Customer_ID = bill.Customer_ID,
+                Date = bill.Date,
+                Previous_unit = bill.Previous_unit,
+                Current_Unit = bill.Current_Unit,
+                Total_Unit = bill.Total_Unit,
+                Electric_bill = bill.Electric_bill,
+                Previous_duos = bill.Previous_duos,
+                Rent_Bill = bill.Rent_Bill,
+                Total_bill = bill.Total_bill,
+                Clear_money = bill.Clear_money,
+                Present_dues = bill.Present_dues
+                // Add other properties as needed
+            }).ToList();
+
+            ViewBag.CustomerBills = customerBills;
+
             return View(customer);
         }
 
@@ -112,7 +144,6 @@ namespace EGMS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
         // GET: Customer/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
@@ -140,6 +171,5 @@ namespace EGMS.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

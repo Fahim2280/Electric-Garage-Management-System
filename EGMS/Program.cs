@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using EGMS.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace EGMS
 {
@@ -15,33 +16,28 @@ namespace EGMS
             var builder = WebApplication.CreateBuilder(args);
 
             // Register services BEFORE builder.Build()
-
             // Add DbContext
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // JWT Authentication
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
+            // Cookie Authentication (Use this OR JWT, not both)
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    options.LoginPath = "/Auth/SignIn";
+                    options.AccessDeniedPath = "/Auth/SignIn";
+                    options.ExpireTimeSpan = TimeSpan.FromHours(3);
+                    options.SlidingExpiration = true;
+                });
 
-            // Add custom service
+            // Add custom services
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<IElectricBillService, ElectricBillService>();
 
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build(); // ✅ Do this AFTER registering services
+            var app = builder.Build();
 
             // Middleware pipeline
             if (!app.Environment.IsDevelopment())
@@ -52,10 +48,9 @@ namespace EGMS
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
-            app.UseAuthentication(); // ✅ Important to add before authorization
+            app.UseAuthentication(); // Must come before UseAuthorization
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -63,7 +58,6 @@ namespace EGMS
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
-
         }
     }
 }

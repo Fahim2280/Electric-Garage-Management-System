@@ -8,6 +8,7 @@ namespace EGMS.Interface
         Task<CustomerDTO?> GetCustomerByIdAsync(int id);
         Task<bool> CreateCustomerAsync(CustomerCreateDTO dto);
         Task<bool> UpdateCustomerAsync(int id, CustomerDTO dto);
+        Task<IEnumerable<ElectricBillDTO>> GetCustomerBillsAsync(int customerId);
         Task<bool> DeleteCustomerAsync(int id);
         Task<bool> IsNIDUniqueAsync(string nidNumber, int? excludeCustomerId = null);
         Task<bool> IsMobileUniqueAsync(string mobileNumber, int? excludeCustomerId = null);
