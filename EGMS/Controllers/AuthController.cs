@@ -83,7 +83,7 @@ namespace EGMS.Controllers
                 // Sign in the user using cookie authentication
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-                return RedirectToAction("Index", "ElectricBill");
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {

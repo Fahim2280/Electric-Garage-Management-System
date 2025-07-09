@@ -61,7 +61,7 @@
 
     <!-- Summary Cards -->
     <div class="row mb-4">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card bg-primary text-white">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -76,7 +76,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card bg-success text-white">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -91,7 +91,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card bg-danger text-white">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
@@ -101,21 +101,6 @@
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-exclamation-circle fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h6 class="card-title">Balance</h6>
-                            <h4 class="mb-0">৳<span id="balanceSum">0.00</span></h4>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-balance-scale fa-2x"></i>
                         </div>
                     </div>
                 </div>
@@ -147,7 +132,6 @@
                             <th>Total Bill</th>
                             <th>Payment</th>
                             <th>Dues</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -187,20 +171,22 @@
                                         <span class="badge bg-success">৳0.00</span>
                                     }
                                 </td>
-                                <td>
-                                    <button type="button" class="btn btn-danger btn-sm delete-btn"
-                                            data-bill-id="@item.ID"
-                                            data-customer-name="@item.CustomerName"
-                                            data-customer-id="@item.Customer_ID"
-                                            data-datetime="@item.Date.ToString("yyyy-MM-dd HH:mm:ss")"
-                                            style="display: none;">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
                             </tr>
                         }
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="card-footer bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted">
+                    Showing <span id="showingFrom">1</span> to <span id="showingTo">@Model.Count()</span> of <span id="totalItems">@Model.Count()</span> entries
+                </div>
+                <nav aria-label="Bills pagination">
+                    <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                        <!-- Pagination buttons will be generated here -->
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -330,11 +316,6 @@
                 width: 8%;
             }
 
-            .compact-table th:nth-child(12),
-            .compact-table td:nth-child(12) {
-                width: 8%;
-            }
-
     .customer-name {
         font-weight: 600;
         color: #333;
@@ -397,55 +378,6 @@
             transform: translateY(-2px);
         }
 
-    .payment-check-section {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-
-    .payment-status-paid {
-        background-color: #d4edda;
-        color: #155724;
-    }
-
-    .payment-status-partial {
-        background-color: #fff3cd;
-        color: #856404;
-    }
-
-    .payment-status-unpaid {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-
-    .payment-summary-card {
-        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-
-    .border-end {
-        border-right: 1px solid #dee2e6;
-    }
-
-    /* Responsive adjustments */
-    
-        
-
-    .compact-table th, .compact-table td {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.2rem;
-    }
-     
-
-    .compact-table th, .compact-table td {
-        font-size: 0.75rem;
-        padding: 0.3rem 0.15rem;
-    }
-    
-
     /* Hide scrollbars completely */
     body {
         overflow-x: hidden;
@@ -459,10 +391,55 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+
+    .pagination .page-link {
+        color: #007bff;
+        border: 1px solid #dee2e6;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        cursor: auto;
+    }
+
+    .pagination .page-link:hover {
+        color: #0056b3;
+        text-decoration: none;
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+    }
+
+    .compact-table th, .compact-table td {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.2rem;
+    }
+      
+
+    .compact-table th, .compact-table td {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.15rem;
+    }
+   
 </style>
 
 <script>
+    // Global variables
+    let currentPage = 1;
+    const itemsPerPage = 30;
+    let totalPages = 1;
+    let allRows = [];
+    let filteredRows = [];
+
     document.addEventListener('DOMContentLoaded', function() {
+        // Get DOM elements
         const fromDate = document.getElementById('fromDate');
         const toDate = document.getElementById('toDate');
         const customerSearch = document.getElementById('customerSearch');
@@ -471,100 +448,82 @@
         const billsTable = document.getElementById('billsTable');
         const noRecordsMessage = document.getElementById('noRecordsMessage');
         const totalRecords = document.getElementById('totalRecords');
-        const tableRows = billsTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        const tableBody = billsTable.getElementsByTagName('tbody')[0];
 
         // Summary elements
         const totalBillSum = document.getElementById('totalBillSum');
         const totalPaymentSum = document.getElementById('totalPaymentSum');
         const totalDuesSum = document.getElementById('totalDuesSum');
-        const balanceSum = document.getElementById('balanceSum');
 
-        // Initialize summations and delete buttons
+        // Initialize rows array
+        allRows = Array.from(tableBody.getElementsByTagName('tr'));
+        filteredRows = [...allRows];
+
+        // Initialize the page
         updateSummations();
-        updateDeleteButtons();
+        updatePaginationInfo();
 
-        // Function to update delete buttons visibility
-        function updateDeleteButtons() {
-            // Group records by customer ID and find the latest record for each customer
-            const customerLatestRecords = {};
-
-            // First pass: find the latest datetime for each customer
-            for (let i = 0; i < tableRows.length; i++) {
-                const row = tableRows[i];
-                const customerId = row.getAttribute('data-customer-id');
-                const datetime = row.getAttribute('data-datetime');
-
-                if (!customerLatestRecords[customerId] || datetime > customerLatestRecords[customerId].datetime) {
-                    customerLatestRecords[customerId] = {
-                        datetime: datetime,
-                        rowIndex: i
-                    };
-                }
-            }
-
-            // Second pass: show delete button only for latest records
-            for (let i = 0; i < tableRows.length; i++) {
-                const row = tableRows[i];
-                const customerId = row.getAttribute('data-customer-id');
-                const deleteBtn = row.querySelector('.delete-btn');
-
-                if (customerLatestRecords[customerId].rowIndex === i) {
-                    deleteBtn.style.display = 'inline-block';
-                } else {
-                    deleteBtn.style.display = 'none';
-                }
-            }
-        }
-
-        // Function to update summations
+        // Function to update summations based on visible rows
         function updateSummations() {
             let totalBill = 0;
             let totalPayment = 0;
             let totalDues = 0;
 
-            for (let i = 0; i < tableRows.length; i++) {
-                const row = tableRows[i];
+            // Track latest records per customer for dues calculation
+            const customerLatestRecords = {};
 
-                // Only count visible rows
-                if (row.style.display !== 'none') {
-                    const billAmount = parseFloat(row.getAttribute('data-total-bill')) || 0;
-                    const paymentAmount = parseFloat(row.getAttribute('data-payment')) || 0;
-                    const duesAmount = parseFloat(row.getAttribute('data-dues')) || 0;
+            // Process filtered rows
+            filteredRows.forEach(row => {
+                const customerId = row.getAttribute('data-customer-id');
+                const datetime = row.getAttribute('data-datetime');
+                const billAmount = parseFloat(row.getAttribute('data-total-bill')) || 0;
+                const paymentAmount = parseFloat(row.getAttribute('data-payment')) || 0;
+                const duesAmount = parseFloat(row.getAttribute('data-dues')) || 0;
 
-                    totalBill += billAmount;
-                    totalPayment += paymentAmount;
-                    totalDues += duesAmount;
+                // Add to totals
+                totalBill += billAmount;
+                totalPayment += paymentAmount;
+
+                // Track latest record for each customer
+                if (!customerLatestRecords[customerId] || datetime > customerLatestRecords[customerId].datetime) {
+                    customerLatestRecords[customerId] = {
+                        datetime: datetime,
+                        dues: duesAmount
+                    };
                 }
-            }
+            });
+
+            // Sum dues only from latest records for each customer
+            Object.values(customerLatestRecords).forEach(record => {
+                totalDues += record.dues;
+            });
 
             // Update display
             totalBillSum.textContent = totalBill.toFixed(2);
             totalPaymentSum.textContent = totalPayment.toFixed(2);
             totalDuesSum.textContent = totalDues.toFixed(2);
-
-            // Calculate balance (Payment - Dues)
-            const balance = totalPayment - totalDues;
-            balanceSum.textContent = balance.toFixed(2);
-
-            // Update balance card color based on positive/negative
-            const balanceCard = balanceSum.closest('.card');
-            if (balance >= 0) {
-                balanceCard.className = 'card bg-success text-white';
-            } else {
-                balanceCard.className = 'card bg-warning text-dark';
-            }
         }
 
-        // Search functionality
-        function performSearch() {
+        // Function to update pagination info
+        function updatePaginationInfo() {
+            const totalItems = filteredRows.length;
+            const startIndex = totalItems > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+            const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
+
+            document.getElementById('showingFrom').textContent = startIndex;
+            document.getElementById('showingTo').textContent = endIndex;
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('totalRecords').textContent = totalItems;
+        }
+
+        // Function to apply filters and pagination
+        function applyFilters() {
             const fromDateValue = fromDate.value;
             const toDateValue = toDate.value;
-            const customerValue = customerSearch.value.toLowerCase();
+            const customerValue = customerSearch.value.toLowerCase().trim();
 
-            let visibleCount = 0;
-
-            for (let i = 0; i < tableRows.length; i++) {
-                const row = tableRows[i];
+            // Filter rows
+            filteredRows = allRows.filter(row => {
                 const customerName = row.getAttribute('data-customer-name');
                 const rowDate = row.getAttribute('data-date');
 
@@ -583,24 +542,42 @@
                     showRow = false;
                 }
 
-                if (showRow) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
+                return showRow;
+            });
+
+            // Calculate total pages
+            totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+
+            // Reset to first page if current page exceeds total pages
+            if (currentPage > totalPages && totalPages > 0) {
+                currentPage = 1;
             }
 
-            // Update total records count
-            totalRecords.textContent = visibleCount;
+            // Hide all rows first
+            allRows.forEach(row => {
+                row.style.display = 'none';
+            });
 
-            // Update summations after filtering
+            // Show rows for current page
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const rowsToShow = filteredRows.slice(startIndex, endIndex);
+
+            rowsToShow.forEach(row => {
+                row.style.display = '';
+            });
+
+            // Update summations
             updateSummations();
-            // Update delete buttons after filtering
-            updateDeleteButtons();
+
+            // Update pagination info
+            updatePaginationInfo();
+
+            // Generate pagination controls
+            generatePaginationControls();
 
             // Show/hide no records message
-            if (visibleCount === 0) {
+            if (filteredRows.length === 0) {
                 noRecordsMessage.style.display = 'block';
                 billsTable.style.display = 'none';
             } else {
@@ -609,24 +586,94 @@
             }
         }
 
-        // Clear search
+        // Function to generate pagination controls
+        function generatePaginationControls() {
+            const paginationControls = document.getElementById('paginationControls');
+
+            if (totalPages <= 1) {
+                paginationControls.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+
+            // Previous button
+            paginationHTML += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="goToPage(${currentPage - 1}); return false;">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if we're near the end
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // First page if not visible
+            if (startPage > 1) {
+                paginationHTML += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="goToPage(1); return false;">1</a>
+                    </li>
+                `;
+                if (startPage > 2) {
+                    paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+            }
+
+            // Page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="goToPage(${i}); return false;">${i}</a>
+                    </li>
+                `;
+            }
+
+            // Last page if not visible
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+                paginationHTML += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="goToPage(${totalPages}); return false;">${totalPages}</a>
+                    </li>
+                `;
+            }
+
+            // Next button
+            paginationHTML += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="goToPage(${currentPage + 1}); return false;">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+
+            paginationControls.innerHTML = paginationHTML;
+        }
+
+        // Function to perform search
+        function performSearch() {
+            currentPage = 1; // Reset to first page
+            applyFilters();
+        }
+
+        // Function to clear search
         function clearSearch() {
             fromDate.value = '';
             toDate.value = '';
             customerSearch.value = '';
-
-            for (let i = 0; i < tableRows.length; i++) {
-                tableRows[i].style.display = '';
-            }
-
-            totalRecords.textContent = tableRows.length;
-            noRecordsMessage.style.display = 'none';
-            billsTable.style.display = 'table';
-
-            // Update summations after clearing
-            updateSummations();
-            // Update delete buttons after clearing
-            updateDeleteButtons();
+            currentPage = 1;
+            applyFilters();
         }
 
         // Event listeners
@@ -638,16 +685,142 @@
         fromDate.addEventListener('change', performSearch);
         toDate.addEventListener('change', performSearch);
 
-        // Delete button event listeners
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.delete-btn')) {
-                const btn = e.target.closest('.delete-btn');
-                const billId = btn.getAttribute('data-bill-id');
-                const customerName = btn.getAttribute('data-customer-name');
-                confirmDelete(billId, customerName);
-            }
-        });
+        // Initial load
+        applyFilters();
     });
+
+    // Global function for pagination
+    function goToPage(page) {
+        if (page < 1 || page > totalPages) return;
+
+        currentPage = page;
+
+        // Re-apply filters to show correct page
+        const fromDate = document.getElementById('fromDate');
+        const toDate = document.getElementById('toDate');
+        const customerSearch = document.getElementById('customerSearch');
+
+        const fromDateValue = fromDate.value;
+        const toDateValue = toDate.value;
+        const customerValue = customerSearch.value.toLowerCase().trim();
+
+        // Filter rows
+        filteredRows = allRows.filter(row => {
+            const customerName = row.getAttribute('data-customer-name');
+            const rowDate = row.getAttribute('data-date');
+
+            let showRow = true;
+
+            // Filter by customer name
+            if (customerValue && !customerName.includes(customerValue)) {
+                showRow = false;
+            }
+
+            // Filter by date range
+            if (fromDateValue && rowDate < fromDateValue) {
+                showRow = false;
+            }
+            if (toDateValue && rowDate > toDateValue) {
+                showRow = false;
+            }
+
+            return showRow;
+        });
+
+        // Hide all rows first
+        allRows.forEach(row => {
+            row.style.display = 'none';
+        });
+
+        // Show rows for current page
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const rowsToShow = filteredRows.slice(startIndex, endIndex);
+
+        rowsToShow.forEach(row => {
+            row.style.display = '';
+        });
+
+        // Update pagination info
+        const totalItems = filteredRows.length;
+        const startIndexDisplay = totalItems > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+        const endIndexDisplay = Math.min(currentPage * itemsPerPage, totalItems);
+
+        document.getElementById('showingFrom').textContent = startIndexDisplay;
+        document.getElementById('showingTo').textContent = endIndexDisplay;
+        document.getElementById('totalItems').textContent = totalItems;
+        document.getElementById('totalRecords').textContent = totalItems;
+
+        // Generate pagination controls
+        const paginationControls = document.getElementById('paginationControls');
+        let paginationHTML = '';
+
+        // Previous button
+        paginationHTML += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="goToPage(${currentPage - 1}); return false;">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+        `;
+
+        // Page numbers
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        // Adjust start page if we're near the end
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        // First page if not visible
+        if (startPage > 1) {
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="goToPage(1); return false;">1</a>
+                </li>
+            `;
+            if (startPage > 2) {
+                paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            }
+        }
+
+        // Page numbers
+        for (let i = startPage; i <= endPage; i++) {
+            paginationHTML += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="goToPage(${i}); return false;">${i}</a>
+                </li>
+            `;
+        }
+
+        // Last page if not visible
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            }
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="goToPage(${totalPages}); return false;">${totalPages}</a>
+                </li>
+            `;
+        }
+
+        // Next button
+        paginationHTML += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="goToPage(${currentPage + 1}); return false;">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        `;
+
+        paginationControls.innerHTML = paginationHTML;
+
+        // Scroll to table top
+        document.getElementById('billsTable').scrollIntoView({ behavior: 'smooth' });
+    }
 
     // Delete confirmation function
     function confirmDelete(billId, customerName) {
