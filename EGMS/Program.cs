@@ -34,6 +34,9 @@ namespace EGMS
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<IElectricBillService, ElectricBillService>();
+            builder.Services.AddScoped<IPasswordService, PasswordService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IEmailService, MockEmailService>();
 
             builder.Services.AddControllersWithViews();
 

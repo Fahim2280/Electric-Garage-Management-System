@@ -26,19 +26,28 @@ namespace EGMS.Services
             try
             {
                 // Validate input
-                if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+                if (string.IsNullOrWhiteSpace(dto.Username) ||
+                    string.IsNullOrWhiteSpace(dto.Password) ||
+                    string.IsNullOrWhiteSpace(dto.Email) ||
+                    string.IsNullOrWhiteSpace(dto.Name) ||
+                    string.IsNullOrWhiteSpace(dto.Number) ||
+                    string.IsNullOrWhiteSpace(dto.CompanyName))
                     return false;
 
-                // Check if user already exists
-                if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
+                // Check if user already exists (by username or email)
+                if (await _context.Users.AnyAsync(u => u.Username == dto.Username || u.Email == dto.Email))
                     return false;
 
                 // Create new user with properly hashed password
                 var user = new User
                 {
                     Username = dto.Username.Trim(),
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password, 12), // Use work factor instead of GenerateSalt
-                    Role = dto.Role ?? "Admin" // Default role if not provided
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password, 12),
+                    Role = dto.Role ?? "Admin", // Default role if not provided
+                    Email = dto.Email.Trim().ToLower(),
+                    Name = dto.Name.Trim(),
+                    Number = dto.Number.Trim(),
+                    CompanyName = dto.CompanyName.Trim()
                 };
 
                 _context.Users.Add(user);

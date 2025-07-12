@@ -7,7 +7,7 @@
 <!-- Sign Up Form -->
 <div class="container">
     <div class="row justify-content-center min-vh-100 align-items-center">
-        <div class="col-md-5 col-lg-4">
+        <div class="col-md-6 col-lg-5">
             <div class="auth-card">
                 <div class="text-center mb-4">
                     <div class="auth-icon">
@@ -31,6 +31,42 @@
                         </div>
 
                         <div class="form-floating mb-3">
+                            <input asp-for="Email" type="email" class="form-control custom-input"
+                                   placeholder="Enter email address" id="email" />
+                            <label for="email">
+                                <i class="fas fa-envelope"></i> Email Address
+                            </label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Number" type="tel" class="form-control custom-input"
+                                   placeholder="Enter phone number" id="phone" />
+                            <label for="phone">
+                                <i class="fas fa-phone"></i> Phone Number
+                            </label>
+                            <span asp-validation-for="Number" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Name" class="form-control custom-input"
+                                   placeholder="Enter full name" id="name" />
+                            <label for="name">
+                                <i class="fas fa-id-card"></i> Full Name
+                            </label>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="CompanyName" class="form-control custom-input"
+                                   placeholder="Enter company name" id="companyName" />
+                            <label for="companyName">
+                                <i class="fas fa-building"></i> Company Name
+                            </label>
+                            <span asp-validation-for="CompanyName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
                             <input asp-for="Password" type="password" class="form-control custom-input"
                                    placeholder="Enter password" id="password" />
                             <label for="password">
@@ -40,8 +76,7 @@
                         </div>
 
                         <div class="form-floating mb-4">
-                            <select asp-for="Role" class="form-select custom-input" id="role">
-                                <option value="">Select Role</option>
+                            <select asp-for="Role" class="form-select custom-input" id="role">                               
                                 <option value="SuperAdmin">Super Admin</option>
                                 <option value="Admin">Admin</option>
                             </select>
@@ -86,6 +121,7 @@
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         padding: 2rem;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin: 2rem 0;
     }
 
         .auth-card:hover {
@@ -204,8 +240,11 @@
         margin-top: 0.25rem;
         display: block;
     }
-       
-    .auth-card {
+
+
+        .auth-card
+
+    {
         margin: 1rem;
         padding: 1.5rem;
     }
@@ -227,7 +266,9 @@
         animation: fadeInUp 0.6s ease;
     }
 
-    from {
+        from
+
+    {
         opacity: 0;
         transform: translateY(30px);
     }
@@ -236,6 +277,7 @@
         opacity: 1;
         transform: translateY(0);
     }
+
     
 </style>
 
