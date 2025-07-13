@@ -1,0 +1,242 @@
+﻿@model EGMS.DTOs.UserLoginDTO
+
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+<!-- Sign In Form -->
+<div class="container">
+    <div class="row justify-content-center min-vh-100 align-items-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="auth-card">
+                <div class="text-center mb-4">
+                    <div class="auth-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h2 class="auth-title">Welcome Back</h2>
+                    <p class="auth-subtitle">Sign in to your EGMS account</p>
+                </div>
+
+                <div class="card-body">
+                    @if (ViewBag.SuccessMessage != null)
+                    {
+                        <div class="alert alert-success custom-alert">
+                            <i class="fas fa-check-circle"></i>
+                            @ViewBag.SuccessMessage
+                        </div>
+                    }
+
+                    <form asp-action="SignIn" method="post" class="auth-form">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Username" class="form-control custom-input"
+                                   placeholder="Enter your username" id="username" />
+                            <label for="username">
+                                <i class="fas fa-user"></i> Username
+                            </label>
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Password" type="password" class="form-control custom-input"
+                                   placeholder="Enter your password" id="password" />
+                            <label for="password">
+                                <i class="fas fa-lock"></i> Password
+                            </label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary custom-btn w-100 mb-3">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="auth-link">
+                            Don't have an account?
+                            <a asp-action="SignUp" asp-controller="Auth" class="link-primary">Sign Up</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .min-vh-100 {
+        min-height: 100vh;
+    }
+
+    .auth-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .auth-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+    .auth-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: white;
+        font-size: 2rem;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .auth-title {
+        color: #2c3e50;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+    }
+
+    .auth-subtitle {
+        color: #6c757d;
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+
+    .custom-input {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+        .custom-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            background: white;
+        }
+
+    .form-floating > label {
+        padding: 1rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+        .form-floating > label i {
+            margin-right: 0.5rem;
+            color: #667eea;
+        }
+
+    .custom-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        border-radius: 12px;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .custom-btn:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .custom-btn:active {
+            transform: translateY(0);
+        }
+
+    .custom-alert {
+        border: none;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        background: rgba(40, 167, 69, 0.1);
+        border-left: 4px solid #28a745;
+    }
+
+        .custom-alert i {
+            margin-right: 0.5rem;
+        }
+
+    .auth-link {
+        color: #6c757d;
+        margin-bottom: 0;
+        font-size: 0.95rem;
+    }
+
+        .auth-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+            .auth-link a:hover {
+                color: #5a67d8;
+                text-decoration: underline;
+            }
+
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .auth-card {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .auth-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .auth-title {
+        font-size: 1.5rem;
+    }
+
+    
+
+    /* Animation for form appearance */
+    .auth-form {
+        animation: fadeInUp 0.6s ease;
+    }
+    
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

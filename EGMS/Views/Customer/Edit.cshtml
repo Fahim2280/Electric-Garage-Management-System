@@ -1,0 +1,363 @@
+﻿@model EGMS.DTOs.CustomerDTO
+@{
+    ViewData["Title"] = "Edit Customer";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-user-edit text-warning me-2"></i>
+            Edit Customer
+        </h2>
+        <div class="badge bg-primary fs-6">ID: @Model.C_ID</div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-edit me-2"></i>
+                Customer Information
+            </h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" id="editCustomerForm" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Hidden field for Customer ID -->
+                <input asp-for="C_ID" type="hidden" />
+                <input asp-for="Created_Date" type="hidden" />
+
+                <div class="row g-3">
+                    <!-- Customer ID (Read-only) -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-id-badge text-primary me-1"></i>
+                            Customer ID
+                        </label>
+                        <input type="text" class="form-control" value="@Model.C_ID" readonly>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label fw-bold">
+                            <i class="fas fa-user text-primary me-1"></i>
+                            Name
+                        </label>
+                        <input asp-for="Name" type="text" class="form-control" placeholder="Enter customer name" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Father's Name -->
+                    <div class="col-md-6">
+                        <label asp-for="F_name" class="form-label fw-bold">
+                            <i class="fas fa-male text-primary me-1"></i>
+                            Father's Name
+                        </label>
+                        <input asp-for="F_name" type="text" class="form-control" placeholder="Enter father's name" />
+                        <span asp-validation-for="F_name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Mother's Name -->
+                    <div class="col-md-6">
+                        <label asp-for="M_name" class="form-label fw-bold">
+                            <i class="fas fa-female text-primary me-1"></i>
+                            Mother's Name
+                        </label>
+                        <input asp-for="M_name" type="text" class="form-control" placeholder="Enter mother's name" />
+                        <span asp-validation-for="M_name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-12">
+                        <label asp-for="Address" class="form-label fw-bold">
+                            <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                            Address
+                        </label>
+                        <textarea asp-for="Address" class="form-control" rows="3" placeholder="Enter full address"></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <!-- Mobile Number -->
+                    <div class="col-md-6">
+                        <label asp-for="Mobile_number" class="form-label fw-bold">
+                            <i class="fas fa-phone text-primary me-1"></i>
+                            Mobile Number
+                        </label>
+                        <input asp-for="Mobile_number" type="tel" class="form-control" placeholder="01XXXXXXXXX" />
+                        <span asp-validation-for="Mobile_number" class="text-danger"></span>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Format: 01XXXXXXXXX (11 digits)
+                        </div>
+                    </div>
+
+                    <!-- NID Number -->
+                    <div class="col-md-6">
+                        <label asp-for="NID_Number" class="form-label fw-bold">
+                            <i class="fas fa-id-card text-primary me-1"></i>
+                            NID Number
+                        </label>
+                        <input asp-for="NID_Number" type="text" class="form-control" placeholder="Enter NID number" />
+                        <span asp-validation-for="NID_Number" class="text-danger"></span>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Must be 10, 13, or 17 digits
+                        </div>
+                    </div>
+
+                    <!-- Previous Unit -->
+                    <div class="col-md-6">
+                        <label asp-for="Previous_Unit" class="form-label fw-bold">
+                            <i class="fas fa-bolt text-primary me-1"></i>
+                            Previous Unit
+                        </label>
+                        <input asp-for="Previous_Unit" type="number" step="0.01" class="form-control" placeholder="Enter previous unit reading" readonly />
+                        <span asp-validation-for="Previous_Unit" class="text-danger"></span>
+                    </div>
+
+                    <!-- Advance Money -->
+                    <div class="col-md-6">
+                        <label asp-for="Advance_money" class="form-label fw-bold">
+                            <i class="fas fa-money-bill-wave text-primary me-1"></i>
+                            Advance Money
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">৳</span>
+                            <input asp-for="Advance_money" type="number" step="0.01" class="form-control" placeholder="0.00" readonly />
+                        </div>
+                        <span asp-validation-for="Advance_money" class="text-danger"></span>
+                    </div>
+
+                    <!-- Created Date (Read-only) -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-calendar-alt text-primary me-1"></i>
+                            Created Date
+                        </label>
+                        <input type="text" class="form-control" value="@Model.Created_Date.ToString("dd/MM/yyyy")" readonly>
+                    </div>
+
+                    <!-- Last Updated (Display current date/time) -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-clock text-primary me-1"></i>
+                            Last Updated
+                        </label>
+                        <input type="text" class="form-control" value="@DateTime.Now.ToString("dd/MM/yyyy HH:mm")" readonly>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-footer bg-light">
+            <div class="d-flex gap-2 justify-content-end">
+                <button type="submit" form="editCustomerForm" class="btn btn-success">
+                    <i class="fas fa-save me-1"></i> Update Customer
+                </button>
+                <a asp-action="Details" asp-controller="Customer" asp-route-id="@Model.C_ID" class="btn btn-info">
+                    <i class="fas fa-eye me-1"></i> View Details
+                </a>
+                <a asp-action="Index" asp-controller="Customer" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:read-only {
+        background-color: #f8f9fa;
+        opacity: 1;
+        border: 1px solid #dee2e6;
+        color: #495057;
+    }
+
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .form-label {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+    }
+
+    .btn {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+    }
+
+    .input-group-text {
+        background-color: #e9ecef;
+        border: 1px solid #dee2e6;
+        font-weight: bold;
+    }
+
+    .card-footer {
+        border-top: 1px solid #dee2e6;
+        padding: 1.25rem;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+
+    .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .is-invalid {
+        border-color: #dc3545;
+    }
+
+    .is-valid {
+        border-color: #28a745;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('editCustomerForm');
+        const mobileInput = document.querySelector('input[name="Mobile_number"]');
+        const nidInput = document.querySelector('input[name="NID_Number"]');
+
+        // Mobile number validation
+        mobileInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, ''); // Remove non-digits
+
+            // Auto-format mobile number
+            if (value.startsWith('880')) {
+                value = value.substring(3);
+            } else if (value.startsWith('0')) {
+                value = value.substring(1);
+            }
+
+            if (value.length <= 10) {
+                this.value = '01' + value;
+            } else {
+                this.value = '01' + value.substring(0, 9);
+            }
+        });
+
+        // NID number validation
+        nidInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, ''); // Remove non-digits
+
+            // Limit to 17 digits
+            if (value.length > 17) {
+                value = value.substring(0, 17);
+            }
+
+            this.value = value;
+        });
+
+        // Form validation before submit
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            const requiredFields = form.querySelectorAll('[required]');
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                    field.classList.add('is-valid');
+                }
+            });
+
+            // Mobile number validation
+            const mobilePattern = /^01[3-9]\d{8}$/;
+            if (mobileInput.value && !mobilePattern.test(mobileInput.value)) {
+                mobileInput.classList.add('is-invalid');
+                isValid = false;
+            } else if (mobileInput.value) {
+                mobileInput.classList.remove('is-invalid');
+                mobileInput.classList.add('is-valid');
+            }
+
+            // NID validation
+            const nidPattern = /^(?:\d{10}|\d{13}|\d{17})$/;
+            if (nidInput.value && !nidPattern.test(nidInput.value)) {
+                nidInput.classList.add('is-invalid');
+                isValid = false;
+            } else if (nidInput.value) {
+                nidInput.classList.remove('is-invalid');
+                nidInput.classList.add('is-valid');
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                // Scroll to first invalid field
+                const firstInvalid = form.querySelector('.is-invalid');
+                if (firstInvalid) {
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalid.focus();
+                }
+            }
+        });
+
+        // Real-time validation feedback
+        const inputs = form.querySelectorAll('input[type="text"], input[type="tel"], input[type="number"], textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                    if (this.value.trim()) {
+                        this.classList.add('is-valid');
+                    }
+                }
+            });
+
+            input.addEventListener('input', function() {
+                if (this.classList.contains('is-invalid') && this.value.trim()) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+        });
+    });
+</script>

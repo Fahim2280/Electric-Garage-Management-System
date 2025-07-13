@@ -1,0 +1,1267 @@
+﻿@using EGMS.DTOs
+@model EGMS.DTOs.CustomerDTO
+@{
+    ViewData["Title"] = "Customer Details";
+
+    // Debug: Check what we're receiving
+    var customerBills = ViewBag.CustomerBills as IEnumerable<EGMS.DTOs.ElectricBillDTO> ?? new List<EGMS.DTOs.ElectricBillDTO>();
+
+    // Get search parameters from query string
+    var searchTerm = ViewBag.SearchTerm as string ?? "";
+    var dateFrom = ViewBag.DateFrom as DateTime?;
+    var dateTo = ViewBag.DateTo as DateTime?;
+    var dateRange = ViewBag.DateRange as string ?? "all";
+
+    // Debug output
+    var billsList = customerBills.ToList();
+    var billsCount = billsList.Count;
+
+    // Find the most recent bill for this customer (assuming bills are for the same customer)
+    var mostRecentBill = billsList.OrderByDescending(x => x.Date).FirstOrDefault();
+
+    // Get last bill data for summary
+    var lastBillTotalBill = mostRecentBill?.Total_bill ?? 0;
+    var lastBillPresentDues = mostRecentBill?.Present_dues ?? 0;
+    var lastBillClearMoney = mostRecentBill?.Clear_money ?? 0;
+    var advanceMoney = decimal.TryParse(Model.Advance_money?.ToString(), out var advance) ? advance : 0;
+    var balance = advanceMoney - lastBillPresentDues;
+
+    // var currentPage = 1;
+    // const int itemsPerPage = 30;
+    // var totalPages = 1;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-user-circle text-primary me-2"></i>
+            Customer Details
+        </h2>
+        <div class="badge bg-primary fs-6">ID: @Model.C_ID</div>
+    </div>
+
+    <!-- Customer Information Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                Customer Information
+            </h5>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="row g-3">
+                    <!-- Customer ID -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-id-badge text-primary me-1"></i>
+                            Customer ID
+                        </label>
+                        <input type="text" class="form-control" value="@Model.C_ID" disabled>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-user text-primary me-1"></i>
+                            Name
+                        </label>
+                        <input type="text" class="form-control" value="@Model.Name" disabled>
+                    </div>
+
+                    <!-- Father's Name -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-male text-primary me-1"></i>
+                            Father's Name
+                        </label>
+                        <input type="text" class="form-control" value="@Model.F_name" disabled>
+                    </div>
+
+                    <!-- Mother's Name -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-female text-primary me-1"></i>
+                            Mother's Name
+                        </label>
+                        <input type="text" class="form-control" value="@Model.M_name" disabled>
+                    </div>
+
+                    <!-- Mobile Number -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-phone text-primary me-1"></i>
+                            Mobile Number
+                        </label>
+                        <input type="tel" class="form-control" value="@Model.Mobile_number" disabled>
+                    </div>
+
+                    <!-- NID Number -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-id-card text-primary me-1"></i>
+                            NID Number
+                        </label>
+                        <input type="text" class="form-control" value="@Model.NID_Number" disabled>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                            Address
+                        </label>
+                        <textarea class="form-control" rows="2" disabled>@Model.Address</textarea>
+                    </div>
+
+                    <!-- Previous Unit -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-bolt text-primary me-1"></i>
+                            Previous Unit
+                        </label>
+                        <input type="number" class="form-control" value="@Model.Previous_Unit" disabled>
+                    </div>
+
+                    <!-- Advance Money -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-money-bill-wave text-primary me-1"></i>
+                            Advance Money
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">৳</span>
+                            <input type="number" class="form-control" value="@Model.Advance_money" disabled>
+                        </div>
+                    </div>
+
+                    <!-- Present Dues (from last bill) -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-exclamation-circle text-danger me-1"></i>
+                            Present Dues (Last Bill)
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">৳</span>
+                            <input type="number" class="form-control" value="@lastBillPresentDues" disabled>
+                        </div>
+                    </div>
+
+                    <!-- Created Date -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-calendar-alt text-primary me-1"></i>
+                            Created Date
+                        </label>
+                        <input type="text" class="form-control" value="@Model.Created_Date.ToString("dd/MM/yyyy")" disabled>
+                    </div>
+
+                    <!-- Last Bill Date -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">
+                            <i class="fas fa-clock text-primary me-1"></i>
+                            Last Bill Date & Time
+                        </label>
+                        <input type="text" class="form-control" value="@(mostRecentBill?.Date.ToString("dd/MM/yyyy HH:mm:ss") ?? "No bills yet")" disabled>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card-footer bg-light">
+            <div class="d-flex gap-2 justify-content-end">
+                <a asp-action="Create" asp-controller="ElectricBill" asp-route-id="@Model.C_ID" class="btn btn-success">
+                    <i class="fas fa-plus me-1"></i> Add Bill
+                </a>
+                <a asp-action="Edit" asp-controller="Customer" asp-route-id="@Model.C_ID" class="btn btn-warning">
+                    <i class="fas fa-edit me-1"></i> Edit Customer
+                </a>
+                <a asp-action="Index" asp-controller="Customer" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    @if (billsList.Any())
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-search me-2"></i>
+                    Search & Filter Bills
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- Search Term -->
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-search text-info me-1"></i>
+                            Search Bills
+                        </label>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search by amount, status, etc..." value="@searchTerm">
+                    </div>
+
+                    <!-- Date Range Selector -->
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-calendar-alt text-info me-1"></i>
+                            Date Range
+                        </label>
+                        <select id="dateRangeSelect" class="form-select">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="last7days">Last 7 Days</option>
+                            <option value="last30days">Last 30 Days</option>
+                            <option value="last3months">Last 3 Months</option>
+                            <option value="last6months">Last 6 Months</option>
+                            <option value="thisyear">This Year</option>
+                            <option value="lastyear">Last Year</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+
+                    <!-- Custom Date Range -->
+                    <div class="col-md-6" id="customDateRange" style="display: none;">
+                        <label class="form-label">
+                            <i class="fas fa-calendar text-info me-1"></i>
+                            From Date
+                        </label>
+                        <input type="date" id="dateFrom" class="form-control">
+                    </div>
+
+                    <div class="col-md-6" id="customDateRangeTo" style="display: none;">
+                        <label class="form-label">
+                            <i class="fas fa-calendar text-info me-1"></i>
+                            To Date
+                        </label>
+                        <input type="date" id="dateTo" class="form-control">
+                    </div>
+
+                    <!-- Search Buttons -->
+                    <div class="col-12">
+                        <div class="d-flex gap-2">
+                            <button type="button" id="searchBtn" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i>
+                                Search
+                            </button>
+                            <button type="button" id="clearBtn" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Customer Bills Summary -->
+    @if (billsList.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Total Payments</h6>
+                                <h4 class="mb-0">৳<span id="totalPaymentSum">@billsList.Sum(x => x.Clear_money).ToString("F2")</span></h4>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-hand-holding-usd fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Total Bill (Last)</h6>
+                                <h4 class="mb-0">৳<span id="lastTotalBill">@lastBillTotalBill.ToString("F2")</span></h4>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-receipt fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Present Dues (Last)</h6>
+                                <h4 class="mb-0">৳<span id="lastPresentDues">@lastBillPresentDues.ToString("F2")</span></h4>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-exclamation-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card @(balance <= 0 ? "bg-success" : "bg-warning") text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h6 class="card-title">Balance</h6>
+                                <h4 class="mb-0">৳<span id="balance">@balance.ToString("F2")</span></h4>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-balance-scale fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results Info -->
+        <div class="alert alert-info" id="searchResultsInfo" style="display: none;">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Search Results:</strong>
+            <span id="searchResultsText"></span>
+        </div>
+
+        <!-- Customer Bills List -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Electric Bills History for @Model.Name
+                </h5>
+                <div class="badge bg-info fs-6 mt-2">Total Records: <span id="totalRecords">@billsList.Count</span></div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-container">
+                    <table class="table table-hover table-striped mb-0" id="customerBillsTable">
+                        <thead class="table-dark sticky-header">
+                            <tr>
+                                <th class="date-column">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Date & Time
+                                </th>
+                                <th class="unit-column">
+                                    <i class="fas fa-history me-1"></i>
+                                    Previous Unit
+                                </th>
+                                <th class="unit-column">
+                                    <i class="fas fa-bolt me-1"></i>
+                                    Current Unit
+                                </th>
+                                <th class="unit-column">
+                                    <i class="fas fa-calculator me-1"></i>
+                                    Total Unit
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-money-bill-wave me-1"></i>
+                                    Electric Bill
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    Previous Dues
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-home me-1"></i>
+                                    Rent Bill
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-receipt me-1"></i>
+                                    Total Bill
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-hand-holding-usd me-1"></i>
+                                    Payment
+                                </th>
+                                <th class="amount-column">
+                                    <i class="fas fa-exclamation-circle me-1"></i>
+                                    Present Dues
+                                </th>
+                                <th class="status-column">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Status
+                                </th>
+                                <th class="action-column">
+                                    <i class="fas fa-cogs me-1"></i>
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="billsTableBody">
+                            @foreach (var bill in billsList.OrderByDescending(x => x.Date))
+                            {
+                                var status = bill.Clear_money >= bill.Total_bill ? "Paid" : (bill.Clear_money > 0 ? "Partial" : "Unpaid");
+                                <tr class="bill-row"
+                                    data-date="@bill.Date.ToString("yyyy-MM-dd")"
+                                    data-search-content="@bill.Electric_bill @bill.Total_bill @bill.Present_dues @bill.Clear_money @bill.Date.ToString("dd/MM/yyyy") @status"
+                                    data-electric-bill="@bill.Electric_bill"
+                                    data-total-bill="@bill.Total_bill"
+                                    data-present-dues="@bill.Present_dues"
+                                    data-clear-money="@bill.Clear_money"
+                                    data-status="@status">
+                                    <td class="date-column">
+                                        <i class="fas fa-calendar-day text-muted me-1"></i>
+                                        <div>
+                                            <div class="fw-bold">@bill.Date.ToString("dd/MM/yyyy")</div>
+                                            <small class="text-muted">@bill.Date.ToString("HH:mm:ss")</small>
+                                        </div>
+                                    </td>
+                                    <td class="unit-column">
+                                        <span class="text-muted">@bill.Previous_unit</span>
+                                    </td>
+                                    <td class="unit-column">
+                                        <span class="text-info fw-bold">@bill.Current_Unit</span>
+                                    </td>
+                                    <td class="unit-column">
+                                        <span class="text-primary fw-bold">@bill.Total_Unit</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-success fw-bold">৳@bill.Electric_bill</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-warning">৳@bill.Previous_duos</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-info">৳@bill.Rent_Bill</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-success fw-bold">৳@bill.Total_bill</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-primary">৳@bill.Clear_money</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        @if (bill.Present_dues > 0)
+                                        {
+                                            <span class="badge bg-danger">৳@bill.Present_dues</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">৳0.00</span>
+                                        }
+                                    </td>
+                                    <td class="status-column">
+                                        @if (bill.Clear_money >= bill.Total_bill)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Paid
+                                            </span>
+                                        }
+                                        else if (bill.Clear_money > 0)
+                                        {
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Partial
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times-circle me-1"></i>Unpaid
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="action-column">
+                                        <div class="btn-group" role="group">
+                                            @if (mostRecentBill != null && bill.ID == mostRecentBill.ID)
+                                            {
+                                                <a asp-action="Edit" asp-controller="ElectricBill" asp-route-id="@bill.ID" class="btn btn-sm btn-outline-primary" title="Edit Bill">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete(@bill.ID, '@Model.Name', '@bill.Date.ToString("dd/MM/yyyy HH:mm:ss")')" title="Delete Bill">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @{
+                    string paginationHTML = @"
+            <div class=""card-footer bg-light"">
+            <div class=""d-flex justify-content-between align-items-center"">
+            <div class=""text-muted"">
+            Showing <span id=""showingFrom"">1</span> to <span id=""showingTo"">30</span> of <span id=""totalItems"">0</span> entries
+            </div>
+            <nav aria-label=""Bills pagination"">
+            <ul class=""pagination pagination-sm mb-0"" id=""paginationControls"">
+            <!-- Pagination buttons will be generated here -->
+            </ul>
+            </nav>
+            </div>
+            </div>";
+                }
+            </div>
+           
+        </div>
+    }
+    else
+    {
+        <!-- No Bills Message -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Electric Bills History for @Model.Name
+                </h5>
+            </div>
+            <div class="card-body text-center py-5">
+                <i class="fas fa-receipt fa-5x text-muted mb-3"></i>
+                <h4 class="text-muted">No Bills Found</h4>
+                <p class="text-muted">This customer doesn't have any electric bills yet.</p>
+                <a asp-action="Create" asp-controller="ElectricBill" asp-route-id="@Model.C_ID" class="btn btn-success">
+                    <i class="fas fa-plus me-1"></i> Create First Bill
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Confirm Delete
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this electric bill?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-warning me-2"></i>
+                    <strong>Customer:</strong> <span id="deleteCustomerName"></span><br>
+                    <strong>Bill Date:</strong> <span id="deleteBillDate"></span><br>
+                    <strong>Warning:</strong> This action cannot be undone.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Cancel
+                </button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #f8f9fa;
+        opacity: 1;
+        border: 1px solid #dee2e6;
+        color: #495057;
+    }
+
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .form-label {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+    }
+
+    .btn {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+    }
+
+    .input-group-text {
+        background-color: #e9ecef;
+        border: 1px solid #dee2e6;
+        font-weight: bold;
+    }
+
+    .card-footer {
+        border-top: 1px solid #dee2e6;
+        padding: 1.25rem;
+    }
+
+    /* Table styling for better column control */
+    .table-container {
+        width: 100%;
+        overflow-x: visible;
+    }
+
+    .table {
+        width: 100%;
+        table-layout: fixed;
+        margin-bottom: 0;
+    }
+
+        .table th {
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.75rem 0.5rem;
+            vertical-align: middle;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table td {
+            vertical-align: middle;
+            font-size: 0.85rem;
+            padding: 0.75rem 0.5rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+    /* Column widths */
+    .date-column {
+        width: 12%;
+        min-width: 120px;
+    }
+
+    .unit-column {
+        width: 8%;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .amount-column {
+        width: 10%;
+        min-width: 100px;
+        text-align: right;
+    }
+
+    .status-column {
+        width: 10%;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .action-column {
+        width: 8%;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .sticky-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #212529 !important;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,123,255,0.05);
+    }
+
+    .btn-group .btn {
+        border-radius: 4px;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .summary-card {
+        transition: transform 0.2s;
+    }
+
+        .summary-card:hover {
+            transform: translateY(-2px);
+        }
+
+    .alert-info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        color: #0c5460;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #17a2b8;
+        box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+    }
+
+    .bill-row.hidden {
+        display: none;
+    }
+
+    mark {
+        background-color: yellow;
+        padding: 0;
+    }
+
+    /* Date and time styling */
+    .date-column div {
+        line-height: 1.2;
+    }
+
+    .date-column small {
+        font-size: 0.75rem;
+    }
+
+    .pagination .page-link {
+        color: #007bff;
+        border: 1px solid #dee2e6;
+        padding: 0.375rem 0.75rem;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        cursor: auto;
+    }
+
+    .pagination .page-link:hover {
+        color: #0056b3;
+        text-decoration: none;
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+    }
+</style>
+
+<script>
+    // Global variables for filtering
+    let allBills = [];
+    let filteredBills = [];
+    let originalBillsData = [];
+
+    let currentPage = 1;
+    const itemsPerPage = 30;
+    let totalPages = 1;
+    // Initialize the search and filter functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Store original bills data
+        const billRows = document.querySelectorAll('.bill-row');
+        allBills = Array.from(billRows);
+        originalBillsData = allBills.map(row => ({
+            row: row,
+            date: row.dataset.date,
+            searchContent: row.dataset.searchContent.toLowerCase(),
+            electricBill: parseFloat(row.dataset.electricBill),
+            totalBill: parseFloat(row.dataset.totalBill),
+            presentDues: parseFloat(row.dataset.presentDues),
+            clearMoney: parseFloat(row.dataset.clearMoney),
+            status: row.dataset.status
+        }));
+
+        // Initialize filter functionality
+        initializeFilters();
+
+        // Add event listeners
+        document.getElementById('searchBtn').addEventListener('click', performSearch);
+        document.getElementById('clearBtn').addEventListener('click', clearFilters);
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Date range selector change event
+        document.getElementById('dateRangeSelect').addEventListener('change', function() {
+            const selectedRange = this.value;
+            const customDateRange = document.getElementById('customDateRange');
+            const customDateRangeTo = document.getElementById('customDateRangeTo');
+
+            if (selectedRange === 'custom') {
+                customDateRange.style.display = 'block';
+                customDateRangeTo.style.display = 'block';
+            } else {
+                customDateRange.style.display = 'none';
+                customDateRangeTo.style.display = 'none';
+            }
+        });
+
+        // Auto-search when date inputs change
+        document.getElementById('dateFrom').addEventListener('change', performSearch);
+        document.getElementById('dateTo').addEventListener('change', performSearch);
+    });
+
+    // Initialize filters with current values
+    function initializeFilters() {
+        // Set current search term if any
+        const searchTerm = document.getElementById('searchInput').value;
+        if (searchTerm) {
+            performSearch();
+        }
+
+        // Set current date range if any
+        const dateRangeSelect = document.getElementById('dateRangeSelect');
+        // You can set the selected value based on ViewBag data if needed
+        // dateRangeSelect.value = '@dateRange';
+    }
+
+    // Main search function
+    function performSearch() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+        const dateRange = document.getElementById('dateRangeSelect').value;
+
+        // Get date range
+        const dateFilter = getDateRange(dateRange);
+
+        // Filter bills based on search criteria
+        filteredBills = originalBillsData.filter(bill => {
+            // Text search filter
+            const matchesSearch = !searchTerm || bill.searchContent.includes(searchTerm);
+
+            // Date range filter
+            const billDate = new Date(bill.date);
+            const matchesDate = !dateFilter || (billDate >= dateFilter.from && billDate <= dateFilter.to);
+
+            return matchesSearch && matchesDate;
+        });
+
+        // Apply filters to DOM
+        applyFilters();
+
+        // Update summary cards
+        updateSummaryCards();
+
+        // Show search results info
+        showSearchResultsInfo(searchTerm, dateRange);
+    }
+
+    // Get date range based on selection
+    function getDateRange(rangeType) {
+        const today = new Date();
+        const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+
+        let from, to;
+
+        switch (rangeType) {
+            case 'today':
+                from = startOfDay;
+                to = endOfDay;
+                break;
+            case 'yesterday':
+                from = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+                from.setHours(0, 0, 0, 0);
+                to = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+                to.setHours(23, 59, 59, 999);
+                break;
+            case 'last7days':
+                from = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                from.setHours(0, 0, 0, 0);
+                to = endOfDay;
+                break;
+            case 'last30days':
+                from = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+                from.setHours(0, 0, 0, 0);
+                to = endOfDay;
+                break;
+            case 'last3months':
+                from = new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
+                from.setHours(0, 0, 0, 0);
+                to = endOfDay;
+                break;
+            case 'last6months':
+                from = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+                from.setHours(0, 0, 0, 0);
+                to = endOfDay;
+                break;
+            case 'thisyear':
+                from = new Date(today.getFullYear(), 0, 1);
+                to = endOfDay;
+                break;
+            case 'lastyear':
+                from = new Date(today.getFullYear() - 1, 0, 1);
+                to = new Date(today.getFullYear() - 1, 11, 31, 23, 59, 59);
+                break;
+            case 'custom':
+                const fromDate = document.getElementById('dateFrom').value;
+                const toDate = document.getElementById('dateTo').value;
+
+                if (fromDate) {
+                    from = new Date(fromDate);
+                    from.setHours(0, 0, 0, 0);
+                }
+                if (toDate) {
+                    to = new Date(toDate);
+                    to.setHours(23, 59, 59, 999);
+                }
+                break;
+            case 'all':
+            default:
+                return null; // No date filtering
+        }
+
+        return from && to ? { from, to } : null;
+    }
+
+    // Apply filters to the DOM
+    function applyFilters() {
+        // Hide all bills first
+        allBills.forEach(bill => {
+            bill.classList.add('hidden');
+        });
+
+        // Show filtered bills
+        filteredBills.forEach(bill => {
+            bill.row.classList.remove('hidden');
+        });
+
+        // Update total records count
+        document.getElementById('totalRecords').textContent = filteredBills.length;
+    }
+
+    // Update summary cards based on filtered data
+    function updateSummaryCards() {
+        if (filteredBills.length === 0) {
+            // If no bills match, show zeros
+            document.getElementById('totalPaymentSum').textContent = '0.00';
+            document.getElementById('lastTotalBill').textContent = '0.00';
+            document.getElementById('lastPresentDues').textContent = '0.00';
+            document.getElementById('balance').textContent = '0.00';
+            return;
+        }
+
+        // Calculate totals from filtered bills
+        const totalPayments = filteredBills.reduce((sum, bill) => sum + bill.clearMoney, 0);
+
+        // Get the most recent bill from filtered results
+        const sortedBills = filteredBills.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const mostRecentBill = sortedBills[0];
+
+        // Update summary cards
+        document.getElementById('totalPaymentSum').textContent = totalPayments.toFixed(2);
+
+        if (mostRecentBill) {
+            document.getElementById('lastTotalBill').textContent = mostRecentBill.totalBill.toFixed(2);
+            document.getElementById('lastPresentDues').textContent = mostRecentBill.presentDues.toFixed(2);
+
+            // Calculate balance (you might need to adjust this calculation based on your business logic)
+            const advanceMoney = parseFloat(document.querySelector('input[value*="Advance_money"]')?.value || 0);
+            const balance = advanceMoney - mostRecentBill.presentDues;
+            document.getElementById('balance').textContent = balance.toFixed(2);
+
+            // Update balance card color
+            const balanceCard = document.getElementById('balance').closest('.card');
+            if (balance <= 0) {
+                balanceCard.className = balanceCard.className.replace('bg-warning', 'bg-success');
+            } else {
+                balanceCard.className = balanceCard.className.replace('bg-success', 'bg-warning');
+            }
+        }
+    }
+
+    // Show search results information
+    function showSearchResultsInfo(searchTerm, dateRange) {
+        const searchResultsInfo = document.getElementById('searchResultsInfo');
+        const searchResultsText = document.getElementById('searchResultsText');
+
+        let infoText = '';
+
+        if (searchTerm || dateRange !== 'all') {
+            infoText = `Showing ${filteredBills.length} of ${originalBillsData.length} bills`;
+
+            if (searchTerm) {
+                infoText += ` matching "${searchTerm}"`;
+            }
+
+            if (dateRange !== 'all') {
+                const rangeText = getRangeDisplayText(dateRange);
+                infoText += ` for ${rangeText}`;
+            }
+
+            searchResultsText.textContent = infoText;
+            searchResultsInfo.style.display = 'block';
+        } else {
+            searchResultsInfo.style.display = 'none';
+        }
+    }
+
+    // Get display text for date range
+    function getRangeDisplayText(rangeType) {
+        const rangeTexts = {
+            'today': 'Today',
+            'yesterday': 'Yesterday',
+            'last7days': 'Last 7 Days',
+            'last30days': 'Last 30 Days',
+            'last3months': 'Last 3 Months',
+            'last6months': 'Last 6 Months',
+            'thisyear': 'This Year',
+            'lastyear': 'Last Year',
+            'custom': 'Custom Date Range'
+        };
+
+        return rangeTexts[rangeType] || 'Selected Period';
+    }
+
+    // Clear all filters
+    function clearFilters() {
+        // Clear search input
+        document.getElementById('searchInput').value = '';
+
+        // Reset date range selector
+        document.getElementById('dateRangeSelect').value = 'all';
+
+        // Clear custom date inputs
+        document.getElementById('dateFrom').value = '';
+        document.getElementById('dateTo').value = '';
+
+        // Hide custom date range inputs
+        document.getElementById('customDateRange').style.display = 'none';
+        document.getElementById('customDateRangeTo').style.display = 'none';
+
+        // Reset to show all bills
+        filteredBills = originalBillsData;
+        applyFilters();
+
+        // Reset summary cards to original values
+        resetSummaryCards();
+
+        // Hide search results info
+        document.getElementById('searchResultsInfo').style.display = 'none';
+    }
+
+    // Reset summary cards to original values
+    function resetSummaryCards() {
+        // Calculate original totals
+        const totalPayments = originalBillsData.reduce((sum, bill) => sum + bill.clearMoney, 0);
+
+        // Get the most recent bill from all bills
+        const sortedBills = originalBillsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const mostRecentBill = sortedBills[0];
+
+        // Update summary cards
+        document.getElementById('totalPaymentSum').textContent = totalPayments.toFixed(2);
+        document.getElementById('totalRecords').textContent = originalBillsData.length;
+
+        if (mostRecentBill) {
+            document.getElementById('lastTotalBill').textContent = mostRecentBill.totalBill.toFixed(2);
+            document.getElementById('lastPresentDues').textContent = mostRecentBill.presentDues.toFixed(2);
+
+            // Calculate balance
+            const advanceMoney = parseFloat(document.querySelector('input[value*="Advance_money"]')?.value || 0);
+            const balance = advanceMoney - mostRecentBill.presentDues;
+            document.getElementById('balance').textContent = balance.toFixed(2);
+        }
+    }
+
+    // Delete confirmation function (for the modal)
+    function confirmDelete(billId, customerName, billDate) {
+        document.getElementById('deleteCustomerName').textContent = customerName;
+        document.getElementById('deleteBillDate').textContent = billDate;
+        document.getElementById('deleteForm').action = `/ElectricBill/Delete/${billId}`;
+
+        // Show the modal
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+
+    // Utility function to highlight search terms (optional enhancement)
+    function highlightSearchTerms(text, searchTerm) {
+        if (!searchTerm) return text;
+
+        const regex = new RegExp(`(${searchTerm})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+    }
+
+    // Export functions for external use if needed
+    window.performSearch = performSearch;
+    window.clearFilters = clearFilters;
+    window.confirmDelete = confirmDelete;
+
+    // Insert pagination HTML after table
+    document.querySelector('#customerBillsTable').closest('.card-body').insertAdjacentHTML('afterend', paginationHTML);
+
+    // Update the applyFilters function to include pagination
+    function applyFilters() {
+        // Calculate total pages
+        totalPages = Math.ceil(filteredBills.length / itemsPerPage);
+
+        // Reset to first page if current page exceeds total pages
+        if (currentPage > totalPages) {
+            currentPage = 1;
+        }
+
+        // Hide all bills first
+        allBills.forEach(bill => {
+            bill.classList.add('hidden');
+        });
+
+        // Calculate which bills to show for current page
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const billsToShow = filteredBills.slice(startIndex, endIndex);
+
+        // Show bills for current page
+        billsToShow.forEach(bill => {
+            bill.row.classList.remove('hidden');
+        });
+
+        // Update pagination info
+        updatePaginationInfo();
+
+        // Generate pagination controls
+        generatePaginationControls();
+    }
+
+    // Update pagination information
+    function updatePaginationInfo() {
+        const startIndex = (currentPage - 1) * itemsPerPage + 1;
+        const endIndex = Math.min(currentPage * itemsPerPage, filteredBills.length);
+
+        document.getElementById('showingFrom').textContent = filteredBills.length > 0 ? startIndex : 0;
+        document.getElementById('showingTo').textContent = endIndex;
+        document.getElementById('totalItems').textContent = filteredBills.length;
+        document.getElementById('totalRecords').textContent = filteredBills.length;
+    }
+
+    // Generate pagination controls
+    function generatePaginationControls() {
+        const paginationControls = document.getElementById('paginationControls');
+
+        if (totalPages <= 1) {
+            paginationControls.innerHTML = '';
+            return;
+        }
+
+        let paginationHTML = '';
+
+        // Previous button
+        paginationHTML += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="goToPage(${currentPage - 1}); return false;">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+        `;
+
+        // Page numbers
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        // Adjust start page if we're near the end
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        // First page if not visible
+        if (startPage > 1) {
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="goToPage(1); return false;">1</a>
+                </li>
+            `;
+            if (startPage > 2) {
+                paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            }
+        }
+
+        // Page numbers
+        for (let i = startPage; i <= endPage; i++) {
+            paginationHTML += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="goToPage(${i}); return false;">${i}</a>
+                </li>
+            `;
+        }
+
+        // Last page if not visible
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+            }
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="goToPage(${totalPages}); return false;">${totalPages}</a>
+                </li>
+            `;
+        }
+
+        // Next button
+        paginationHTML += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="goToPage(${currentPage + 1}); return false;">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        `;
+
+        paginationControls.innerHTML = paginationHTML;
+    }
+
+    // Go to specific page
+    function goToPage(page) {
+        if (page < 1 || page > totalPages) return;
+
+        currentPage = page;
+        applyFilters();
+
+        // Scroll to table top
+        document.getElementById('customerBillsTable').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Reset pagination when performing new search
+    function performSearch() {
+        currentPage = 1; // Reset to first page
+
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+        const dateRange = document.getElementById('dateRangeSelect').value;
+
+        // Get date range
+        const dateFilter = getDateRange(dateRange);
+
+        // Filter bills based on search criteria
+        filteredBills = originalBillsData.filter(bill => {
+            // Text search filter
+            const matchesSearch = !searchTerm || bill.searchContent.includes(searchTerm);
+
+            // Date range filter
+            const billDate = new Date(bill.date);
+            const matchesDate = !dateFilter || (billDate >= dateFilter.from && billDate <= dateFilter.to);
+
+            return matchesSearch && matchesDate;
+        });
+
+        // Apply filters to DOM (this now includes pagination)
+        applyFilters();
+
+        // Update summary cards
+        updateSummaryCards();
+
+        // Show search results info
+        showSearchResultsInfo(searchTerm, dateRange);
+    }
+
+    // Initialize pagination on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // ... existing code ...
+
+        // Initialize pagination
+        filteredBills = originalBillsData;
+        applyFilters();
+    });
+
+</script>

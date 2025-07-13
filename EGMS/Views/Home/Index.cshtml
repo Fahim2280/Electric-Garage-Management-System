@@ -1,8 +1,1064 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<EGMS.DTOs.CustomerDashboardDTO>
+
+@{
+    ViewData["Title"] = "Customer Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <!-- Balance Summary Row -->
+    <div class="row mb-4">
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card bg-primary text-white shadow-lg border-0 card-hover">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0 font-weight-bold counter-text">৳@(ViewBag.TotalAdvanceMoney?.ToString("N2") ?? "0.00")</h4>
+                            <p class="mb-0 opacity-85">Total Advance Money</p>
+                        </div>
+                        <div class="text-white-50 icon-container">
+                            <i class="fas fa-coins fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <small class="text-white-75">
+                        <i class="fas fa-trending-up mr-1"></i>
+                        Available Balance
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card bg-danger text-white shadow-lg border-0 card-hover">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0 font-weight-bold counter-text">৳@(ViewBag.TotalPresentDues?.ToString("N2") ?? "0.00")</h4>
+                            <p class="mb-0 opacity-85">Total Present Dues</p>
+                        </div>
+                        <div class="text-white-50 icon-container">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <small class="text-white-75">
+                        <i class="fas fa-clock mr-1"></i>
+                        Pending Payments
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card @(ViewBag.Balance != null && ViewBag.Balance >= 0 ? "bg-success" : "bg-gradient-warning") text-white shadow-lg border-0 card-hover">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0 font-weight-bold counter-text">৳@(ViewBag.Balance?.ToString("N2") ?? "0.00")</h4>
+                            <p class="mb-0 opacity-85">Balance</p>
+                        </div>
+                        <div class="text-white-50 icon-container">
+                            <i class="fas @(ViewBag.Balance != null && ViewBag.Balance >= 0 ? "fa-check-circle" : "fa-minus-circle") fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <small class="text-white-75">
+                        <i class="fas @(ViewBag.Balance != null && ViewBag.Balance >= 0 ? "fa-arrow-up" : "fa-arrow-down") mr-1"></i>
+                        @(ViewBag.Balance != null && ViewBag.Balance >= 0 ? "Positive" : "Negative") Balance
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Table Row -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg border-0">
+                <div class="card-header border-0 bg-light">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                        <h3 class="card-title mb-2 mb-md-0">
+                            <i class="fas fa-users mr-2 text-primary"></i>
+                            Customer Overview
+                        </h3>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary m-1" id="customerCount">
+                                @(Model?.Count() ?? 0) customers
+                            </span>
+                         
+                            <button class="btn btn-outline-primary btn-sm" id="refreshBtn" title="Refresh Data">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model != null && Model.Any())
+                    {
+                        <!-- Enhanced Search Box -->
+                        <div class="search-container p-4 border-bottom">
+                            <div class="row align-items-center">
+                                <div class="col-md-8 col-12 mb-3 mb-md-0">
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                        <input type="text" id="searchInput" class="form-control" placeholder="Search by Customer Name or Mobile Number...">
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-4 col-12 text-md-right text-center">
+                                    <button id="clearSearch" class="btn btn-outline-secondary btn-sm shadow-sm">
+                                        <i class="fas fa-times mr-1"></i>
+                                        Clear Search
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0 modern-table" id="customerTable">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="border-0 font-weight-bold">
+                                            <i class="fas fa-user mr-2"></i>Customer Name
+                                        </th>
+                                        <th class="border-0 font-weight-bold">
+                                            <i class="fas fa-phone mr-2"></i>Mobile Number
+                                        </th>
+                                        <th class="border-0 font-weight-bold">
+                                            <i class="fas fa-money-bill-wave mr-2"></i>Present Dues
+                                        </th>
+                                        <th class="border-0 font-weight-bold text-center">
+                                            <i class="fas fa-cog mr-2"></i>Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customerTableBody">
+                                    @foreach (var customer in Model)
+                                    {
+                                        <tr class="customer-row" data-customer-name="@customer.Name.ToLower()" data-mobile="@customer.Mobile_number">
+                                            <td class="align-middle">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-modern text-white rounded-circle d-flex align-items-center justify-content-center mr-3">
+                                                        <i class="fas fa-user"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0 font-weight-bold text-dark">@customer.Name</h6>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-id-card mr-1"></i>
+                                                            ID: @customer.C_ID
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="icon-wrapper bg-light rounded-circle p-2 mr-3">
+                                                        <i class="fas fa-phone text-primary"></i>
+                                                    </div>
+                                                    <span class="font-weight-medium">@customer.Mobile_number</span>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                @if (customer.Present_dues > 0)
+                                                {
+                                                    <div class="dues-amount dues-positive">
+                                                        @* <i class="fas fa-exclamation-triangle mr-2"></i> *@
+                                                        <span>৳@customer.Present_dues.ToString("N2")</span>
+                                                    </div>
+                                                }
+                                                else if (customer.Present_dues < 0)
+                                                {
+                                                    <div class="dues-amount dues-negative">
+                                                        @* <i class="fas fa-arrow-down mr-2"></i> *@
+                                                        <span>৳@customer.Present_dues.ToString("N2")</span>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="dues-amount dues-zero">
+                                                        <i class="fas fa-check-circle mr-2"></i>
+                                                        <span>৳@customer.Present_dues.ToString("N2")</span>
+                                                    </div>
+                                                }
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <a href="@Url.Action("Details", "Customer", new { id = customer.C_ID })"
+                                                   class="btn btn-primary btn-sm rounded-pill shadow-sm btn-modern" title="View Customer Details">
+                                                    <i class="fas fa-eye mr-1"></i>
+                                                    View Details
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Enhanced Pagination Controls -->
+                        <div class="pagination-container p-4 bg-gradient-light border-top" id="paginationContainer">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 col-12 mb-3 mb-md-0">
+                                    <div class="pagination-info">
+                                        <span class="badge badge-outline-primary">
+                                            <i class="fas fa-info-circle mr-1"></i>
+                                            Showing <span id="showingStart">1</span> to <span id="showingEnd">30</span> of <span id="totalRecords">@Model.Count()</span> customers
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <nav aria-label="Customer pagination">
+                                        <ul class="pagination pagination-modern justify-content-end mb-0" id="paginationList">
+                                            <!-- Pagination will be generated by JavaScript -->
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state text-center py-5">
+                            <div class="mb-4">
+                                <div class="empty-icon bg-light rounded-circle mx-auto mb-3">
+                                    <i class="fas fa-users fa-4x text-muted"></i>
+                                </div>
+                            </div>
+                            <h5 class="text-muted mb-2">No Customers Found</h5>
+                            <p class="text-muted">No customers have been added to the system yet.</p>
+                            <button class="btn btn-primary btn-sm rounded-pill">
+                                <i class="fas fa-plus mr-1"></i>
+                                Add Customer
+                            </button>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer bg-gradient-light border-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 col-12 text-center text-md-left mb-2 mb-md-0">
+                            <small class="text-muted">
+                                <i class="fas fa-clock mr-1"></i>
+                                Last updated: @DateTime.Now.ToString("dd MMM yyyy, hh:mm tt")
+                            </small>
+                        </div>
+                        <div class="col-md-6 col-12 text-center text-md-right">
+                            <small class="text-muted">
+                                <i class="fas fa-chart-line mr-1"></i>
+                                Dashboard Overview
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Pagination variables
+            let currentPage = 1;
+            const itemsPerPage = 30;
+            let filteredRows = [];
+            let allRows = [];
+
+            // Initialize pagination
+            function initializePagination() {
+                allRows = $('#customerTableBody .customer-row').toArray();
+                filteredRows = allRows.slice();
+                showPage(1);
+                updatePaginationInfo();
+                generatePagination();
+            }
+
+            // Show specific page
+            function showPage(pageNumber) {
+                currentPage = pageNumber;
+                const startIndex = (pageNumber - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+
+                // Hide all rows
+                $(allRows).hide();
+
+                // Show only the rows for current page
+                const rowsToShow = filteredRows.slice(startIndex, endIndex);
+                $(rowsToShow).show();
+
+                updatePaginationInfo();
+                generatePagination();
+            }
+
+            // Update pagination info
+            function updatePaginationInfo() {
+                const startIndex = (currentPage - 1) * itemsPerPage + 1;
+                const endIndex = Math.min(currentPage * itemsPerPage, filteredRows.length);
+                const totalRecords = filteredRows.length;
+
+                $('#showingStart').text(totalRecords > 0 ? startIndex : 0);
+                $('#showingEnd').text(endIndex);
+                $('#totalRecords').text(totalRecords);
+
+                // Update customer count in header
+                $('#customerCount').text(totalRecords + ' Customers');
+            }
+
+            // Generate pagination buttons
+            function generatePagination() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                const paginationList = $('#paginationList');
+                paginationList.empty();
+
+                if (totalPages <= 1) {
+                    $('#paginationContainer').hide();
+                    return;
+                }
+
+                $('#paginationContainer').show();
+
+                // Previous button
+                const prevDisabled = currentPage === 1 ? 'disabled' : '';
+                paginationList.append(`
+                    <li class="page-item ${prevDisabled}">
+                        <a class="page-link" href="#" data-page="${currentPage - 1}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                `);
+
+                // Page numbers
+                const startPage = Math.max(1, currentPage - 2);
+                const endPage = Math.min(totalPages, currentPage + 2);
+
+                if (startPage > 1) {
+                    paginationList.append(`
+                        <li class="page-item">
+                            <a class="page-link" href="#" data-page="1">1</a>
+                        </li>
+                    `);
+                    if (startPage > 2) {
+                        paginationList.append(`<li class="page-item disabled"><span class="page-link">...</span></li>`);
+                    }
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const activeClass = i === currentPage ? 'active' : '';
+                    paginationList.append(`
+                        <li class="page-item ${activeClass}">
+                            <a class="page-link" href="#" data-page="${i}">${i}</a>
+                        </li>
+                    `);
+                }
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        paginationList.append(`<li class="page-item disabled"><span class="page-link">...</span></li>`);
+                    }
+                    paginationList.append(`
+                        <li class="page-item">
+                            <a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a>
+                        </li>
+                    `);
+                }
+
+                // Next button
+                const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+                paginationList.append(`
+                    <li class="page-item ${nextDisabled}">
+                        <a class="page-link" href="#" data-page="${currentPage + 1}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                `);
+            }
+
+            // Handle pagination clicks
+            $(document).on('click', '#paginationList .page-link', function(e) {
+                e.preventDefault();
+                const page = parseInt($(this).data('page'));
+                if (page && page !== currentPage) {
+                    showPage(page);
+                }
+            });
+
+            // Enhanced search functionality with pagination
+            $('#searchInput').on('keyup', function() {
+                const searchValue = this.value.toLowerCase();
+
+                if (searchValue === '') {
+                    filteredRows = allRows.slice();
+                } else {
+                    filteredRows = allRows.filter(function(row) {
+                        const customerName = $(row).data('customer-name');
+                        const mobileNumber = $(row).data('mobile');
+                        return customerName.includes(searchValue) || mobileNumber.includes(searchValue);
+                    });
+                }
+
+                showPage(1); // Reset to first page after search
+            });
+
+            // Clear search functionality
+            $('#clearSearch').click(function() {
+                $('#searchInput').val('');
+                filteredRows = allRows.slice();
+                showPage(1);
+            });
+
+            // Real-time search with debouncing
+            var searchTimeout;
+            $('#searchInput').on('input', function() {
+                clearTimeout(searchTimeout);
+                var input = this;
+                searchTimeout = setTimeout(function() {
+                    $(input).trigger('keyup');
+                }, 300);
+            });
+
+            // Add smooth animations to table rows
+            $('#customerTable tbody tr').hover(
+                function() {
+                    $(this).addClass('table-row-hover');
+                },
+                function() {
+                    $(this).removeClass('table-row-hover');
+                }
+            );
+
+            // Refresh button functionality
+            $('#refreshBtn').click(function() {
+                $(this).addClass('fa-spin');
+                setTimeout(() => {
+                    $(this).removeClass('fa-spin');
+                }, 1000);
+            });
+
+            // Initialize everything
+            initializePagination();
+        });
+    </script>
+
+    <style>
+        /* Modern gradient backgrounds */
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .bg-gradient-danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .bg-gradient-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .bg-gradient-warning {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .bg-gradient-light {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        /* Enhanced card styling */
+        .card {
+            border: none;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            border-bottom: none;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 1.5rem 2rem;
+            /* background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); */
+        }
+
+        .card-footer {
+            border-top: none;
+            border-radius: 0 0 20px 20px !important;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .shadow-lg {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Icon containers */
+        .icon-container {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover .icon-container {
+            transform: scale(1.1);
+        }
+
+        /* Counter animation */
+        .counter-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        /* Modern search styling */
+        .search-container {
+            /* background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); */
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .search-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+                animation: shimmer 3s infinite;
+            }
+
+        shimmer {
+            0%
+
+        {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
+
+        }
+
+        .search-input-group {
+            position: relative;
+            z-index: 1;
+        }
+
+            .search-input-group .form-control {
+                border-radius: 25px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                background: rgba(255, 255, 255, 0.9);
+                padding: 0.75rem 1rem;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+            }
+
+                .search-input-group .form-control:focus {
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+                    background: #fff;
+                }
+
+            .search-input-group .input-group-text {
+                border-radius: 25px 0 0 25px;
+                background: rgba(255, 255, 255, 0.9);
+                border: 7px solid rgba(255, 255, 255, 0.3);
+                border-right: none;
+                font-weight: 0.9rem;
+                padding: 0.6rem 0.8rem;
+            }
+
+        /* Modern table styling */
+        .modern-table {
+            background: #fff;
+            border-radius: 0;
+        }
+
+        .thead-modern {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+            .thead-modern th {
+                border: none;
+                padding: 1.2rem 1rem;
+                font-weight: 600;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: #fff;
+            }
+
+        .modern-table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+            .modern-table tbody tr:hover {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                transform: translateX(5px);
+            }
+
+        .modern-table td {
+            padding: 1.2rem 1rem;
+            border-top: none;
+            vertical-align: middle;
+        }
+
+        /* Avatar styling */
+        .avatar-modern {
+            width: 45px;
+            height: 45px;
+            font-size: 16px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+
+            .avatar-modern:hover {
+                transform: scale(1.1);
+            }
+
+        .icon-wrapper {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .icon-wrapper:hover {
+                background: #007bff !important;
+                color: #fff !important;
+            }
+
+        /* Enhanced dues styling */
+        .dues-amount {
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.6rem 1rem;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+        }
+
+            .dues-amount:hover {
+                transform: translateY(-2px);
+                /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); */
+            }
+
+        .dues-positive {
+            /* background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); */
+            color: #d63384;
+            /* border: 1px solid rgba(214, 51, 132, 0.2); */
+        }
+
+        .dues-negative {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #198754;
+            border: 1px solid rgba(25, 135, 84, 0.2);
+        }
+
+        .dues-zero {
+            background: linear-gradient(135deg, #d0d0d0 0%, #f0f0f0 100%);
+            color: #6c757d;
+            border: 1px solid rgba(108, 117, 125, 0.2);
+        }
+
+        /* Modern button styling */
+        .btn-modern {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 25px;
+            padding: 0.5rem 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+            .btn-modern:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+            }
+
+        /* Empty state styling */
+        .empty-state {
+            padding: 4rem 2rem;
+        }
+
+        .empty-icon {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        /* Modern pagination */
+        .pagination-modern {
+            gap: 0.5rem;
+        }
+
+            .pagination-modern .page-link {
+                border: none;
+                border-radius: 12px;
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+                font-weight: 500;
+                color: #667eea;
+                background: rgba(102, 126, 234, 0.1);
+                transition: all 0.3s ease;
+            }
+
+                .pagination-modern .page-link:hover {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: #fff;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+                }
+
+            .pagination-modern .page-item.active .page-link {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #fff;
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            }
+
+            .pagination-modern .page-item.disabled .page-link {
+                color: #adb5bd;
+                background: rgba(173, 181, 189, 0.1);
+                cursor: not-allowed;
+            }
+
+        /* Badge styling */
+        .badge-outline-primary {
+            color: #667eea;
+            border: 1px solid #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Responsive improvements */
+
+
+
+        .container-fluid {
+            padding: 1rem;
+        }
+
+        .card {
+            border-radius: 15px;
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-radius: 15px 15px 0 0 !important;
+        }
+
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-radius: 0 0 15px 15px !important;
+        }
+
+        .search-container {
+            padding: 1.5rem !important;
+        }
+
+        .counter-text {
+            font-size: 1.5rem;
+        }
+
+        .avatar-modern {
+            width: 40px;
+            height: 40px;
+            font-size: 14px;
+        }
+
+        .dues-amount {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.8rem;
+        }
+
+        .modern-table td {
+            padding: 1rem 0.8rem;
+        }
+
+        .thead-modern th {
+            padding: 1rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-modern {
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .search-input-group .form-control {
+            font-size: 0.9rem;
+            padding: 0.6rem 0.8rem;
+        }
+
+        .pagination-modern .page-link {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .icon-wrapper {
+            width: 28px;
+            height: 28px;
+        }
+
+        
+
+
+
+
+    .counter-text {
+            font-size: 1.3rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .avatar-modern {
+            width: 35px;
+            height: 35px;
+            font-size: 12px;
+        }
+
+        .dues-amount {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+        }
+
+        .btn-modern {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .modern-table td {
+            padding: 0.8rem 0.6rem;
+        }
+
+        .thead-modern th {
+            padding: 0.8rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .pagination-modern .page-link {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .search-container {
+            padding: 1rem !important;
+        }
+
+        .empty-state {
+            padding: 2rem 1rem;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+        }
+
+        
+
+        /* Additional animations */
+        fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        .customer-row {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+            .customer-row:nth-child(even) {
+                animation-delay: 0.1s;
+            }
+
+            .customer-row:nth-child(odd) {
+                animation-delay: 0.2s;
+            }
+
+        /* Loading animation for refresh button */
+        .fa-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        spin {
+            0%
+
+        {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+
+        }
+
+        /* Enhanced hover effects */
+        .card-hover .card-footer {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover .card-footer {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Glassmorphism effect for cards */
+        .card {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Modern scrollbar */
+        .table-responsive::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 4px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+        }
+
+            .table-responsive::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            }
+
+        /* Enhanced focus states */
+        .form-control:focus,
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        /* Text utilities */
+        .text-white-75 {
+            color: rgba(255, 255, 255, 0.75) !important;
+        }
+
+        .opacity-85 {
+            opacity: 0.85;
+        }
+
+        .font-weight-medium {
+            font-weight: 500;
+        }
+
+        /* Modern shadows */
+        .shadow-sm {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        /* Improved table row hover */
+        .table-row-hover {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+            transform: translateX(5px) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom badge styling */
+        .badge-pill {
+            border-radius: 50rem;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* Enhanced card body padding */
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Improved responsive spacing */
+
+
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+
+        .card-body {
+            padding: 1rem;
+        }
+        
+
+        /* Enhanced button group spacing */
+        .btn + .btn {
+            margin-left: 0.5rem;
+        }
+
+        /* Improved form group spacing */
+        .form-group + .form-group {
+            margin-top: 1.5rem;
+        }
+
+        /* Enhanced typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .text-dark {
+            color: #2d3748 !important;
+        }
+
+        /* Modern input styling */
+        .form-control {
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+            }
+
+        /* Enhanced alert styling */
+        .alert {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Modern modal styling */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f1f5f9;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #f1f5f9;
+            border-radius: 0 0 20px 20px;
+        }
+    </style>
+}

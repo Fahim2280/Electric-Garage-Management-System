@@ -1,0 +1,385 @@
+﻿@model EGMS.DTOs.ElectricBillDTO
+@{
+    ViewData["Title"] = "Create Electric Bill";
+    bool isCustomerPreSelected = Model.Customer_ID > 0;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-plus-circle text-success me-2"></i>
+            Create Electric Bill
+        </h2>
+        @if (isCustomerPreSelected)
+        {
+            <div class="badge bg-info fs-6">Customer ID: @Model.Customer_ID</div>
+        }
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-bolt me-2"></i>
+                Electric Bill Information
+            </h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" id="billForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <!-- Customer Selection (if not pre-selected) -->
+                    @if (!isCustomerPreSelected)
+                    {
+                        <div class="col-md-6">
+                            <label asp-for="Customer_ID" class="form-label fw-bold">
+                                <i class="fas fa-user text-primary me-1"></i>
+                                Select Customer
+                            </label>
+                            <select asp-for="Customer_ID" class="form-select" id="customerSelect">
+                                <option value="">-- Select Customer --</option>
+                                @foreach (var customer in ViewBag.Customers as List<EGMS.Models.Customer>)
+                                {
+                                    <option value="@customer.C_ID">@customer.Name (ID: @customer.C_ID)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Customer_ID" class="text-danger"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Customer Information (Read-only when pre-selected) -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-user text-primary me-1"></i>
+                                Customer Name
+                            </label>
+                            <input type="text" class="form-control" value="@Model.CustomerName" readonly>
+                            <input asp-for="Customer_ID" type="hidden" />
+                            <input asp-for="CustomerName" type="hidden" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-id-badge text-primary me-1"></i>
+                                Customer ID
+                            </label>
+                            <input type="text" class="form-control" value="@Model.Customer_ID" readonly>
+                        </div>
+                    }
+
+                    <!-- Bill Date -->
+                    <div class="col-md-6">
+                        <label asp-for="Date" class="form-label fw-bold">
+                            <i class="fas fa-calendar-alt text-primary me-1"></i>
+                            Bill Date
+                        </label>
+                        <input asp-for="Date" type="date" class="form-control" />
+                        <span asp-validation-for="Date" class="text-danger"></span>
+                    </div>
+
+                    <!-- Previous Unit -->
+                    <div class="col-md-6">
+                        <label asp-for="Previous_unit" class="form-label fw-bold">
+                            <i class="fas fa-history text-primary me-1"></i>
+                            Previous Unit
+                        </label>
+                        <input asp-for="Previous_unit" type="number" step="0.01" class="form-control" id="previousUnit" readonly />
+                        <span asp-validation-for="Previous_unit" class="text-danger"></span>
+                    </div>
+
+                    <!-- Current Unit -->
+                    <div class="col-md-6">
+                        <label asp-for="Current_Unit" class="form-label fw-bold">
+                            <i class="fas fa-bolt text-primary me-1"></i>
+                            Current Unit
+                        </label>
+                        <input asp-for="Current_Unit" type="number" step="0.01" class="form-control" id="currentUnit" />
+                        <span asp-validation-for="Current_Unit" class="text-danger"></span>
+                    </div>
+
+                    <!-- Total Unit (Auto-calculated) -->
+                    <div class="col-md-6">
+                        <label asp-for="Total_Unit" class="form-label fw-bold">
+                            <i class="fas fa-calculator text-primary me-1"></i>
+                            Total Unit Consumed
+                        </label>
+                        <input asp-for="Total_Unit" type="number" step="0.01" class="form-control" id="totalUnit" readonly />
+                        <span asp-validation-for="Total_Unit" class="text-danger"></span>
+                    </div>
+
+                    <!-- Electric Bill (Auto-calculated: Total Unit × 15) -->
+                    <div class="col-md-6">
+                        <label asp-for="Electric_bill" class="form-label fw-bold">
+                            <i class="fas fa-money-bill-wave text-primary me-1"></i>
+                            Electric Bill Amount
+                            <small class="text-muted">(Auto-calculated: Total Unit × 15)</small>
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">৳</span>
+                            <input asp-for="Electric_bill" type="number" step="0.01" class="form-control" id="electricBill" readonly />
+                        </div>
+                        <span asp-validation-for="Electric_bill" class="text-danger"></span>
+                    </div>
+
+                    <!-- Previous Dues (Auto-calculated from customer data) -->
+                    <div class="col-md-6">
+                        <label asp-for="Previous_duos" class="form-label fw-bold">
+                            <i class="fas fa-exclamation-triangle text-warning me-1"></i>
+                            Previous Dues
+                            <small class="text-muted">(Auto-calculated from customer data)</small>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">৳</span>
+                            <input asp-for="Previous_duos" type="number" step="0.01" class="form-control" id="previousDues" readonly />
+                        </div>
+                        <span asp-validation-for="Previous_duos" class="text-danger"></span>
+                    </div>
+
+                    <!-- Rent Bill -->
+                    <div class="col-md-6">
+                        <label asp-for="Rent_Bill" class="form-label fw-bold">
+                            <i class="fas fa-home text-primary me-1"></i>
+                            Rent Bill
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">৳</span>
+                            <input asp-for="Rent_Bill" type="number" step="0.01" class="form-control" id="rentBill" />
+                        </div>
+                        <span asp-validation-for="Rent_Bill" class="text-danger"></span>
+                    </div>
+
+                    <!-- Total Bill (Auto-calculated) -->
+                    <div class="col-md-6">
+                        <label asp-for="Total_bill" class="form-label fw-bold">
+                            <i class="fas fa-receipt text-success me-1"></i>
+                            Total Bill Amount
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">৳</span>
+                            <input asp-for="Total_bill" type="number" step="0.01" class="form-control" id="totalBill" readonly />
+                        </div>
+                        <span asp-validation-for="Total_bill" class="text-danger"></span>
+                    </div>
+
+                    <!-- Clear Money -->
+                    <div class="col-md-6">
+                        <label asp-for="Clear_money" class="form-label fw-bold">
+                            <i class="fas fa-hand-holding-usd text-success me-1"></i>
+                            Payment Received
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">৳</span>
+                            <input asp-for="Clear_money" type="number" step="0.01" class="form-control" id="clearMoney" />
+                        </div>
+                        <span asp-validation-for="Clear_money" class="text-danger"></span>
+                    </div>
+
+                    <!-- Present Dues (Auto-calculated) -->
+                    <div class="col-md-6">
+                        <label asp-for="Present_dues" class="form-label fw-bold">
+                            <i class="fas fa-exclamation-circle text-danger me-1"></i>
+                            Present Dues
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">৳</span>
+                            <input asp-for="Present_dues" type="number" step="0.01" class="form-control" id="presentDues" readonly />
+                        </div>
+                        <span asp-validation-for="Present_dues" class="text-danger"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-footer bg-light">
+            <div class="d-flex gap-2 justify-content-end">
+                <button type="submit" form="billForm" class="btn btn-success">
+                    <i class="fas fa-save me-1"></i> Create Bill
+                </button>
+                @if (isCustomerPreSelected)
+                {
+                    <a asp-action="Details" asp-controller="Customer" asp-route-id="@Model.Customer_ID" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Customer
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Back to List
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:read-only {
+        background-color: #f8f9fa;
+        opacity: 1;
+        border: 1px solid #dee2e6;
+        color: #495057;
+    }
+
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .form-label {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+    }
+
+    .btn {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+    }
+
+    .input-group-text {
+        background-color: #e9ecef;
+        border: 1px solid #dee2e6;
+        font-weight: bold;
+    }
+
+    .card-footer {
+        border-top: 1px solid #dee2e6;
+        padding: 1.25rem;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-select {
+        border-radius: 8px;
+    }
+
+    .text-muted {
+        font-size: 0.8rem;
+        font-weight: normal;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const customerSelect = document.getElementById('customerSelect');
+        const previousUnit = document.getElementById('previousUnit');
+        const currentUnit = document.getElementById('currentUnit');
+        const totalUnit = document.getElementById('totalUnit');
+        const electricBill = document.getElementById('electricBill');
+        const previousDues = document.getElementById('previousDues');
+        const rentBill = document.getElementById('rentBill');
+        const totalBill = document.getElementById('totalBill');
+        const clearMoney = document.getElementById('clearMoney');
+        const presentDues = document.getElementById('presentDues');
+
+        // Function to calculate total units
+        function calculateTotalUnits() {
+            const prev = parseFloat(previousUnit.value) || 0;
+            const current = parseFloat(currentUnit.value) || 0;
+            const total = current - prev;
+            totalUnit.value = total >= 0 ? total.toFixed(2) : '0.00';
+
+            // Auto-calculate electric bill when total units change
+            calculateElectricBill();
+        }
+
+        // Function to calculate electric bill (Total Unit × 15)
+        function calculateElectricBill() {
+            const totalUnits = parseFloat(totalUnit.value) || 0;
+            const billAmount = totalUnits * 15;
+            electricBill.value = billAmount.toFixed(2);
+
+            // Trigger total bill calculation
+            calculateTotalBill();
+        }
+
+        // Function to calculate total bill
+        function calculateTotalBill() {
+            const electric = parseFloat(electricBill.value) || 0;
+            const dues = parseFloat(previousDues.value) || 0;
+            const rent = parseFloat(rentBill.value) || 0;
+            const total = electric + dues + rent;
+            totalBill.value = total.toFixed(2);
+
+            // Trigger present dues calculation
+            calculatePresentDues();
+        }
+
+        // Function to calculate present dues
+        function calculatePresentDues() {
+            const total = parseFloat(totalBill.value) || 0;
+            const clear = parseFloat(clearMoney.value) || 0;
+            const dues = total - clear;
+            presentDues.value = dues >= 0 ? dues.toFixed(2) : '0.00';
+        }
+
+        // Function to load customer data
+        async function loadCustomerData(customerId) {
+            if (!customerId) {
+                previousUnit.value = '';
+                previousDues.value = '';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/ElectricBill/GetCustomerSummary?customerId=${customerId}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    previousUnit.value = result.data.lastMeterReading.toFixed(2);
+                    previousDues.value = result.data.previousDues.toFixed(2);
+
+                    // Trigger all calculations
+                    calculateTotalUnits();
+                    calculateElectricBill();
+                    calculateTotalBill();
+                    calculatePresentDues();
+                } else {
+                    console.error('Error loading customer data:', result.message);
+                }
+            } catch (error) {
+                console.error('Error loading customer data:', error);
+            }
+        }
+
+        // Event listeners for auto-calculation
+        currentUnit.addEventListener('input', calculateTotalUnits);
+        rentBill.addEventListener('input', calculateTotalBill);
+        clearMoney.addEventListener('input', calculatePresentDues);
+
+        // Customer selection change event
+        if (customerSelect) {
+            customerSelect.addEventListener('change', function() {
+                loadCustomerData(this.value);
+            });
+        }
+
+        // Set today's date by default
+        const dateInput = document.querySelector('input[type="date"]');
+        if (dateInput && !dateInput.value) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        // Initialize calculations
+        calculateTotalUnits();
+        calculateElectricBill();
+        calculateTotalBill();
+        calculatePresentDues();
+    });
+</script>
