@@ -20,6 +20,8 @@ namespace EGMS
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.AddHttpContextAccessor();
+
             // Cookie Authentication (Use this OR JWT, not both)
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>

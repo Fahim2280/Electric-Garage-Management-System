@@ -3,20 +3,96 @@
   "WorkspaceRootPath": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\services\\electricbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:services\\electricbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\services\\customerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:services\\customerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\controllers\\electricbillcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:controllers\\electricbillcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\models\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\models\\electricbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\electricbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250716170532_Init8.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250716170532_Init8.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250716165525_Init7.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250716165525_Init7.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\customerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\customerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\customercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\customercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\customer\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\customer\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\customer\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\customer\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\customer\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\customer\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\customer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\customer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\interface\\icustomerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:interface\\icustomerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\auth\\signin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -35,32 +111,8 @@
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250711155229_Init3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250711155229_Init3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\models\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\Edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Auth\\Edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250711144539_Init2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250711144539_Init2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\userregisterdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -79,30 +131,6 @@
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\electricbill\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\customer\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\customer\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\customer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\customer\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\services\\electricbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:services\\electricbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\services\\customerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:services\\customerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\interface\\ielectricbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:interface\\ielectricbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -113,18 +141,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\electricbilldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\electricbilldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\customerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\customerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\customer\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\customer\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\controllers\\electricbillcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:controllers\\electricbillcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\electricbill\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -143,31 +159,11 @@
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\shared\\_validationscriptspartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\interface\\icustomerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:interface\\icustomerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kfahi\\AppData\\Local\\Temp\\.vsdbgsrc\\d161942c889792c39312acfe5f5fa67f250fc59d3dabbe9a7b48e9623384f464\\HashCode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\customercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\customercreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\electricbillpreviewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\electricbillpreviewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\customer\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\customer\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\models\\electricbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\electricbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\previewbillrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -190,64 +186,64 @@
       "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\migrations\\20250704183449_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:migrations\\20250704183449_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\forgotpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\forgotpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\UserEditDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\UserEditDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\models\\passwordresettoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:models\\passwordresettoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\Index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Auth\\Index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\services\\mockemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:services\\mockemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\IEmailService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Interface\\IEmailService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\resetpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\resetpassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ChangePasswordDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\ChangePasswordDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\services\\passwordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:services\\passwordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\IPasswordService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Interface\\IPasswordService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\PasswordService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\PasswordService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\auth\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\auth\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ResetPasswordDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\ResetPasswordDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\auth\\forgotpasswordconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\auth\\forgotpasswordconfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ForgotPasswordDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DTOs\\ForgotPasswordDTO.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\auth\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\auth\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\PasswordResetToken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\PasswordResetToken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\auth\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\auth\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\MockEmailService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\MockEmailService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\interface\\iemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:interface\\iemailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\EmailService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\EmailService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\changepassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\changepassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\ForgotPassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Auth\\ForgotPassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\interface\\ipasswordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:interface\\ipasswordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\ForgotPasswordConfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Auth\\ForgotPasswordConfirmation.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\dtos\\usereditdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:dtos\\usereditdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\ResetPassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Auth\\ResetPassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|d:\\github\\electric-garage-management-system\\egms\\views\\auth\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{05327E64-F4D8-4E88-81BB-E470D395A438}|EGMS.csproj|solutionrelative:views\\auth\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -257,7 +253,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -277,70 +273,293 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
-              "Title": "ForgotPasswordDTO.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ForgotPasswordDTO.cs",
-              "RelativeDocumentMoniker": "DTOs\\ForgotPasswordDTO.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ForgotPasswordDTO.cs",
-              "RelativeToolTip": "DTOs\\ForgotPasswordDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAfAAAAAAAAAA==",
+              "DocumentIndex": 8,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAAwCgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-11T15:41:59.546Z"
+              "WhenOpened": "2025-06-30T18:36:36.925Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 56,
-              "Title": "PasswordResetToken.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\PasswordResetToken.cs",
-              "RelativeDocumentMoniker": "Models\\PasswordResetToken.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\PasswordResetToken.cs",
-              "RelativeToolTip": "Models\\PasswordResetToken.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAkAAAApAAAAAAAAAA==",
+              "DocumentIndex": 6,
+              "Title": "Customer.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\Customer.cs",
+              "RelativeDocumentMoniker": "Models\\Customer.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\Customer.cs",
+              "RelativeToolTip": "Models\\Customer.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAwDYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-11T15:42:58.975Z"
+              "WhenOpened": "2025-07-02T15:14:01.128Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-06-30T18:33:32.383Z",
+              "DocumentIndex": 4,
+              "Title": "ElectricBillController.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\ElectricBillController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ElectricBillController.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\ElectricBillController.cs",
+              "RelativeToolTip": "Controllers\\ElectricBillController.cs",
+              "ViewState": "AgIAALYBAAAAAAAAAAAAwMsBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-03T16:32:10.772Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ElectricBillService.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\ElectricBillService.cs",
+              "RelativeDocumentMoniker": "Services\\ElectricBillService.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\ElectricBillService.cs",
+              "RelativeToolTip": "Services\\ElectricBillService.cs",
+              "ViewState": "AgIAAC0CAAAAAAAAAAAAwEICAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-03T16:31:21.493Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CustomerService.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\CustomerService.cs",
+              "RelativeDocumentMoniker": "Services\\CustomerService.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\CustomerService.cs",
+              "RelativeToolTip": "Services\\CustomerService.cs",
+              "ViewState": "AgIAAHQAAAAAAAAAAAAAwBkBAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T15:15:14.07Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CustomerController.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\CustomerController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CustomerController.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\CustomerController.cs",
+              "RelativeToolTip": "Controllers\\CustomerController.cs",
+              "ViewState": "AgIAALMAAAAAAAAAAAAAwMgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T15:16:39.615Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAAAFAAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-02T14:54:59.175Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Controllers\\HomeController.cs",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAAwIMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T15:36:24.424Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ElectricBill.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\ElectricBill.cs",
+              "RelativeDocumentMoniker": "Models\\ElectricBill.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\ElectricBill.cs",
+              "RelativeToolTip": "Models\\ElectricBill.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAwDYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-03T16:28:54.66Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Models\\AppDbContext.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\AppDbContext.cs",
+              "RelativeToolTip": "Models\\AppDbContext.cs",
+              "ViewState": "AgIAAEYAAAAAAAAAAAAAwFsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-30T18:39:52.649Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "20250716170532_Init8.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250716170532_Init8.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250716170532_Init8.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250716170532_Init8.cs",
+              "RelativeToolTip": "Migrations\\20250716170532_Init8.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-16T17:05:32.236Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "20250716165525_Init7.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250716165525_Init7.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250716165525_Init7.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250716165525_Init7.cs",
+              "RelativeToolTip": "Migrations\\20250716165525_Init7.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-16T16:55:25.978Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Details.cshtml",
+              "RelativeDocumentMoniker": "Views\\Customer\\Details.cshtml",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Details.cshtml",
+              "RelativeToolTip": "Views\\Customer\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-02T19:22:38.769Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Views\\Customer\\Edit.cshtml",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Edit.cshtml",
+              "RelativeToolTip": "Views\\Customer\\Edit.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-06T19:52:25.059Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAQwCQAAABMAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-07T16:50:38.95Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 13,
+              "Title": "CustomerDTO.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\CustomerDTO.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerDTO.cs",
+              "RelativeToolTip": "DTOs\\CustomerDTO.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAwCwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T15:12:33.674Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Customer\\Index.cshtml",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Index.cshtml",
+              "RelativeToolTip": "Views\\Customer\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-02T17:34:58.441Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Create.cshtml",
+              "RelativeDocumentMoniker": "Views\\Customer\\Create.cshtml",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Create.cshtml",
+              "RelativeToolTip": "Views\\Customer\\Create.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-02T15:43:50.991Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "CustomerCreateDTO.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerCreateDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\CustomerCreateDTO.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerCreateDTO.cs",
+              "RelativeToolTip": "DTOs\\CustomerCreateDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T15:13:30.969Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "ICustomerService.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\ICustomerService.cs",
+              "RelativeDocumentMoniker": "Interface\\ICustomerService.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\ICustomerService.cs",
+              "RelativeToolTip": "Interface\\ICustomerService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-02T15:14:44.109Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
               "Title": "AuthController.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
               "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAAACcBAAAPAAAAAAAAAA==",
+              "ViewState": "AgIAAFEBAAAAAAAAAAAAwGYBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-30T18:40:20.331Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 57,
+              "DocumentIndex": 21,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "appsettings.Development.json",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\appsettings.Development.json",
+              "RelativeToolTip": "appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-30T18:33:27.517Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
               "Title": "MockEmailService.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\MockEmailService.cs",
               "RelativeDocumentMoniker": "Services\\MockEmailService.cs",
@@ -352,20 +571,43 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "appsettings.Development.json",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\appsettings.Development.json",
-              "RelativeDocumentMoniker": "appsettings.Development.json",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\appsettings.Development.json",
-              "RelativeToolTip": "appsettings.Development.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 22,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-06-30T18:33:27.517Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-30T18:33:32.383Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 54,
+              "DocumentIndex": 47,
+              "Title": "PasswordResetToken.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\PasswordResetToken.cs",
+              "RelativeDocumentMoniker": "Models\\PasswordResetToken.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\PasswordResetToken.cs",
+              "RelativeToolTip": "Models\\PasswordResetToken.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAkAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-11T15:42:58.975Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "ForgotPasswordDTO.cs",
+              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ForgotPasswordDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\ForgotPasswordDTO.cs",
+              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ForgotPasswordDTO.cs",
+              "RelativeToolTip": "DTOs\\ForgotPasswordDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-11T15:41:59.546Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
               "Title": "ResetPasswordDTO.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ResetPasswordDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\ResetPasswordDTO.cs",
@@ -377,7 +619,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 50,
               "Title": "PasswordService.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\PasswordService.cs",
               "RelativeDocumentMoniker": "Services\\PasswordService.cs",
@@ -389,7 +631,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 58,
+              "DocumentIndex": 51,
               "Title": "EmailService.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\EmailService.cs",
               "RelativeDocumentMoniker": "Services\\EmailService.cs",
@@ -401,7 +643,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 59,
+              "DocumentIndex": 52,
               "Title": "ForgotPassword.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\ForgotPassword.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\ForgotPassword.cshtml",
@@ -413,7 +655,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 60,
+              "DocumentIndex": 53,
               "Title": "ForgotPasswordConfirmation.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\ForgotPasswordConfirmation.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\ForgotPasswordConfirmation.cshtml",
@@ -425,7 +667,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 61,
+              "DocumentIndex": 54,
               "Title": "ResetPassword.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\ResetPassword.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\ResetPassword.cshtml",
@@ -437,7 +679,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 25,
               "Title": "_ViewImports.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\_ViewImports.cshtml",
               "RelativeDocumentMoniker": "Views\\_ViewImports.cshtml",
@@ -449,7 +691,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 23,
               "Title": "SignIn.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\SignIn.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\SignIn.cshtml",
@@ -461,7 +703,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 24,
               "Title": "SignUp.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\SignUp.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\SignUp.cshtml",
@@ -473,7 +715,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 26,
               "Title": "UserService.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "Services\\UserService.cs",
@@ -485,7 +727,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 55,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\Index.cshtml",
@@ -497,19 +739,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "20250711155229_Init3.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250711155229_Init3.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250711155229_Init3.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250711155229_Init3.cs",
-              "RelativeToolTip": "Migrations\\20250711155229_Init3.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-11T15:52:29.653Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 56,
               "Title": "IEmailService.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\IEmailService.cs",
               "RelativeDocumentMoniker": "Interface\\IEmailService.cs",
@@ -521,7 +751,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 57,
               "Title": "ChangePasswordDTO.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ChangePasswordDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\ChangePasswordDTO.cs",
@@ -533,7 +763,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 58,
               "Title": "IPasswordService.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\IPasswordService.cs",
               "RelativeDocumentMoniker": "Interface\\IPasswordService.cs",
@@ -545,7 +775,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 59,
               "Title": "UserEditDTO.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\UserEditDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\UserEditDTO.cs",
@@ -557,19 +787,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "AppDbContext.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\AppDbContext.cs",
-              "RelativeDocumentMoniker": "Models\\AppDbContext.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\AppDbContext.cs",
-              "RelativeToolTip": "Models\\AppDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T18:39:52.649Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 60,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Auth\\Edit.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\Edit.cshtml",
@@ -581,19 +799,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "20250711144539_Init2.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250711144539_Init2.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250711144539_Init2.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250711144539_Init2.cs",
-              "RelativeToolTip": "Migrations\\20250711144539_Init2.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-11T14:45:39.398Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 27,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
@@ -605,7 +811,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 30,
               "Title": "IUserService.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\IUserService.cs",
               "RelativeDocumentMoniker": "Interface\\IUserService.cs",
@@ -617,19 +823,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "User.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\User.cs",
-              "RelativeDocumentMoniker": "Models\\User.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\User.cs",
-              "RelativeToolTip": "Models\\User.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAmwCUAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-30T18:36:36.925Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 29,
               "Title": "UserLoginDTO.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\UserLoginDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\UserLoginDTO.cs",
@@ -641,31 +835,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "CustomerController.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\CustomerController.cs",
-              "RelativeDocumentMoniker": "Controllers\\CustomerController.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\CustomerController.cs",
-              "RelativeToolTip": "Controllers\\CustomerController.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAAABUAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T15:16:39.615Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Create.cshtml",
-              "RelativeDocumentMoniker": "Views\\Customer\\Create.cshtml",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Create.cshtml",
-              "RelativeToolTip": "Views\\Customer\\Create.cshtml",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-02T15:43:50.991Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 28,
               "Title": "UserRegisterDTO.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\UserRegisterDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\UserRegisterDTO.cs",
@@ -677,19 +847,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Customer\\Index.cshtml",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Index.cshtml",
-              "RelativeToolTip": "Views\\Customer\\Index.cshtml",
-              "ViewState": "AgIAAEAAAAAAAAAAAAAlwEwAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-02T17:34:58.441Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 31,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\ElectricBill\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\ElectricBill\\Index.cshtml",
@@ -701,31 +859,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
-              "Title": "CustomerDTO.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerDTO.cs",
-              "RelativeDocumentMoniker": "DTOs\\CustomerDTO.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerDTO.cs",
-              "RelativeToolTip": "DTOs\\CustomerDTO.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAowC0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T15:12:33.674Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "ElectricBillService.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\ElectricBillService.cs",
-              "RelativeDocumentMoniker": "Services\\ElectricBillService.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\ElectricBillService.cs",
-              "RelativeToolTip": "Services\\ElectricBillService.cs",
-              "ViewState": "AgIAAJ4BAAAAAAAAAAAmwLsBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T16:31:21.493Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 32,
               "Title": "IElectricBillService.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\IElectricBillService.cs",
               "RelativeDocumentMoniker": "Interface\\IElectricBillService.cs",
@@ -737,43 +871,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "Controllers\\HomeController.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T15:36:24.424Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Home\\Index.cshtml",
-              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAAAFAAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-02T14:54:59.175Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "CustomerService.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\CustomerService.cs",
-              "RelativeDocumentMoniker": "Services\\CustomerService.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Services\\CustomerService.cs",
-              "RelativeToolTip": "Services\\CustomerService.cs",
-              "ViewState": "AgIAAM0AAAAAAAAAAAAowOoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T15:15:14.07Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 34,
               "Title": "ElectricBillDTO.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ElectricBillDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\ElectricBillDTO.cs",
@@ -785,7 +883,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 33,
               "Title": "CustomerDashboardDTO.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerDashboardDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\CustomerDashboardDTO.cs",
@@ -797,7 +895,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 35,
               "Title": "Create.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\ElectricBill\\Create.cshtml",
               "RelativeDocumentMoniker": "Views\\ElectricBill\\Create.cshtml",
@@ -809,43 +907,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Details.cshtml",
-              "RelativeDocumentMoniker": "Views\\Customer\\Details.cshtml",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Details.cshtml",
-              "RelativeToolTip": "Views\\Customer\\Details.cshtml",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABkAAABoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-02T19:22:38.769Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 30,
-              "Title": "ElectricBillController.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\ElectricBillController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ElectricBillController.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Controllers\\ElectricBillController.cs",
-              "RelativeToolTip": "Controllers\\ElectricBillController.cs",
-              "ViewState": "AgIAAJYBAAAAAAAAAAAmwMsBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T16:32:10.772Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 35,
-              "Title": "ICustomerService.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\ICustomerService.cs",
-              "RelativeDocumentMoniker": "Interface\\ICustomerService.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Interface\\ICustomerService.cs",
-              "RelativeToolTip": "Interface\\ICustomerService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA+AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T15:14:44.109Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 38,
               "Title": "_ValidationScriptsPartial.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
@@ -857,7 +919,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 36,
               "Title": "_ViewStart.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\_ViewStart.cshtml",
               "RelativeDocumentMoniker": "Views\\_ViewStart.cshtml",
@@ -869,7 +931,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 37,
               "Title": "Error.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Shared\\Error.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\Error.cshtml",
@@ -881,19 +943,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
-              "Title": "CustomerCreateDTO.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerCreateDTO.cs",
-              "RelativeDocumentMoniker": "DTOs\\CustomerCreateDTO.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerCreateDTO.cs",
-              "RelativeToolTip": "DTOs\\CustomerCreateDTO.cs",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAACMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T15:13:30.969Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 39,
               "Title": "HashCode.cs",
               "DocumentMoniker": "C:\\Users\\kfahi\\AppData\\Local\\Temp\\.vsdbgsrc\\d161942c889792c39312acfe5f5fa67f250fc59d3dabbe9a7b48e9623384f464\\HashCode.cs",
               "ToolTip": "C:\\Users\\kfahi\\AppData\\Local\\Temp\\.vsdbgsrc\\d161942c889792c39312acfe5f5fa67f250fc59d3dabbe9a7b48e9623384f464\\HashCode.cs [Read Only]",
@@ -904,7 +954,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 40,
               "Title": "ElectricBillPreviewDTO.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\ElectricBillPreviewDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\ElectricBillPreviewDTO.cs",
@@ -916,43 +966,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
-              "Title": "ElectricBill.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\ElectricBill.cs",
-              "RelativeDocumentMoniker": "Models\\ElectricBill.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\ElectricBill.cs",
-              "RelativeToolTip": "Models\\ElectricBill.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAowDYAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T16:28:54.66Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 41,
-              "Title": "Customer.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\Customer.cs",
-              "RelativeDocumentMoniker": "Models\\Customer.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\Customer.cs",
-              "RelativeToolTip": "Models\\Customer.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAowC8AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T15:14:01.128Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 39,
-              "Title": "Edit.cshtml",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Edit.cshtml",
-              "RelativeDocumentMoniker": "Views\\Customer\\Edit.cshtml",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Customer\\Edit.cshtml",
-              "RelativeToolTip": "Views\\Customer\\Edit.cshtml",
-              "ViewState": "AgIAAGwAAAAAAAAAAAAQwHMAAACZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-07-06T19:52:25.059Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 42,
               "Title": "PreviewBillRequest.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\PreviewBillRequest.cs",
               "RelativeDocumentMoniker": "DTOs\\PreviewBillRequest.cs",
@@ -964,7 +978,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 42,
               "Title": "CustomerBillSummaryDTO.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\DTOs\\CustomerBillSummaryDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\CustomerBillSummaryDTO.cs",
@@ -976,19 +990,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
-              "Title": "20250704183449_Init.cs",
-              "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250704183449_Init.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250704183449_Init.cs",
-              "ToolTip": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250704183449_Init.cs",
-              "RelativeToolTip": "Migrations\\20250704183449_Init.cs",
-              "ViewState": "AgIAAFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-04T18:34:49.745Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 43,
               "Title": "20250704183230_Init.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Migrations\\20250704183230_Init.cs",
               "RelativeDocumentMoniker": "Migrations\\20250704183230_Init.cs",
@@ -1000,7 +1002,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 44,
               "Title": "Privacy.cshtml",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Views\\Home\\Privacy.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Privacy.cshtml",
@@ -1012,7 +1014,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 45,
               "Title": "ErrorViewModel.cs",
               "DocumentMoniker": "D:\\GitHub\\Electric-Garage-Management-System\\EGMS\\Models\\ErrorViewModel.cs",
               "RelativeDocumentMoniker": "Models\\ErrorViewModel.cs",

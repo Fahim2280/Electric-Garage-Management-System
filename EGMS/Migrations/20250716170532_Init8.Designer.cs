@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EGMS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250704183449_Init")]
-    partial class Init
+    [Migration("20250716170532_Init8")]
+    partial class Init8
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,56 @@ namespace EGMS.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("EGMS.DTOs.ElectricBillDTO", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<decimal>("Clear_money")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Current_Unit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Customer_ID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Electric_bill")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Present_dues")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Previous_duos")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Previous_unit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Rent_Bill")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Total_Unit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Total_bill")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ElectricBillDTO");
+                });
 
             modelBuilder.Entity("EGMS.Models.Customer", b =>
                 {
@@ -74,12 +124,17 @@ namespace EGMS.Migrations
                     b.Property<decimal>("Previous_Unit")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("C_ID");
 
-                    b.HasIndex("Mobile_number")
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("Mobile_number", "UserId")
                         .IsUnique();
 
-                    b.HasIndex("NID_Number")
+                    b.HasIndex("NID_Number", "UserId")
                         .IsUnique();
 
                     b.ToTable("Customers");
@@ -133,6 +188,36 @@ namespace EGMS.Migrations
                     b.ToTable("ElectricBills");
                 });
 
+            modelBuilder.Entity("EGMS.Models.PasswordResetToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PasswordResetTokens");
+                });
+
             modelBuilder.Entity("EGMS.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -141,21 +226,60 @@ namespace EGMS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EGMS.Models.Customer", b =>
+                {
+                    b.HasOne("EGMS.Models.User", "User")
+                        .WithMany("Customers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EGMS.Models.ElectricBill", b =>
@@ -172,6 +296,11 @@ namespace EGMS.Migrations
             modelBuilder.Entity("EGMS.Models.Customer", b =>
                 {
                     b.Navigation("ElectricBills");
+                });
+
+            modelBuilder.Entity("EGMS.Models.User", b =>
+                {
+                    b.Navigation("Customers");
                 });
 #pragma warning restore 612, 618
         }

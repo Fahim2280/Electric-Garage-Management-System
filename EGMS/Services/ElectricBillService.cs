@@ -8,107 +8,167 @@ namespace EGMS.Services
     public class ElectricBillService : IElectricBillService
     {
         private readonly AppDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private const decimal RATE_PER_UNIT = 15; // 15 taka per unit
 
-        public ElectricBillService(AppDbContext context)
+        public ElectricBillService(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        private async Task<int?> GetCurrentUserIdAsync()
+        {
+            var username = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            if (string.IsNullOrEmpty(username))
+                return null;
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return user?.Id;
         }
 
         public async Task<IEnumerable<ElectricBillDTO>> GetAllElectricBillsAsync()
         {
-            var electricBills = await _context.ElectricBills
-                .Include(e => e.Customer)
-                .OrderByDescending(e => e.Date)
-                .ToListAsync();
-
-            return electricBills.Select(e => new ElectricBillDTO
+            try
             {
-                ID = e.ID,
-                Customer_ID = e.Customer_ID,
-                Date = e.Date,
-                Previous_unit = e.Previous_unit,
-                Current_Unit = e.Current_Unit,
-                Total_Unit = e.Total_Unit,
-                Electric_bill = e.Electric_bill,
-                Previous_duos = e.Previous_duos,
-                Rent_Bill = e.Rent_Bill,
-                Total_bill = e.Total_bill,
-                Clear_money = e.Clear_money,
-                Present_dues = e.Present_dues,
-                CustomerName = e.Customer.Name
-            });
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return new List<ElectricBillDTO>();
+
+                var electricBills = await _context.ElectricBills
+                    .Include(e => e.Customer)
+                    .Where(e => e.Customer.UserId == currentUserId.Value)
+                    .OrderByDescending(e => e.Date)
+                    .ToListAsync();
+
+                return electricBills.Select(e => new ElectricBillDTO
+                {
+                    ID = e.ID,
+                    Customer_ID = e.Customer_ID,
+                    Date = e.Date,
+                    Previous_unit = e.Previous_unit,
+                    Current_Unit = e.Current_Unit,
+                    Total_Unit = e.Total_Unit,
+                    Electric_bill = e.Electric_bill,
+                    Previous_duos = e.Previous_duos,
+                    Rent_Bill = e.Rent_Bill,
+                    Total_bill = e.Total_bill,
+                    Clear_money = e.Clear_money,
+                    Present_dues = e.Present_dues,
+                    CustomerName = e.Customer.Name
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetAllElectricBillsAsync: {ex.Message}");
+                return new List<ElectricBillDTO>();
+            }
         }
 
         public async Task<ElectricBillDTO> GetElectricBillByIdAsync(int id)
         {
-            var electricBill = await _context.ElectricBills
-                .Include(e => e.Customer)
-                .FirstOrDefaultAsync(e => e.ID == id);
-
-            if (electricBill == null) return null;
-
-            return new ElectricBillDTO
+            try
             {
-                ID = electricBill.ID,
-                Customer_ID = electricBill.Customer_ID,
-                Date = electricBill.Date,
-                Previous_unit = electricBill.Previous_unit,
-                Current_Unit = electricBill.Current_Unit,
-                Total_Unit = electricBill.Total_Unit,
-                Electric_bill = electricBill.Electric_bill,
-                Previous_duos = electricBill.Previous_duos,
-                Rent_Bill = electricBill.Rent_Bill,
-                Total_bill = electricBill.Total_bill,
-                Clear_money = electricBill.Clear_money,
-                Present_dues = electricBill.Present_dues,
-                CustomerName = electricBill.Customer.Name
-            };
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return null;
+
+                var electricBill = await _context.ElectricBills
+                    .Include(e => e.Customer)
+                    .FirstOrDefaultAsync(e => e.ID == id && e.Customer.UserId == currentUserId.Value);
+
+                if (electricBill == null) return null;
+
+                return new ElectricBillDTO
+                {
+                    ID = electricBill.ID,
+                    Customer_ID = electricBill.Customer_ID,
+                    Date = electricBill.Date,
+                    Previous_unit = electricBill.Previous_unit,
+                    Current_Unit = electricBill.Current_Unit,
+                    Total_Unit = electricBill.Total_Unit,
+                    Electric_bill = electricBill.Electric_bill,
+                    Previous_duos = electricBill.Previous_duos,
+                    Rent_Bill = electricBill.Rent_Bill,
+                    Total_bill = electricBill.Total_bill,
+                    Clear_money = electricBill.Clear_money,
+                    Present_dues = electricBill.Present_dues,
+                    CustomerName = electricBill.Customer.Name
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetElectricBillByIdAsync: {ex.Message}");
+                return null;
+            }
         }
 
         public async Task<IEnumerable<ElectricBillDTO>> GetElectricBillsByCustomerIdAsync(int customerId)
         {
-            var electricBills = await _context.ElectricBills
-                .Include(e => e.Customer)
-                .Where(e => e.Customer_ID == customerId)
-                .OrderByDescending(e => e.Date)
-                .ToListAsync();
-
-            return electricBills.Select(e => new ElectricBillDTO
+            try
             {
-                ID = e.ID,
-                Customer_ID = e.Customer_ID,
-                Date = e.Date,
-                Previous_unit = e.Previous_unit,
-                Current_Unit = e.Current_Unit,
-                Total_Unit = e.Total_Unit,
-                Electric_bill = e.Electric_bill,
-                Previous_duos = e.Previous_duos,
-                Rent_Bill = e.Rent_Bill,
-                Total_bill = e.Total_bill,
-                Clear_money = e.Clear_money,
-                Present_dues = e.Present_dues,
-                CustomerName = e.Customer.Name
-            });
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return new List<ElectricBillDTO>();
+
+                // First check if the customer belongs to the current user
+                var customerExists = await _context.Customers
+                    .AnyAsync(c => c.C_ID == customerId && c.UserId == currentUserId.Value);
+
+                if (!customerExists)
+                    return new List<ElectricBillDTO>();
+
+                var electricBills = await _context.ElectricBills
+                    .Include(e => e.Customer)
+                    .Where(e => e.Customer_ID == customerId && e.Customer.UserId == currentUserId.Value)
+                    .OrderByDescending(e => e.Date)
+                    .ToListAsync();
+
+                return electricBills.Select(e => new ElectricBillDTO
+                {
+                    ID = e.ID,
+                    Customer_ID = e.Customer_ID,
+                    Date = e.Date,
+                    Previous_unit = e.Previous_unit,
+                    Current_Unit = e.Current_Unit,
+                    Total_Unit = e.Total_Unit,
+                    Electric_bill = e.Electric_bill,
+                    Previous_duos = e.Previous_duos,
+                    Rent_Bill = e.Rent_Bill,
+                    Total_bill = e.Total_bill,
+                    Clear_money = e.Clear_money,
+                    Present_dues = e.Present_dues,
+                    CustomerName = e.Customer.Name
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetElectricBillsByCustomerIdAsync: {ex.Message}");
+                return new List<ElectricBillDTO>();
+            }
         }
 
         public async Task<bool> CreateElectricBillAsync(ElectricBillDTO electricBillDto)
         {
             try
             {
-                // Get customer information
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return false;
+
+                // Get customer information and verify it belongs to current user
                 var customer = await _context.Customers
-                    .FirstOrDefaultAsync(c => c.C_ID == electricBillDto.Customer_ID);
+                    .FirstOrDefaultAsync(c => c.C_ID == electricBillDto.Customer_ID && c.UserId == currentUserId.Value);
 
                 if (customer == null)
                 {
-                    Console.WriteLine($"Customer with ID {electricBillDto.Customer_ID} not found");
+                    Console.WriteLine($"Customer with ID {electricBillDto.Customer_ID} not found or doesn't belong to current user");
                     return false;
                 }
 
                 // Get the last bill for this customer (chronologically)
                 var lastBill = await _context.ElectricBills
-                    .Where(e => e.Customer_ID == electricBillDto.Customer_ID)
+                    .Where(e => e.Customer_ID == electricBillDto.Customer_ID && e.Customer.UserId == currentUserId.Value)
                     .OrderByDescending(e => e.Date)
                     .FirstOrDefaultAsync();
 
@@ -160,7 +220,7 @@ namespace EGMS.Services
                 var electricBillEntity = new ElectricBill
                 {
                     Customer_ID = electricBillDto.Customer_ID,
-                    Date =DateTime.Now,
+                    Date = DateTime.Now,
                     Previous_unit = previousUnit,               // From customer or last bill
                     Current_Unit = electricBillDto.Current_Unit, // Current meter reading (input)
                     Total_Unit = totalUnit,                     // Calculated: consumed units
@@ -189,12 +249,19 @@ namespace EGMS.Services
         {
             try
             {
-                var electricBillEntity = await _context.ElectricBills.FindAsync(electricBillDto.ID);
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return false;
+
+                var electricBillEntity = await _context.ElectricBills
+                    .Include(e => e.Customer)
+                    .FirstOrDefaultAsync(e => e.ID == electricBillDto.ID && e.Customer.UserId == currentUserId.Value);
+
                 if (electricBillEntity == null) return false;
 
-                // Get customer information
+                // Get customer information and verify it belongs to current user
                 var customer = await _context.Customers
-                    .FirstOrDefaultAsync(c => c.C_ID == electricBillDto.Customer_ID);
+                    .FirstOrDefaultAsync(c => c.C_ID == electricBillDto.Customer_ID && c.UserId == currentUserId.Value);
 
                 if (customer == null) return false;
 
@@ -202,7 +269,8 @@ namespace EGMS.Services
                 var previousBill = await _context.ElectricBills
                     .Where(e => e.Customer_ID == electricBillDto.Customer_ID &&
                                e.Date < electricBillDto.Date &&
-                               e.ID != electricBillDto.ID)
+                               e.ID != electricBillDto.ID &&
+                               e.Customer.UserId == currentUserId.Value)
                     .OrderByDescending(e => e.Date)
                     .FirstOrDefaultAsync();
 
@@ -265,60 +333,84 @@ namespace EGMS.Services
         // Update all bills that come after a specific date
         private async Task UpdateSubsequentBillsAsync(int customerId, DateTime fromDate)
         {
-            var subsequentBills = await _context.ElectricBills
-                .Where(e => e.Customer_ID == customerId && e.Date > fromDate)
-                .OrderBy(e => e.Date)
-                .ToListAsync();
-
-            foreach (var bill in subsequentBills)
+            try
             {
-                // Find the bill immediately before this one
-                var previousBill = await _context.ElectricBills
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return;
+
+                var subsequentBills = await _context.ElectricBills
+                    .Include(e => e.Customer)
                     .Where(e => e.Customer_ID == customerId &&
-                               e.Date < bill.Date &&
-                               e.ID != bill.ID)
-                    .OrderByDescending(e => e.Date)
-                    .FirstOrDefaultAsync();
+                               e.Date > fromDate &&
+                               e.Customer.UserId == currentUserId.Value)
+                    .OrderBy(e => e.Date)
+                    .ToListAsync();
 
-                decimal previousUnit;
-                decimal previousDues;
-
-                if (previousBill == null)
+                foreach (var bill in subsequentBills)
                 {
-                    // Get from customer table
-                    var customer = await _context.Customers.FirstOrDefaultAsync(c => c.C_ID == customerId);
-                    previousUnit = customer?.Previous_Unit ?? 0;
-                    previousDues = customer?.Advance_money ?? 0;
-                }
-                else
-                {
-                    previousUnit = previousBill.Current_Unit;
-                    previousDues = previousBill.Present_dues;
+                    // Find the bill immediately before this one
+                    var previousBill = await _context.ElectricBills
+                        .Include(e => e.Customer)
+                        .Where(e => e.Customer_ID == customerId &&
+                                   e.Date < bill.Date &&
+                                   e.ID != bill.ID &&
+                                   e.Customer.UserId == currentUserId.Value)
+                        .OrderByDescending(e => e.Date)
+                        .FirstOrDefaultAsync();
+
+                    decimal previousUnit;
+                    decimal previousDues;
+
+                    if (previousBill == null)
+                    {
+                        // Get from customer table
+                        var customer = await _context.Customers
+                            .FirstOrDefaultAsync(c => c.C_ID == customerId && c.UserId == currentUserId.Value);
+                        previousUnit = customer?.Previous_Unit ?? 0;
+                        previousDues = customer?.Advance_money ?? 0;
+                    }
+                    else
+                    {
+                        previousUnit = previousBill.Current_Unit;
+                        previousDues = previousBill.Present_dues;
+                    }
+
+                    // Recalculate using corrected business logic
+                    decimal totalUnit = bill.Current_Unit - previousUnit;
+                    decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
+                    decimal totalBill = previousDues + electricBillAmount + bill.Rent_Bill;
+                    decimal presentDues = totalBill - bill.Clear_money;
+
+                    // Update
+                    bill.Previous_unit = previousUnit;
+                    bill.Total_Unit = totalUnit;
+                    bill.Previous_duos = previousDues;
+                    bill.Electric_bill = electricBillAmount;
+                    bill.Total_bill = totalBill;
+                    bill.Present_dues = presentDues;
                 }
 
-                // Recalculate using corrected business logic
-                decimal totalUnit = bill.Current_Unit - previousUnit;
-                decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
-                decimal totalBill = previousDues + electricBillAmount + bill.Rent_Bill;
-                decimal presentDues = totalBill - bill.Clear_money;
-
-                // Update
-                bill.Previous_unit = previousUnit;
-                bill.Total_Unit = totalUnit;
-                bill.Previous_duos = previousDues;
-                bill.Electric_bill = electricBillAmount;
-                bill.Total_bill = totalBill;
-                bill.Present_dues = presentDues;
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating subsequent bills: {ex.Message}");
+            }
         }
 
         public async Task<bool> DeleteElectricBillAsync(int id)
         {
             try
             {
-                var electricBillEntity = await _context.ElectricBills.FindAsync(id);
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return false;
+
+                var electricBillEntity = await _context.ElectricBills
+                    .Include(e => e.Customer)
+                    .FirstOrDefaultAsync(e => e.ID == id && e.Customer.UserId == currentUserId.Value);
+
                 if (electricBillEntity == null) return false;
 
                 int customerId = electricBillEntity.Customer_ID;
@@ -343,7 +435,14 @@ namespace EGMS.Services
         {
             try
             {
-                return await _context.Customers.OrderBy(c => c.Name).ToListAsync();
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return new List<Customer>();
+
+                return await _context.Customers
+                    .Where(c => c.UserId == currentUserId.Value)
+                    .OrderBy(c => c.Name)
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -355,90 +454,126 @@ namespace EGMS.Services
         // Helper method to get customer's last bill summary
         public async Task<CustomerBillSummaryDTO> GetCustomerBillSummaryAsync(int customerId)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.C_ID == customerId);
-            if (customer == null) return null;
-
-            var lastBill = await _context.ElectricBills
-                .Where(e => e.Customer_ID == customerId)
-                .OrderByDescending(e => e.Date)
-                .FirstOrDefaultAsync();
-
-            if (lastBill == null)
+            try
             {
-                // No previous bills, return initial values from customer
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return null;
+
+                var customer = await _context.Customers
+                    .FirstOrDefaultAsync(c => c.C_ID == customerId && c.UserId == currentUserId.Value);
+
+                if (customer == null) return null;
+
+                var lastBill = await _context.ElectricBills
+                    .Where(e => e.Customer_ID == customerId && e.Customer.UserId == currentUserId.Value)
+                    .OrderByDescending(e => e.Date)
+                    .FirstOrDefaultAsync();
+
+                if (lastBill == null)
+                {
+                    // No previous bills, return initial values from customer
+                    return new CustomerBillSummaryDTO
+                    {
+                        CustomerId = customerId,
+                        CustomerName = customer.Name,
+                        LastMeterReading = customer.Previous_Unit,
+                        PreviousDues = customer.Advance_money,
+                        LastBillDate = null
+                    };
+                }
+
                 return new CustomerBillSummaryDTO
                 {
                     CustomerId = customerId,
                     CustomerName = customer.Name,
-                    LastMeterReading = customer.Previous_Unit,
-                    PreviousDues = customer.Advance_money,
-                    LastBillDate = null
+                    LastMeterReading = lastBill.Current_Unit,
+                    PreviousDues = lastBill.Present_dues,
+                    LastBillDate = lastBill.Date
                 };
             }
-
-            return new CustomerBillSummaryDTO
+            catch (Exception ex)
             {
-                CustomerId = customerId,
-                CustomerName = customer.Name,
-                LastMeterReading = lastBill.Current_Unit,
-                PreviousDues = lastBill.Present_dues,
-                LastBillDate = lastBill.Date
-            };
+                Console.WriteLine($"Error getting customer bill summary: {ex.Message}");
+                return null;
+            }
         }
 
         // Method to preview bill calculation before saving
         public async Task<ElectricBillPreviewDTO> PreviewElectricBillAsync(int customerId, decimal currentMeterReading, decimal rentBill)
         {
-            var summary = await GetCustomerBillSummaryAsync(customerId);
-            if (summary == null) return null;
-
-            // CORRECTED BUSINESS LOGIC FOR PREVIEW:
-            decimal totalUnit = currentMeterReading - summary.LastMeterReading;
-            decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
-            decimal totalBill = summary.PreviousDues + electricBillAmount + rentBill;
-
-            return new ElectricBillPreviewDTO
+            try
             {
-                CustomerId = customerId,
-                CustomerName = summary.CustomerName,
-                PreviousMeterReading = summary.LastMeterReading,
-                CurrentMeterReading = currentMeterReading,
-                ConsumedUnits = totalUnit,
-                ElectricBill = electricBillAmount,
-                RentBill = rentBill,
-                PreviousDues = summary.PreviousDues,
-                TotalBill = totalBill
-            };
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return null;
+
+                var summary = await GetCustomerBillSummaryAsync(customerId);
+                if (summary == null) return null;
+
+                // CORRECTED BUSINESS LOGIC FOR PREVIEW:
+                decimal totalUnit = currentMeterReading - summary.LastMeterReading;
+                decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
+                decimal totalBill = summary.PreviousDues + electricBillAmount + rentBill;
+
+                return new ElectricBillPreviewDTO
+                {
+                    CustomerId = customerId,
+                    CustomerName = summary.CustomerName,
+                    PreviousMeterReading = summary.LastMeterReading,
+                    CurrentMeterReading = currentMeterReading,
+                    ConsumedUnits = totalUnit,
+                    ElectricBill = electricBillAmount,
+                    RentBill = rentBill,
+                    PreviousDues = summary.PreviousDues,
+                    TotalBill = totalBill
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in PreviewElectricBillAsync: {ex.Message}");
+                return null;
+            }
         }
 
         public async Task<ElectricBillDTO> GetLatestElectricBillByCustomerIdAsync(int customerId)
         {
-            var electricBill = await _context.ElectricBills
-                .Include(e => e.Customer)
-                .Where(e => e.Customer_ID == customerId)
-                .OrderByDescending(e => e.Date)
-                .FirstOrDefaultAsync();
-
-            if (electricBill == null) return null;
-
-            return new ElectricBillDTO
+            try
             {
-                ID = electricBill.ID,
-                Customer_ID = electricBill.Customer_ID,
-                Date = electricBill.Date,
-                Previous_unit = electricBill.Previous_unit,
-                Current_Unit = electricBill.Current_Unit,
-                Total_Unit = electricBill.Total_Unit,
-                Electric_bill = electricBill.Electric_bill,
-                Previous_duos = electricBill.Previous_duos,
-                Rent_Bill = electricBill.Rent_Bill,
-                Total_bill = electricBill.Total_bill,
-                Clear_money = electricBill.Clear_money,
-                Present_dues = electricBill.Present_dues,
-                CustomerName = electricBill.Customer.Name
-            };
-        }
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return null;
 
-       
+                var electricBill = await _context.ElectricBills
+                    .Include(e => e.Customer)
+                    .Where(e => e.Customer_ID == customerId && e.Customer.UserId == currentUserId.Value)
+                    .OrderByDescending(e => e.Date)
+                    .FirstOrDefaultAsync();
+
+                if (electricBill == null) return null;
+
+                return new ElectricBillDTO
+                {
+                    ID = electricBill.ID,
+                    Customer_ID = electricBill.Customer_ID,
+                    Date = electricBill.Date,
+                    Previous_unit = electricBill.Previous_unit,
+                    Current_Unit = electricBill.Current_Unit,
+                    Total_Unit = electricBill.Total_Unit,
+                    Electric_bill = electricBill.Electric_bill,
+                    Previous_duos = electricBill.Previous_duos,
+                    Rent_Bill = electricBill.Rent_Bill,
+                    Total_bill = electricBill.Total_bill,
+                    Clear_money = electricBill.Clear_money,
+                    Present_dues = electricBill.Present_dues,
+                    CustomerName = electricBill.Customer.Name
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetLatestElectricBillByCustomerIdAsync: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

@@ -16,7 +16,17 @@ namespace EGMS.Controllers
         public CustomerController(ICustomerService customerService, AppDbContext context)
         {
             _customerService = customerService;
-            _context = context; // Fixed: was context = _context; 
+            _context = context;
+        }
+
+        private async Task<int?> GetCurrentUserIdAsync()
+        {
+            var username = User.Identity?.Name;
+            if (string.IsNullOrEmpty(username))
+                return null;
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return user?.Id;
         }
 
         public async Task<IActionResult> Index()
@@ -31,13 +41,20 @@ namespace EGMS.Controllers
             var customer = await _customerService.GetCustomerByIdAsync(id);
             if (customer == null)
             {
-                TempData["ErrorMessage"] = "Customer not found.";
+                TempData["ErrorMessage"] = "Customer not found or you don't have permission to view this customer.";
                 return RedirectToAction(nameof(Index));
             }
 
-            // Get customer's bills and map to DTOs
+            var currentUserId = await GetCurrentUserIdAsync();
+            if (!currentUserId.HasValue)
+            {
+                TempData["ErrorMessage"] = "User session expired. Please log in again.";
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            // Get customer's bills but only for customers belonging to the current user
             var customerBillEntities = await _context.ElectricBills
-                .Where(b => b.Customer_ID == id)
+                .Where(b => b.Customer_ID == id && b.Customer.UserId == currentUserId.Value)
                 .Include(b => b.Customer)
                 .ToListAsync();
 
@@ -56,7 +73,6 @@ namespace EGMS.Controllers
                 Total_bill = bill.Total_bill,
                 Clear_money = bill.Clear_money,
                 Present_dues = bill.Present_dues
-                // Add other properties as needed
             }).ToList();
 
             ViewBag.CustomerBills = customerBills;
@@ -80,17 +96,17 @@ namespace EGMS.Controllers
                 return View(dto);
             }
 
-            // Check for duplicate NID
+            // Check for duplicate NID (within the current user's customers)
             if (!await _customerService.IsNIDUniqueAsync(dto.NID_Number))
             {
-                ModelState.AddModelError("NID_Number", "This NID number already exists.");
+                ModelState.AddModelError("NID_Number", "This NID number already exists in your customer list.");
                 return View(dto);
             }
 
-            // Check for duplicate Mobile
+            // Check for duplicate Mobile (within the current user's customers)
             if (!await _customerService.IsMobileUniqueAsync(dto.Mobile_number))
             {
-                ModelState.AddModelError("Mobile_number", "This mobile number already exists.");
+                ModelState.AddModelError("Mobile_number", "This mobile number already exists in your customer list.");
                 return View(dto);
             }
 
@@ -98,7 +114,7 @@ namespace EGMS.Controllers
             if (result)
             {
                 TempData["SuccessMessage"] = "Customer created successfully!";
-                return RedirectToAction(nameof(Create)); // Redirect to same page
+                return RedirectToAction(nameof(Index));
             }
 
             ModelState.AddModelError("", "Failed to create customer. Please try again.");
@@ -111,7 +127,8 @@ namespace EGMS.Controllers
             var customer = await _customerService.GetCustomerByIdAsync(id);
             if (customer == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Customer not found or you don't have permission to edit this customer.";
+                return RedirectToAction(nameof(Index));
             }
             return View(customer);
         }
@@ -127,15 +144,23 @@ namespace EGMS.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // Check if customer belongs to current user
+            var existingCustomer = await _customerService.GetCustomerByIdAsync(dto.C_ID);
+            if (existingCustomer == null)
+            {
+                TempData["ErrorMessage"] = "Customer not found or you don't have permission to edit this customer.";
+                return RedirectToAction(nameof(Index));
+            }
+
             if (!await _customerService.IsNIDUniqueAsync(dto.NID_Number, dto.C_ID))
             {
-                TempData["ErrorMessage"] = "NID number already exists.";
+                TempData["ErrorMessage"] = "NID number already exists in your customer list.";
                 return RedirectToAction(nameof(Index));
             }
 
             if (!await _customerService.IsMobileUniqueAsync(dto.Mobile_number, dto.C_ID))
             {
-                TempData["ErrorMessage"] = "Mobile number already exists.";
+                TempData["ErrorMessage"] = "Mobile number already exists in your customer list.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -150,7 +175,8 @@ namespace EGMS.Controllers
             var customer = await _customerService.GetCustomerByIdAsync(id);
             if (customer == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Customer not found or you don't have permission to delete this customer.";
+                return RedirectToAction(nameof(Index));
             }
             return View(customer);
         }
@@ -167,7 +193,7 @@ namespace EGMS.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to delete customer.";
+                TempData["ErrorMessage"] = "Failed to delete customer or you don't have permission to delete this customer.";
             }
             return RedirectToAction(nameof(Index));
         }

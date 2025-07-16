@@ -36,13 +36,20 @@ namespace EGMS.Models
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Previous_Unit { get; set; } // Fixed: Changed from string to decimal
+        public decimal Previous_Unit { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Advance_money { get; set; } // Fixed: Changed from string to decimal
+        public decimal Advance_money { get; set; }
 
-        // Navigation property for electric bills
+        // Foreign key to User - THIS WAS MISSING
+        [Required]
+        public int UserId { get; set; }
+
+        // Navigation properties
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
+
         public virtual ICollection<ElectricBill> ElectricBills { get; set; } = new List<ElectricBill>();
     }
 }

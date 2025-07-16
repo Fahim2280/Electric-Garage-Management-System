@@ -34,5 +34,8 @@ namespace EGMS.Models
         [Required]
         [StringLength(100)]
         public string CompanyName { get; set; }
+
+        // Navigation property for customers
+        public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
     }
 }

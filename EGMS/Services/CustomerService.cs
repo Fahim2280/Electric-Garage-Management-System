@@ -3,27 +3,45 @@ using EGMS.Interface;
 using EGMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace EGMS.Services
 {
     public class CustomerService : ICustomerService
     {
         private readonly AppDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CustomerService(AppDbContext context)
+        public CustomerService(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        private async Task<int?> GetCurrentUserIdAsync()
+        {
+            var username = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
+            if (string.IsNullOrEmpty(username))
+                return null;
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return user?.Id;
         }
 
         public async Task<IEnumerable<CustomerDTO>> GetAllCustomersAsync()
         {
             try
             {
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return new List<CustomerDTO>();
+
                 var customers = await _context.Customers
+                    .Where(c => c.UserId == currentUserId.Value)
                     .OrderByDescending(c => c.Created_Date)
                     .ToListAsync();
 
-                Console.WriteLine($"Found {customers.Count} customers in database");
+                Console.WriteLine($"Found {customers.Count} customers for user {currentUserId}");
 
                 return customers.Select(c => new CustomerDTO
                 {
@@ -34,8 +52,8 @@ namespace EGMS.Services
                     Address = c.Address,
                     Mobile_number = c.Mobile_number,
                     NID_Number = c.NID_Number,
-                    Previous_Unit = c.Previous_Unit.ToString(), // Fix: Convert decimal to string
-                    Advance_money = c.Advance_money.ToString(), // Fix: Convert decimal to string
+                    Previous_Unit = c.Previous_Unit.ToString(),
+                    Advance_money = c.Advance_money.ToString(),
                     Created_Date = c.Created_Date
                 }).ToList();
             }
@@ -47,11 +65,21 @@ namespace EGMS.Services
             }
         }
 
-
         public async Task<IEnumerable<ElectricBillDTO>> GetCustomerBillsAsync(int customerId)
         {
             try
             {
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return new List<ElectricBillDTO>();
+
+                // First check if the customer belongs to the current user
+                var customerExists = await _context.Customers
+                    .AnyAsync(c => c.C_ID == customerId && c.UserId == currentUserId.Value);
+
+                if (!customerExists)
+                    return new List<ElectricBillDTO>();
+
                 var bills = await _context.ElectricBills
                     .Where(b => b.Customer_ID == customerId)
                     .Include(b => b.Customer)
@@ -71,7 +99,6 @@ namespace EGMS.Services
                     Total_bill = bill.Total_bill,
                     Clear_money = bill.Clear_money,
                     Present_dues = bill.Present_dues
-                    // Add other properties as needed
                 }).ToList();
             }
             catch (Exception ex)
@@ -81,12 +108,17 @@ namespace EGMS.Services
             }
         }
 
-        
         public async Task<CustomerDTO?> GetCustomerByIdAsync(int id)
         {
             try
             {
-                var customer = await _context.Customers.FindAsync(id);
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return null;
+
+                var customer = await _context.Customers
+                    .FirstOrDefaultAsync(c => c.C_ID == id && c.UserId == currentUserId.Value);
+
                 if (customer == null) return null;
 
                 return new CustomerDTO
@@ -98,10 +130,9 @@ namespace EGMS.Services
                     Address = customer.Address,
                     Mobile_number = customer.Mobile_number,
                     NID_Number = customer.NID_Number,
-                    Previous_Unit = customer.Previous_Unit.ToString(), // Fix: Convert decimal to string
-                    Advance_money = customer.Advance_money.ToString(), // Fix: Convert decimal to string
+                    Previous_Unit = customer.Previous_Unit.ToString(),
+                    Advance_money = customer.Advance_money.ToString(),
                     Created_Date = customer.Created_Date
-                   
                 };
             }
             catch (Exception ex)
@@ -115,6 +146,10 @@ namespace EGMS.Services
         {
             try
             {
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return false;
+
                 var customer = new Customer
                 {
                     Name = dto.Name,
@@ -123,15 +158,16 @@ namespace EGMS.Services
                     Address = dto.Address,
                     Mobile_number = dto.Mobile_number,
                     NID_Number = dto.NID_Number,
-                    Previous_Unit = decimal.Parse(dto.Previous_Unit), // Fix: Convert string to decimal
-                    Advance_money = decimal.Parse(dto.Advance_money), // Fix: Convert string to decimal
-                    Created_Date = DateTime.UtcNow
+                    Previous_Unit = decimal.Parse(dto.Previous_Unit),
+                    Advance_money = decimal.Parse(dto.Advance_money),
+                    Created_Date = DateTime.UtcNow,
+                    UserId = currentUserId.Value
                 };
 
                 _context.Customers.Add(customer);
                 var result = await _context.SaveChangesAsync();
 
-                Console.WriteLine($"Customer created: {result > 0}");
+                Console.WriteLine($"Customer created by user {currentUserId}: {result > 0}");
                 return result > 0;
             }
             catch (Exception ex)
@@ -145,7 +181,13 @@ namespace EGMS.Services
         {
             try
             {
-                var customer = await _context.Customers.FindAsync(id);
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return false;
+
+                var customer = await _context.Customers
+                    .FirstOrDefaultAsync(c => c.C_ID == id && c.UserId == currentUserId.Value);
+
                 if (customer == null) return false;
 
                 customer.Name = dto.Name;
@@ -154,15 +196,13 @@ namespace EGMS.Services
                 customer.Address = dto.Address;
                 customer.Mobile_number = dto.Mobile_number;
                 customer.NID_Number = dto.NID_Number;
-
-                // Fix for CS0029: Convert string to decimal using decimal.Parse
                 customer.Previous_Unit = decimal.Parse(dto.Previous_Unit);
                 customer.Advance_money = decimal.Parse(dto.Advance_money);
 
                 _context.Customers.Update(customer);
                 var result = await _context.SaveChangesAsync();
 
-                Console.WriteLine($"Customer updated: {result > 0}");
+                Console.WriteLine($"Customer updated by user {currentUserId}: {result > 0}");
                 return result > 0;
             }
             catch (Exception ex)
@@ -176,13 +216,19 @@ namespace EGMS.Services
         {
             try
             {
-                var customer = await _context.Customers.FindAsync(id);
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return false;
+
+                var customer = await _context.Customers
+                    .FirstOrDefaultAsync(c => c.C_ID == id && c.UserId == currentUserId.Value);
+
                 if (customer == null) return false;
 
                 _context.Customers.Remove(customer);
                 var result = await _context.SaveChangesAsync();
 
-                Console.WriteLine($"Customer deleted: {result > 0}");
+                Console.WriteLine($"Customer deleted by user {currentUserId}: {result > 0}");
                 return result > 0;
             }
             catch (Exception ex)
@@ -196,7 +242,12 @@ namespace EGMS.Services
         {
             try
             {
-                var query = _context.Customers.Where(c => c.NID_Number == nidNumber);
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return false;
+
+                var query = _context.Customers
+                    .Where(c => c.NID_Number == nidNumber && c.UserId == currentUserId.Value);
 
                 if (excludeCustomerId.HasValue)
                 {
@@ -216,7 +267,12 @@ namespace EGMS.Services
         {
             try
             {
-                var query = _context.Customers.Where(c => c.Mobile_number == mobileNumber);
+                var currentUserId = await GetCurrentUserIdAsync();
+                if (!currentUserId.HasValue)
+                    return false;
+
+                var query = _context.Customers
+                    .Where(c => c.Mobile_number == mobileNumber && c.UserId == currentUserId.Value);
 
                 if (excludeCustomerId.HasValue)
                 {
