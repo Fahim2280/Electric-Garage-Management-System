@@ -121,12 +121,17 @@ namespace EGMS.Migrations
                     b.Property<decimal>("Previous_Unit")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("C_ID");
 
-                    b.HasIndex("Mobile_number")
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("Mobile_number", "UserId")
                         .IsUnique();
 
-                    b.HasIndex("NID_Number")
+                    b.HasIndex("NID_Number", "UserId")
                         .IsUnique();
 
                     b.ToTable("Customers");
@@ -254,7 +259,24 @@ namespace EGMS.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EGMS.Models.Customer", b =>
+                {
+                    b.HasOne("EGMS.Models.User", "User")
+                        .WithMany("Customers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EGMS.Models.ElectricBill", b =>
@@ -271,6 +293,11 @@ namespace EGMS.Migrations
             modelBuilder.Entity("EGMS.Models.Customer", b =>
                 {
                     b.Navigation("ElectricBills");
+                });
+
+            modelBuilder.Entity("EGMS.Models.User", b =>
+                {
+                    b.Navigation("Customers");
                 });
 #pragma warning restore 612, 618
         }

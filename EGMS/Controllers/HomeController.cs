@@ -27,8 +27,26 @@ namespace EGMS.Controllers
         {
             try
             {
-                // Get all customers
+                // Get current user's name for display
+                var currentUsername = User?.Identity?.Name ?? "Unknown User";
+
+                // Get all customers for the current user
+                // Note: Make sure ICustomerService.GetAllCustomersAsync() filters by current user
                 var customers = await _customerService.GetAllCustomersAsync();
+
+                // If no customers found, show empty dashboard
+                if (customers == null || !customers.Any())
+                {
+                    ViewBag.TotalAdvanceMoney = 0;
+                    ViewBag.TotalPresentDues = 0;
+                    ViewBag.Balance = 0;
+                    ViewBag.CurrentUser = currentUsername;
+                    ViewBag.CustomerCount = 0;
+                    ViewBag.Message = "No customers found for the current user.";
+
+                    _logger.LogInformation($"No customers found for user: {currentUsername}");
+                    return View(new List<CustomerDashboardDTO>());
+                }
 
                 // Create a list to hold customer dashboard data
                 var customerDashboardList = new List<CustomerDashboardDTO>();
@@ -36,10 +54,11 @@ namespace EGMS.Controllers
                 // Variables for balance calculation
                 decimal totalAdvanceMoney = 0;
                 decimal totalPresentDues = 0;
+                int customersWithBills = 0;
 
                 foreach (var customer in customers)
                 {
-                    // Get the latest bill for each customer
+                    // Get the latest bill for each customer (this already filters by user in ElectricBillService)
                     var latestBill = await _electricBillService.GetLatestElectricBillByCustomerIdAsync(customer.C_ID);
 
                     // Calculate advance money for this customer
@@ -49,6 +68,12 @@ namespace EGMS.Controllers
                     // Calculate present dues for this customer
                     decimal customerPresentDues = latestBill?.Present_dues ?? customerAdvanceMoney;
                     totalPresentDues += customerPresentDues;
+
+                    // Count customers with bills
+                    if (latestBill != null)
+                    {
+                        customersWithBills++;
+                    }
 
                     var dashboardItem = new CustomerDashboardDTO
                     {
@@ -71,19 +96,37 @@ namespace EGMS.Controllers
                     .OrderByDescending(x => x.LastBillDate)
                     .ToList();
 
-                // Pass the balance calculation to the view
+                // Pass user-specific data to the view
                 ViewBag.TotalAdvanceMoney = totalAdvanceMoney;
                 ViewBag.TotalPresentDues = totalPresentDues;
                 ViewBag.Balance = balance;
+                ViewBag.CurrentUser = currentUsername;
+                ViewBag.CustomerCount = customers.Count();
+                ViewBag.CustomersWithBills = customersWithBills;
+                ViewBag.CustomersWithoutBills = customers.Count() - customersWithBills;
 
-                // Optional: Log the balance calculation for debugging
-                _logger.LogInformation($"Balance Calculation - Total Advance: {totalAdvanceMoney:C}, Total Present Dues: {totalPresentDues:C}, Balance: {balance:C}");
+                // Log the balance calculation for debugging with user info
+                _logger.LogInformation($"User: {currentUsername} - Balance Calculation - " +
+                                     $"Total Customers: {customers.Count()}, " +
+                                     $"Total Advance: {totalAdvanceMoney:C}, " +
+                                     $"Total Present Dues: {totalPresentDues:C}, " +
+                                     $"Balance: {balance:C}");
 
                 return View(customerDashboardList);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while loading customer dashboard");
+                var currentUsername = User?.Identity?.Name ?? "Unknown User";
+                _logger.LogError(ex, $"Error occurred while loading customer dashboard for user: {currentUsername}");
+
+                // Set error state ViewBag values
+                ViewBag.TotalAdvanceMoney = 0;
+                ViewBag.TotalPresentDues = 0;
+                ViewBag.Balance = 0;
+                ViewBag.CurrentUser = currentUsername;
+                ViewBag.CustomerCount = 0;
+                ViewBag.ErrorMessage = "An error occurred while loading the dashboard.";
+
                 return View(new List<CustomerDashboardDTO>());
             }
         }

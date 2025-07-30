@@ -28,11 +28,10 @@ namespace EGMS.DTOs
         [RegularExpression(@"^(?:\d{10}|\d{13}|\d{17})$", ErrorMessage = "NID must be 10, 13, or 17 digits")]
         public string NID_Number { get; set; }
 
-        [Required(ErrorMessage = "Pervious Unit is required")]
+        [Required(ErrorMessage = "Previous Unit is required")]
         public string Previous_Unit { get; set; }
 
         [Required(ErrorMessage = "Advance money is required")]
         public string Advance_money { get; set; }
-       
     }
 }

@@ -19,6 +19,23 @@ namespace EGMS.Services
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configure User entity
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.PasswordHash).IsRequired();
+                entity.Property(e => e.Role).IsRequired().HasMaxLength(20);
+                entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Number).IsRequired().HasMaxLength(15);
+                entity.Property(e => e.CompanyName).IsRequired().HasMaxLength(100);
+
+                // Create unique indexes
+                entity.HasIndex(e => e.Username).IsUnique();
+                entity.HasIndex(e => e.Email).IsUnique();
+            });
+
             // Configure Customer entity
             modelBuilder.Entity<Customer>(entity =>
             {
@@ -30,14 +47,21 @@ namespace EGMS.Services
                 entity.Property(e => e.Mobile_number).IsRequired().HasMaxLength(15);
                 entity.Property(e => e.NID_Number).IsRequired().HasMaxLength(17);
                 entity.Property(e => e.Created_Date).HasDefaultValueSql("GETDATE()");
+                entity.Property(e => e.UserId).IsRequired();
 
-                // Create unique indexes
-                entity.HasIndex(e => e.Mobile_number).IsUnique();
-                entity.HasIndex(e => e.NID_Number).IsUnique();
+                // Create unique indexes (scoped to user)
+                entity.HasIndex(e => new { e.Mobile_number, e.UserId }).IsUnique();
+                entity.HasIndex(e => new { e.NID_Number, e.UserId }).IsUnique();
 
                 // Configure decimal properties
                 entity.Property(e => e.Previous_Unit).HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Advance_money).HasColumnType("decimal(18,2)");
+
+                // Configure relationship with User
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.Customers)
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             // Configure ElectricBill entity
@@ -62,6 +86,7 @@ namespace EGMS.Services
                       .OnDelete(DeleteBehavior.Cascade);
             });
         }
+
         public DbSet<EGMS.DTOs.ElectricBillDTO> ElectricBillDTO { get; set; } = default!;
     }
 }
