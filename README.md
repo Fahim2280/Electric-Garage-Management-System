@@ -1,203 +1,159 @@
 # Electric Garage Management System
 
-A comprehensive mini ERP system designed specifically for garage management operations, built with modern web technologies.
+A mini ERP system built with ASP.NET Core MVC 8 for managing electric garage operations, customer data, and billing processes.
 
 ## 🚗 Overview
 
-The Electric Garage Management System is a full-featured web application that streamlines garage operations including vehicle management, service tracking, inventory control, customer management, and billing. This system is designed to help garage owners and mechanics efficiently manage their daily operations with an intuitive and responsive interface.
+The Electric Garage Management System is a web-based application designed to streamline garage operations by providing comprehensive customer and billing management capabilities. The system enables administrators to efficiently manage customer records, generate bills, and track service history.
+
+## ✨ Features
+
+- **Admin Authentication**: Secure login system using JWT authentication
+- **Customer Management**: Add, edit, and manage customer information
+- **Billing System**: Create and manage customer bills
+- **Bill Tracking**: View and monitor all customer bills
+- **User-friendly Interface**: Responsive MVC-based web interface
 
 ## 🛠️ Technology Stack
 
 - **Framework**: ASP.NET Core MVC 8
 - **Database**: Microsoft SQL Server (MSSQL)
 - **ORM**: Entity Framework Core
-- **Frontend**: HTML5, CSS3, Bootstrap 5, JavaScript
-- **Authentication**: ASP.NET Core Identity
-- **Architecture**: MVC (Model-View-Controller)
+- **Authentication**: JWT (JSON Web Tokens)
+- **Architecture**: Code First approach
 
-## ✨ Key Features
+## 📋 Prerequisites
 
-### 🔧 Service Management
-- Service order creation and tracking
-- Work progress monitoring
-- Service history maintenance
-- Technician assignment and scheduling
+Before running this application, ensure you have the following installed:
 
-### 👥 Customer Management
-- Customer registration and profiles
-- Contact information management
-- Service history tracking
-- Customer communication logs
-
-### 🚙 Vehicle Management
-- Vehicle registration and details
-- Maintenance history tracking
-- Vehicle inspection records
-- Multi-vehicle support per customer
-
-### 📦 Inventory Management
-- Parts and supplies tracking
-- Stock level monitoring
-- Supplier management
-- Purchase order generation
-
-### 💰 Financial Management
-- Invoice generation and management
-- Payment tracking
-- Revenue reporting
-- Expense management
-
-### 📊 Reporting & Analytics
-- Service performance metrics
-- Revenue analysis
-- Inventory reports
-- Customer analytics
-
-### 🔐 User Management
-- Role-based access control
-- User authentication and authorization
-- Staff management
-- Activity logging
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) or [Visual Studio Code](https://code.visualstudio.com/)
+- [SQL Server Management Studio (SSMS)](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms) (optional)
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 1. Clone the Repository
 
-- .NET 8 SDK
-- Microsoft SQL Server (LocalDB, Express, or Full version)
-- Visual Studio 2022 or Visual Studio Code
-- Git
+```bash
+git https://github.com/Fahim2280/Electric-Garage-Management-System.git
+cd electric-garage-management-system
+```
 
-### Installation
+### 2. Database Configuration
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Fahim2280/Electric-Garage-Management-System.git
-   cd electric-garage-management-system
-   ```
+Update the connection string in `appsettings.json`:
 
-2. **Restore NuGet packages**
-   ```bash
-   dotnet restore
-   ```
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=ElectricGarageDB;Trusted_Connection=true;MultipleActiveResultSets=true"
+  },
+  "JwtSettings": {
+    "Key": "your-secret-key-here",
+    "Issuer": "ElectricGarageSystem",
+    "Audience": "ElectricGarageUsers",
+    "ExpireMinutes": 60
+  }
+}
+```
 
-3. **Update database connection string**
-   
-   Edit `appsettings.json` and update the connection string:
-   ```json
-   {
-     "ConnectionStrings": {
-       "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=ElectricGarageDB;Trusted_Connection=true;MultipleActiveResultSets=true"
-     }
-   }
-   ```
+### 3. Database Migration
 
-4. **Apply database migrations**
-   ```bash
-   dotnet ef database update
-   ```
+Run the following commands to create and update the database:
 
-5. **Run the application**
-   ```bash
-   dotnet run
-   ```
+```bash
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
 
-6. **Access the application**
-   
-   Open your browser and navigate to `https://localhost:5001` or `http://localhost:5000`
+### 4. Run the Application
+
+```bash
+dotnet run
+```
+
+The application will be available at `https://localhost:5001` or `http://localhost:5000`.
 
 ## 📁 Project Structure
 
 ```
 ElectricGarageManagementSystem/
-├── Controllers/          # MVC Controllers
-├── DTOs/                 # Data models and ViewModels
-├── Views/                # Razor views
-├── Models/                 # DbContext and configurations
-├── Services/             # Business logic services
-├── wwwroot/              # Static files (CSS, JS, images)
-├── Migrations/           # EF Core migrations
-├── Areas/                # Area-specific features
-└── appsettings.json      # Configuration settings
+├── Controllers   
+├── Models
+├── Views
+├── DTOs
+├── Services
+├── wwwroot
+├── appsettings.json
+└── Program.cs
 ```
 
-## 🗄️ Database Schema
+## 🔧 Key Components
 
-### Core Entities
+### Models
 
-- **Customers**: Customer information and contact details
-- **Vehicles**: Vehicle registration and specifications
-- **Services**: Service orders and work details
-- **ServiceItems**: Individual service line items
-- **Inventory**: Parts and supplies management
-- **Invoices**: Billing and payment information
-- **Users**: System users and authentication
-- **Roles**: User roles and permissions
+- **Admin**: Manages administrator accounts and authentication
+- **Customer**: Stores customer information and contact details
+- **Bill**: Handles billing information and service records
 
-## 🔧 Configuration
+### Controllers
 
-### Database Configuration
+- **AdminController**: Handles admin authentication and dashboard
+- **CustomerController**: Manages customer CRUD operations
+- **BillController**: Handles bill creation and management
 
-The application uses Entity Framework Core with SQL Server. Configure your database connection in `appsettings.json`:
+### Services
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Your SQL Server Connection String"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  }
-}
-```
+- **AuthService**: Manages JWT token generation and validation
 
-### Identity Configuration
+## 🔐 Authentication
 
-ASP.NET Core Identity is pre-configured for user authentication and authorization with role-based access control.
+The system uses JWT-based authentication for admin users. Upon successful login, a JWT token is generated and used for subsequent requests to protected endpoints.
 
-## 🚀 Deployment
+### Login Process:
+1. Admin enters credentials
+2. System validates credentials against database
+3. JWT token is generated and returned
+4. Token is stored and used for authenticated requests
 
-### Development Environment
+## 🎯 Usage
 
-1. Ensure SQL Server is running
-2. Update connection strings for your environment
-3. Run database migrations
-4. Start the application using `dotnet run`
+### Admin Login
+1. Navigate to `/Admin/Login`
+2. Enter admin credentials
+3. Access the admin dashboard
 
-### Production Deployment
+### Customer Management
+1. From admin dashboard, navigate to Customer section
+2. Add new customers with required information
+3. Edit or view existing customer details
 
-1. Configure production connection strings
-2. Set up SQL Server database
-3. Apply migrations in production
-4. Configure IIS or hosting environment
-5. Set environment variables for production
+### Bill Management
+1. Select a customer from the customer list
+2. Create a new bill with service details and amount
+3. View all bills for tracking and management
 
+## 🤝 Contributing
 
-## 📄 License
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 📞 Support
 
-For support and questions:
-
-- Create an issue in the GitHub repository
-- Email: kfahim2280@gmail.com
-
+For support and questions, please open an issue in the repository or contact the development team.
 
 ## 🔄 Version History
 
-- **v1.0.0** - Initial release with core functionality
-- **v1.1.0** - Added reporting features
-- **v1.2.0** - Enhanced inventory management
-
-## 🙏 Acknowledgments
-
-- ASP.NET Core team for the excellent framework
-- Entity Framework Core for robust ORM capabilities
-- Bootstrap team for responsive UI components
-- Community contributors and testers
+- **v1.0.0** - Initial release with basic ERP functionality
+  - Admin authentication
+  - Customer management
+  - Basic billing system
 
