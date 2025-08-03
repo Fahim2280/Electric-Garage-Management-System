@@ -101,6 +101,11 @@ namespace EGMS.Controllers
                         ModelState.AddModelError("Rent_Bill", "Rent bill cannot be negative.");
                     }
 
+                    if (electricBillDto.Loan < 0)
+                    {
+                        ModelState.AddModelError("Loan", "Loan amount cannot be negative.");
+                    }
+
                     if (electricBillDto.Clear_money < 0)
                     {
                         ModelState.AddModelError("Clear_money", "Payment amount cannot be negative.");
@@ -353,7 +358,8 @@ namespace EGMS.Controllers
                 var preview = await _electricBillService.PreviewElectricBillAsync(
                     request.CustomerId,
                     request.CurrentMeterReading,
-                    request.RentBill);
+                    request.RentBill,
+                    request.Loan);
 
                 if (preview == null)
                 {
@@ -372,6 +378,7 @@ namespace EGMS.Controllers
                         consumedUnits = preview.ConsumedUnits,
                         electricBill = preview.ElectricBill,
                         rentBill = preview.RentBill,
+                        loan = preview.Loan,
                         previousDues = preview.PreviousDues,
                         totalBill = preview.TotalBill
                     }
@@ -413,6 +420,7 @@ namespace EGMS.Controllers
                                     Date = billDate,
                                     Current_Unit = summary.LastMeterReading, // Same as last reading (no consumption)
                                     Rent_Bill = 0, // Default rent bill
+                                    Loan = 0, // Default loan amount
                                     Clear_money = 0 // No payment
                                 };
 
@@ -456,5 +464,11 @@ namespace EGMS.Controllers
     }
 
     // Request model for preview bill AJAX call
-    
+    public class PreviewBillRequest
+    {
+        public int CustomerId { get; set; }
+        public decimal CurrentMeterReading { get; set; }
+        public decimal RentBill { get; set; }
+        public decimal Loan { get; set; }
+    }
 }

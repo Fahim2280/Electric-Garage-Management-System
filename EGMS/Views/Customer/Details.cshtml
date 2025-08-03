@@ -26,9 +26,8 @@
     var advanceMoney = decimal.TryParse(Model.Advance_money?.ToString(), out var advance) ? advance : 0;
     var balance = advanceMoney - lastBillPresentDues;
 
-    // var currentPage = 1;
-    // const int itemsPerPage = 30;
-    // var totalPages = 1;
+    // Calculate total loans for summary
+    var totalLoans = billsList.Sum(x => x.Loan);
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -265,7 +264,7 @@
     <!-- Customer Bills Summary -->
     @if (billsList.Any())
     {
-        <div class="row mb-4">
+        <div class="row mb-3">
             <div class="col-md-3">
                 <div class="card bg-success text-white">
                     <div class="card-body">
@@ -297,6 +296,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3">
                 <div class="card bg-danger text-white">
                     <div class="card-body">
@@ -312,16 +312,17 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-3">
-                <div class="card @(balance <= 0 ? "bg-success" : "bg-warning") text-white">
+                <div class="card bg-warning text-dark">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h6 class="card-title">Balance</h6>
-                                <h4 class="mb-0">৳<span id="balance">@balance.ToString("F2")</span></h4>
+                                <h6 class="card-title">Total Loans</h6>
+                                <h4 class="mb-0">৳<span id="totalLoans">@totalLoans.ToString("F2")</span></h4>
                             </div>
                             <div class="align-self-center">
-                                <i class="fas fa-balance-scale fa-2x"></i>
+                                <i class="fas fa-hand-holding-heart fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -379,6 +380,10 @@
                                     Rent Bill
                                 </th>
                                 <th class="amount-column">
+                                    <i class="fas fa-hand-holding-heart me-1"></i>
+                                    Loan
+                                </th>
+                                <th class="amount-column">
                                     <i class="fas fa-receipt me-1"></i>
                                     Total Bill
                                 </th>
@@ -406,11 +411,12 @@
                                 var status = bill.Clear_money >= bill.Total_bill ? "Paid" : (bill.Clear_money > 0 ? "Partial" : "Unpaid");
                                 <tr class="bill-row"
                                     data-date="@bill.Date.ToString("yyyy-MM-dd")"
-                                    data-search-content="@bill.Electric_bill @bill.Total_bill @bill.Present_dues @bill.Clear_money @bill.Date.ToString("dd/MM/yyyy") @status"
+                                    data-search-content="@bill.Electric_bill @bill.Total_bill @bill.Present_dues @bill.Clear_money @bill.Loan @bill.Date.ToString("dd/MM/yyyy") @status"
                                     data-electric-bill="@bill.Electric_bill"
                                     data-total-bill="@bill.Total_bill"
                                     data-present-dues="@bill.Present_dues"
                                     data-clear-money="@bill.Clear_money"
+                                    data-loan="@bill.Loan"
                                     data-status="@status">
                                     <td class="date-column">
                                         <i class="fas fa-calendar-day text-muted me-1"></i>
@@ -429,24 +435,28 @@
                                         <span class="text-primary fw-bold">@bill.Total_Unit</span>
                                     </td>
                                     <td class="amount-column">
-                                        <span class="text-success fw-bold">৳@bill.Electric_bill</span>
+                                        <span class="text-success fw-bold">৳@bill.Electric_bill.ToString("F2")</span>
                                     </td>
                                     <td class="amount-column">
-                                        <span class="text-warning">৳@bill.Previous_duos</span>
+                                        <span class="text-warning">৳@bill.Previous_duos.ToString("F2")</span>
                                     </td>
                                     <td class="amount-column">
-                                        <span class="text-info">৳@bill.Rent_Bill</span>
+                                        <span class="text-info">৳@bill.Rent_Bill.ToString("F2")</span>
                                     </td>
                                     <td class="amount-column">
-                                        <span class="text-success fw-bold">৳@bill.Total_bill</span>
+                                        @* Fixed: Ensure loan value displays correctly with proper formatting and conditional styling *@
+                                        <span class="text-warning fw-bold">৳@bill.Loan.ToString("F2")</span>
                                     </td>
                                     <td class="amount-column">
-                                        <span class="text-primary">৳@bill.Clear_money</span>
+                                        <span class="text-success fw-bold">৳@bill.Total_bill.ToString("F2")</span>
+                                    </td>
+                                    <td class="amount-column">
+                                        <span class="text-primary">৳@bill.Clear_money.ToString("F2")</span>
                                     </td>
                                     <td class="amount-column">
                                         @if (bill.Present_dues > 0)
                                         {
-                                            <span class="badge bg-danger">৳@bill.Present_dues</span>
+                                            <span class="badge bg-danger">৳@bill.Present_dues.ToString("F2")</span>
                                         }
                                         else
                                         {
@@ -491,23 +501,19 @@
                         </tbody>
                     </table>
                 </div>
-                @{
-                    string paginationHTML = @"
-            <div class=""card-footer bg-light"">
-            <div class=""d-flex justify-content-between align-items-center"">
-            <div class=""text-muted"">
-            Showing <span id=""showingFrom"">1</span> to <span id=""showingTo"">30</span> of <span id=""totalItems"">0</span> entries
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted">
+                            Showing <span id="showingFrom">1</span> to <span id="showingTo">30</span> of <span id="totalItems">0</span> entries
+                        </div>
+                        <nav aria-label="Bills pagination">
+                            <ul class="pagination pagination-sm mb-0" id="paginationControls">
+                                <!-- Pagination buttons will be generated here -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
             </div>
-            <nav aria-label=""Bills pagination"">
-            <ul class=""pagination pagination-sm mb-0"" id=""paginationControls"">
-            <!-- Pagination buttons will be generated here -->
-            </ul>
-            </nav>
-            </div>
-            </div>";
-                }
-            </div>
-           
         </div>
     }
     else
@@ -613,13 +619,14 @@
     /* Table styling for better column control */
     .table-container {
         width: 100%;
-        overflow-x: visible;
+        overflow-x: auto;
     }
 
     .table {
         width: 100%;
         table-layout: fixed;
         margin-bottom: 0;
+        min-width: 1400px; /* Increased to accommodate loan column */
     }
 
         .table th {
@@ -638,32 +645,32 @@
             overflow-wrap: break-word;
         }
 
-    /* Column widths */
+    /* Column widths - adjusted for loan column */
     .date-column {
-        width: 12%;
+        width: 11%;
         min-width: 120px;
     }
 
     .unit-column {
-        width: 8%;
+        width: 7%;
         min-width: 80px;
         text-align: center;
     }
 
     .amount-column {
-        width: 10%;
-        min-width: 100px;
+        width: 9%;
+        min-width: 90px;
         text-align: right;
     }
 
     .status-column {
-        width: 10%;
-        min-width: 100px;
+        width: 9%;
+        min-width: 90px;
         text-align: center;
     }
 
     .action-column {
-        width: 8%;
+        width: 7%;
         min-width: 80px;
         text-align: center;
     }
@@ -749,6 +756,8 @@
 </style>
 
 <script>
+
+
     // Global variables for filtering
     let allBills = [];
     let filteredBills = [];
@@ -757,6 +766,7 @@
     let currentPage = 1;
     const itemsPerPage = 30;
     let totalPages = 1;
+
     // Initialize the search and filter functionality
     document.addEventListener('DOMContentLoaded', function() {
         // Store original bills data
@@ -770,6 +780,7 @@
             totalBill: parseFloat(row.dataset.totalBill),
             presentDues: parseFloat(row.dataset.presentDues),
             clearMoney: parseFloat(row.dataset.clearMoney),
+            loan: parseFloat(row.dataset.loan || 0),
             status: row.dataset.status
         }));
 
@@ -803,6 +814,10 @@
         // Auto-search when date inputs change
         document.getElementById('dateFrom').addEventListener('change', performSearch);
         document.getElementById('dateTo').addEventListener('change', performSearch);
+
+        // Initialize pagination
+        filteredBills = originalBillsData;
+        applyFilters();
     });
 
     // Initialize filters with current values
@@ -812,15 +827,12 @@
         if (searchTerm) {
             performSearch();
         }
-
-        // Set current date range if any
-        const dateRangeSelect = document.getElementById('dateRangeSelect');
-        // You can set the selected value based on ViewBag data if needed
-        // dateRangeSelect.value = '@dateRange';
     }
 
     // Main search function
     function performSearch() {
+        currentPage = 1; // Reset to first page
+
         const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
         const dateRange = document.getElementById('dateRangeSelect').value;
 
@@ -839,7 +851,7 @@
             return matchesSearch && matchesDate;
         });
 
-        // Apply filters to DOM
+        // Apply filters to DOM (this now includes pagination)
         applyFilters();
 
         // Update summary cards
@@ -917,184 +929,7 @@
         return from && to ? { from, to } : null;
     }
 
-    // Apply filters to the DOM
-    function applyFilters() {
-        // Hide all bills first
-        allBills.forEach(bill => {
-            bill.classList.add('hidden');
-        });
-
-        // Show filtered bills
-        filteredBills.forEach(bill => {
-            bill.row.classList.remove('hidden');
-        });
-
-        // Update total records count
-        document.getElementById('totalRecords').textContent = filteredBills.length;
-    }
-
-    // Update summary cards based on filtered data
-    function updateSummaryCards() {
-        if (filteredBills.length === 0) {
-            // If no bills match, show zeros
-            document.getElementById('totalPaymentSum').textContent = '0.00';
-            document.getElementById('lastTotalBill').textContent = '0.00';
-            document.getElementById('lastPresentDues').textContent = '0.00';
-            document.getElementById('balance').textContent = '0.00';
-            return;
-        }
-
-        // Calculate totals from filtered bills
-        const totalPayments = filteredBills.reduce((sum, bill) => sum + bill.clearMoney, 0);
-
-        // Get the most recent bill from filtered results
-        const sortedBills = filteredBills.sort((a, b) => new Date(b.date) - new Date(a.date));
-        const mostRecentBill = sortedBills[0];
-
-        // Update summary cards
-        document.getElementById('totalPaymentSum').textContent = totalPayments.toFixed(2);
-
-        if (mostRecentBill) {
-            document.getElementById('lastTotalBill').textContent = mostRecentBill.totalBill.toFixed(2);
-            document.getElementById('lastPresentDues').textContent = mostRecentBill.presentDues.toFixed(2);
-
-            // Calculate balance (you might need to adjust this calculation based on your business logic)
-            const advanceMoney = parseFloat(document.querySelector('input[value*="Advance_money"]')?.value || 0);
-            const balance = advanceMoney - mostRecentBill.presentDues;
-            document.getElementById('balance').textContent = balance.toFixed(2);
-
-            // Update balance card color
-            const balanceCard = document.getElementById('balance').closest('.card');
-            if (balance <= 0) {
-                balanceCard.className = balanceCard.className.replace('bg-warning', 'bg-success');
-            } else {
-                balanceCard.className = balanceCard.className.replace('bg-success', 'bg-warning');
-            }
-        }
-    }
-
-    // Show search results information
-    function showSearchResultsInfo(searchTerm, dateRange) {
-        const searchResultsInfo = document.getElementById('searchResultsInfo');
-        const searchResultsText = document.getElementById('searchResultsText');
-
-        let infoText = '';
-
-        if (searchTerm || dateRange !== 'all') {
-            infoText = `Showing ${filteredBills.length} of ${originalBillsData.length} bills`;
-
-            if (searchTerm) {
-                infoText += ` matching "${searchTerm}"`;
-            }
-
-            if (dateRange !== 'all') {
-                const rangeText = getRangeDisplayText(dateRange);
-                infoText += ` for ${rangeText}`;
-            }
-
-            searchResultsText.textContent = infoText;
-            searchResultsInfo.style.display = 'block';
-        } else {
-            searchResultsInfo.style.display = 'none';
-        }
-    }
-
-    // Get display text for date range
-    function getRangeDisplayText(rangeType) {
-        const rangeTexts = {
-            'today': 'Today',
-            'yesterday': 'Yesterday',
-            'last7days': 'Last 7 Days',
-            'last30days': 'Last 30 Days',
-            'last3months': 'Last 3 Months',
-            'last6months': 'Last 6 Months',
-            'thisyear': 'This Year',
-            'lastyear': 'Last Year',
-            'custom': 'Custom Date Range'
-        };
-
-        return rangeTexts[rangeType] || 'Selected Period';
-    }
-
-    // Clear all filters
-    function clearFilters() {
-        // Clear search input
-        document.getElementById('searchInput').value = '';
-
-        // Reset date range selector
-        document.getElementById('dateRangeSelect').value = 'all';
-
-        // Clear custom date inputs
-        document.getElementById('dateFrom').value = '';
-        document.getElementById('dateTo').value = '';
-
-        // Hide custom date range inputs
-        document.getElementById('customDateRange').style.display = 'none';
-        document.getElementById('customDateRangeTo').style.display = 'none';
-
-        // Reset to show all bills
-        filteredBills = originalBillsData;
-        applyFilters();
-
-        // Reset summary cards to original values
-        resetSummaryCards();
-
-        // Hide search results info
-        document.getElementById('searchResultsInfo').style.display = 'none';
-    }
-
-    // Reset summary cards to original values
-    function resetSummaryCards() {
-        // Calculate original totals
-        const totalPayments = originalBillsData.reduce((sum, bill) => sum + bill.clearMoney, 0);
-
-        // Get the most recent bill from all bills
-        const sortedBills = originalBillsData.sort((a, b) => new Date(b.date) - new Date(a.date));
-        const mostRecentBill = sortedBills[0];
-
-        // Update summary cards
-        document.getElementById('totalPaymentSum').textContent = totalPayments.toFixed(2);
-        document.getElementById('totalRecords').textContent = originalBillsData.length;
-
-        if (mostRecentBill) {
-            document.getElementById('lastTotalBill').textContent = mostRecentBill.totalBill.toFixed(2);
-            document.getElementById('lastPresentDues').textContent = mostRecentBill.presentDues.toFixed(2);
-
-            // Calculate balance
-            const advanceMoney = parseFloat(document.querySelector('input[value*="Advance_money"]')?.value || 0);
-            const balance = advanceMoney - mostRecentBill.presentDues;
-            document.getElementById('balance').textContent = balance.toFixed(2);
-        }
-    }
-
-    // Delete confirmation function (for the modal)
-    function confirmDelete(billId, customerName, billDate) {
-        document.getElementById('deleteCustomerName').textContent = customerName;
-        document.getElementById('deleteBillDate').textContent = billDate;
-        document.getElementById('deleteForm').action = `/ElectricBill/Delete/${billId}`;
-
-        // Show the modal
-        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
-    }
-
-    // Utility function to highlight search terms (optional enhancement)
-    function highlightSearchTerms(text, searchTerm) {
-        if (!searchTerm) return text;
-
-        const regex = new RegExp(`(${searchTerm})`, 'gi');
-        return text.replace(regex, '<mark>$1</mark>');
-    }
-
-    // Export functions for external use if needed
-    window.performSearch = performSearch;
-    window.clearFilters = clearFilters;
-    window.confirmDelete = confirmDelete;
-
-    // Insert pagination HTML after table
-    document.querySelector('#customerBillsTable').closest('.card-body').insertAdjacentHTML('afterend', paginationHTML);
-
-    // Update the applyFilters function to include pagination
+    // Apply filters to the DOM with pagination
     function applyFilters() {
         // Calculate total pages
         totalPages = Math.ceil(filteredBills.length / itemsPerPage);
@@ -1223,45 +1058,155 @@
         document.getElementById('customerBillsTable').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Reset pagination when performing new search
-    function performSearch() {
-        currentPage = 1; // Reset to first page
+    // Update summary cards based on filtered data
+    function updateSummaryCards() {
+        if (filteredBills.length === 0) {
+            // If no bills match, show zeros
+            document.getElementById('totalPaymentSum').textContent = '0.00';
+            document.getElementById('lastTotalBill').textContent = '0.00';
+            document.getElementById('lastPresentDues').textContent = '0.00';
+            document.getElementById('balance').textContent = '0.00';
+            return;
+        }
 
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-        const dateRange = document.getElementById('dateRangeSelect').value;
+        // Calculate totals from filtered bills
+        const totalPayments = filteredBills.reduce((sum, bill) => sum + bill.clearMoney, 0);
 
-        // Get date range
-        const dateFilter = getDateRange(dateRange);
-
-        // Filter bills based on search criteria
-        filteredBills = originalBillsData.filter(bill => {
-            // Text search filter
-            const matchesSearch = !searchTerm || bill.searchContent.includes(searchTerm);
-
-            // Date range filter
-            const billDate = new Date(bill.date);
-            const matchesDate = !dateFilter || (billDate >= dateFilter.from && billDate <= dateFilter.to);
-
-            return matchesSearch && matchesDate;
-        });
-
-        // Apply filters to DOM (this now includes pagination)
-        applyFilters();
+        // Get the most recent bill from filtered results
+        const sortedBills = filteredBills.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const mostRecentBill = sortedBills[0];
 
         // Update summary cards
-        updateSummaryCards();
+        document.getElementById('totalPaymentSum').textContent = totalPayments.toFixed(2);
 
-        // Show search results info
-        showSearchResultsInfo(searchTerm, dateRange);
+        if (mostRecentBill) {
+            document.getElementById('lastTotalBill').textContent = mostRecentBill.totalBill.toFixed(2);
+            document.getElementById('lastPresentDues').textContent = mostRecentBill.presentDues.toFixed(2);
+
+            // Calculate balance (you might need to adjust this calculation based on your business logic)
+            const advanceMoney = parseFloat(document.querySelector('input[value*="Advance_money"]')?.value || 0);
+            const balance = advanceMoney - mostRecentBill.presentDues;
+            document.getElementById('balance').textContent = balance.toFixed(2);
+
+            // Update balance card color
+            const balanceCard = document.getElementById('balance').closest('.card');
+            if (balance <= 0) {
+                balanceCard.className = balanceCard.className.replace('bg-warning', 'bg-success');
+            } else {
+                balanceCard.className = balanceCard.className.replace('bg-success', 'bg-warning');
+            }
+        }
     }
 
-    // Initialize pagination on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        // ... existing code ...
+    // Show search results information
+    function showSearchResultsInfo(searchTerm, dateRange) {
+        const searchResultsInfo = document.getElementById('searchResultsInfo');
+        const searchResultsText = document.getElementById('searchResultsText');
 
-        // Initialize pagination
+        let infoText = '';
+
+        if (searchTerm || dateRange !== 'all') {
+            infoText = `Showing ${filteredBills.length} of ${originalBillsData.length} bills`;
+
+            if (searchTerm) {
+                infoText += ` matching "${searchTerm}"`;
+            }
+
+            if (dateRange !== 'all') {
+                const rangeText = getRangeDisplayText(dateRange);
+                infoText += ` for ${rangeText}`;
+            }
+
+            searchResultsText.textContent = infoText;
+            searchResultsInfo.style.display = 'block';
+        } else {
+            searchResultsInfo.style.display = 'none';
+        }
+    }
+
+    // Get display text for date range
+    function getRangeDisplayText(rangeType) {
+        const rangeTexts = {
+            'today': 'Today',
+            'yesterday': 'Yesterday',
+            'last7days': 'Last 7 Days',
+            'last30days': 'Last 30 Days',
+            'last3months': 'Last 3 Months',
+            'last6months': 'Last 6 Months',
+            'thisyear': 'This Year',
+            'lastyear': 'Last Year',
+            'custom': 'Custom Date Range'
+        };
+
+        return rangeTexts[rangeType] || 'Selected Period';
+    }
+
+    // Clear all filters
+    function clearFilters() {
+        // Clear search input
+        document.getElementById('searchInput').value = '';
+
+        // Reset date range selector
+        document.getElementById('dateRangeSelect').value = 'all';
+
+        // Clear custom date inputs
+        document.getElementById('dateFrom').value = '';
+        document.getElementById('dateTo').value = '';
+
+        // Hide custom date range inputs
+        document.getElementById('customDateRange').style.display = 'none';
+        document.getElementById('customDateRangeTo').style.display = 'none';
+
+        // Reset to show all bills
         filteredBills = originalBillsData;
+        currentPage = 1;
         applyFilters();
-    });
 
+        // Reset summary cards to original values
+        resetSummaryCards();
+
+        // Hide search results info
+        document.getElementById('searchResultsInfo').style.display = 'none';
+    }
+
+    // Reset summary cards to original values
+    function resetSummaryCards() {
+        // Calculate original totals
+        const totalPayments = originalBillsData.reduce((sum, bill) => sum + bill.clearMoney, 0);
+
+        // Get the most recent bill from all bills
+        const sortedBills = originalBillsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const mostRecentBill = sortedBills[0];
+
+        // Update summary cards
+        document.getElementById('totalPaymentSum').textContent = totalPayments.toFixed(2);
+        document.getElementById('totalRecords').textContent = originalBillsData.length;
+
+        if (mostRecentBill) {
+            document.getElementById('lastTotalBill').textContent = mostRecentBill.totalBill.toFixed(2);
+            document.getElementById('lastPresentDues').textContent = mostRecentBill.presentDues.toFixed(2);
+
+            // Calculate balance
+            const advanceMoney = parseFloat(document.querySelector('input[value*="Advance_money"]')?.value || 0);
+            const balance = advanceMoney - mostRecentBill.presentDues;
+            document.getElementById('balance').textContent = balance.toFixed(2);
+        }
+    }
+
+    // Delete confirmation function (for the modal)
+    function confirmDelete(billId, customerName, billDate) {
+        document.getElementById('deleteCustomerName').textContent = customerName;
+        document.getElementById('deleteBillDate').textContent = billDate;
+        document.getElementById('deleteForm').action = `/ElectricBill/Delete/${billId}`;
+
+        // Show the modal
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+
+    // Export functions for external use if needed
+    window.performSearch = performSearch;
+    window.clearFilters = clearFilters;
+    window.confirmDelete = confirmDelete;
+    window.goToPage = goToPage;
 </script>

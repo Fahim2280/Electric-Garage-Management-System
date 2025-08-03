@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,6 +39,10 @@ namespace EGMS.Models
         [Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Rent_Bill { get; set; }
+
+        [Required]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Loan { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Total_bill { get; set; }

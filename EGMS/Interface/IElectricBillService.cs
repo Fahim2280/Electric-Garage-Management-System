@@ -16,7 +16,7 @@ namespace EGMS.Interface
         Task<IEnumerable<Customer>> GetAllCustomersAsync();
         Task<CustomerBillSummaryDTO> GetCustomerBillSummaryAsync(int customerId);
         //Task PreviewElectricBillAsync(int customerId, decimal currentMeterReading, decimal rentBill);
-        Task<ElectricBillPreviewDTO> PreviewElectricBillAsync(int customerId, decimal currentMeterReading, decimal rentBill);
+        Task<ElectricBillPreviewDTO> PreviewElectricBillAsync(int customerId, decimal currentMeterReading, decimal rentBill, decimal loan);
         Task<ElectricBillDTO> GetLatestElectricBillByCustomerIdAsync(int customerId);
     }
 }
