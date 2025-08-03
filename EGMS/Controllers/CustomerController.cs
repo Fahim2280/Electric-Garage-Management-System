@@ -70,6 +70,7 @@ namespace EGMS.Controllers
                 Electric_bill = bill.Electric_bill,
                 Previous_duos = bill.Previous_duos,
                 Rent_Bill = bill.Rent_Bill,
+                Loan = bill.Loan,
                 Total_bill = bill.Total_bill,
                 Clear_money = bill.Clear_money,
                 Present_dues = bill.Present_dues

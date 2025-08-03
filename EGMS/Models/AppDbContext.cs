@@ -75,6 +75,7 @@ namespace EGMS.Services
                 entity.Property(e => e.Electric_bill).HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Previous_duos).HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Rent_Bill).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.Loan).HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Total_bill).HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Clear_money).HasColumnType("decimal(18,2)");
                 entity.Property(e => e.Present_dues).HasColumnType("decimal(18,2)");

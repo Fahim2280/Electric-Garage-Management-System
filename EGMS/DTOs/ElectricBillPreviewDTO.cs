@@ -9,6 +9,7 @@
         public decimal ConsumedUnits { get; set; }
         public decimal ElectricBill { get; set; }
         public decimal RentBill { get; set; }
+        public decimal Loan { get; set; }
         public decimal PreviousDues { get; set; }
         public decimal TotalBill { get; set; }
     }

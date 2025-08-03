@@ -36,6 +36,11 @@ namespace EGMS.DTOs
         [Range(0, double.MaxValue, ErrorMessage = "Rent bill must be greater than or equal to 0")]
         public decimal Rent_Bill { get; set; } // User input
 
+        [Required]
+        [Display(Name = "Loan")]
+        [Range(0, double.MaxValue, ErrorMessage = "Loan must be greater than or equal to 0")]
+        public decimal Loan { get; set; } // User input
+
         [Display(Name = "Total Bill")]
         public decimal Total_bill { get; set; } // Calculated
 

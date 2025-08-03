@@ -1,6 +1,7 @@
 ﻿using EGMS.DTOs;
 using EGMS.Interface;
 using EGMS.Models;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 namespace EGMS.Services
@@ -52,6 +53,7 @@ namespace EGMS.Services
                     Electric_bill = e.Electric_bill,
                     Previous_duos = e.Previous_duos,
                     Rent_Bill = e.Rent_Bill,
+                    Loan = e.Loan,  
                     Total_bill = e.Total_bill,
                     Clear_money = e.Clear_money,
                     Present_dues = e.Present_dues,
@@ -90,6 +92,7 @@ namespace EGMS.Services
                     Electric_bill = electricBill.Electric_bill,
                     Previous_duos = electricBill.Previous_duos,
                     Rent_Bill = electricBill.Rent_Bill,
+                    Loan = electricBill.Loan,
                     Total_bill = electricBill.Total_bill,
                     Clear_money = electricBill.Clear_money,
                     Present_dues = electricBill.Present_dues,
@@ -135,6 +138,7 @@ namespace EGMS.Services
                     Electric_bill = e.Electric_bill,
                     Previous_duos = e.Previous_duos,
                     Rent_Bill = e.Rent_Bill,
+                    Loan = e.Loan,
                     Total_bill = e.Total_bill,
                     Clear_money = e.Clear_money,
                     Present_dues = e.Present_dues,
@@ -200,7 +204,7 @@ namespace EGMS.Services
                 decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
 
                 // 3. Previous_duos + Electric_bill + Rent_Bill = Total_bill
-                decimal totalBill = previousDues + electricBillAmount + electricBillDto.Rent_Bill;
+                decimal totalBill = previousDues + electricBillAmount + electricBillDto.Rent_Bill + electricBillDto.Loan;
 
                 // 4. Total_bill - Clear_money = Present_dues
                 decimal presentDues = totalBill - electricBillDto.Clear_money;
@@ -227,6 +231,7 @@ namespace EGMS.Services
                     Electric_bill = electricBillAmount,         // Calculated: consumed units × 15
                     Previous_duos = previousDues,               // From customer advance or last bill dues
                     Rent_Bill = electricBillDto.Rent_Bill,      // Input from user
+                    Loan = electricBillDto.Loan,                // Input from user
                     Total_bill = totalBill,                     // Calculated: previous dues + electric bill + rent bill
                     Clear_money = electricBillDto.Clear_money,  // Input from user (amount paid)
                     Present_dues = presentDues                  // Calculated: total bill - clear money
@@ -293,7 +298,7 @@ namespace EGMS.Services
                 // CORRECTED BUSINESS LOGIC CALCULATIONS:
                 decimal totalUnit = electricBillDto.Current_Unit - previousUnit;
                 decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
-                decimal totalBill = previousDues + electricBillAmount + electricBillDto.Rent_Bill;
+                decimal totalBill = previousDues + electricBillAmount + electricBillDto.Rent_Bill + electricBillDto.Loan;
                 decimal presentDues = totalBill - electricBillDto.Clear_money;
 
                 // Validation: Current unit should not be less than previous unit
@@ -312,6 +317,7 @@ namespace EGMS.Services
                 electricBillEntity.Electric_bill = electricBillAmount;
                 electricBillEntity.Previous_duos = previousDues;
                 electricBillEntity.Rent_Bill = electricBillDto.Rent_Bill;
+                electricBillEntity.Loan = electricBillDto.Loan;
                 electricBillEntity.Total_bill = totalBill;
                 electricBillEntity.Clear_money = electricBillDto.Clear_money;
                 electricBillEntity.Present_dues = presentDues;
@@ -379,7 +385,7 @@ namespace EGMS.Services
                     // Recalculate using corrected business logic
                     decimal totalUnit = bill.Current_Unit - previousUnit;
                     decimal electricBillAmount = totalUnit * RATE_PER_UNIT;
-                    decimal totalBill = previousDues + electricBillAmount + bill.Rent_Bill;
+                    decimal totalBill = previousDues + electricBillAmount + bill.Rent_Bill + bill.Loan;
                     decimal presentDues = totalBill - bill.Clear_money;
 
                     // Update
@@ -500,7 +506,7 @@ namespace EGMS.Services
         }
 
         // Method to preview bill calculation before saving
-        public async Task<ElectricBillPreviewDTO> PreviewElectricBillAsync(int customerId, decimal currentMeterReading, decimal rentBill)
+        public async Task<ElectricBillPreviewDTO> PreviewElectricBillAsync(int customerId, decimal currentMeterReading, decimal rentBill, decimal loan)
         {
             try
             {
@@ -525,6 +531,7 @@ namespace EGMS.Services
                     ConsumedUnits = totalUnit,
                     ElectricBill = electricBillAmount,
                     RentBill = rentBill,
+                    Loan = loan,
                     PreviousDues = summary.PreviousDues,
                     TotalBill = totalBill
                 };
@@ -563,6 +570,7 @@ namespace EGMS.Services
                     Electric_bill = electricBill.Electric_bill,
                     Previous_duos = electricBill.Previous_duos,
                     Rent_Bill = electricBill.Rent_Bill,
+                    Loan = electricBill.Loan,
                     Total_bill = electricBill.Total_bill,
                     Clear_money = electricBill.Clear_money,
                     Present_dues = electricBill.Present_dues,
